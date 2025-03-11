@@ -1,6 +1,7 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
-const Login = () => {
+const Register = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-200">
       <div className="relative w-full max-w-md p-8 bg-opacity-30 backdrop-blur-md bg-gray-300 rounded-2xl shadow-lg">
@@ -11,7 +12,7 @@ const Login = () => {
         </div>
                   
         <div>
-          <h2 className="text-xl font-semibold mt-3 ">MD Login</h2>
+          <h2 className="text-xl font-semibold mt-3 text-center">Register</h2>
         {/* action={} */}
         <form className="mt-6" method="post" >
           <div className="mb-4">
@@ -29,10 +30,19 @@ const Login = () => {
             />
           </div>
           <button className="w-full py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700">
-                Sign In
+                Sign Up
           </button>
         </form>
-          </div>
+
+        {/* SIgnup or login */}
+        <div>
+                   <div className="mt-4 text-sm text-gray-700 text-center">
+                        Doesn't have an account?
+                       <Link to="/login" className="mt-4 pl-2 text-sm text-gray-900 text-center hover:text-blue-600">Sign In</Link>
+                   </div>  
+                   
+        </div>
+        </div>
           
 
         
@@ -46,4 +56,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

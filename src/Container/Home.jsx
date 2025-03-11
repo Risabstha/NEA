@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import Header from './NavBar/Header';
-import Meeting_Filter from './Home/Meeting_Filter';
+import Header from '../NavBar/Header';
+import Meeting_Filter from '../Home/Meeting_Filter';
 import {Outlet } from "react-router-dom";
 
 const Home = ()=>

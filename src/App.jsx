@@ -1,10 +1,10 @@
 import React from 'react'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
-import Login from './Login'
-import AddMeeting from './AddMeeting';
-import Home from './Home';
+import Login from './SignIn/Login'
+import AddMeeting from './Container/AddMeeting';
+import Home from './Container/Home';
 import Meeting_Table from './Home/Meeting_Table';
+import Register from './SignIn/Register';
 
 function App() {
   return (
@@ -20,6 +20,8 @@ function App() {
             </Route>
             <Route path="/add-meeting" element={<AddMeeting />} />
             <Route path="/login" element={<Login/>} />
+            <Route path="/register" element={<Register/>}/>     
+            
           </Routes>
         </BrowserRouter>
     </>

@@ -6,6 +6,7 @@ const Header = ()=>
     const [isOpen, setIsOpen] = useState(false);
     const location = useLocation(); //  Get the current route
     const handleIsOpen = () => setIsOpen(!isOpen);
+    
 
     return (
         
@@ -33,7 +34,7 @@ const Header = ()=>
                                     
                                     
                                     // this down here
-                                ${location.pathname === "/"  ? "bg-green-500 text-white rounded-4xl" : ""}`}      
+                                ${location.pathname === "/" || location.pathname === "/yesterday" || location.pathname === "/tomorrow" || location.pathname === "/overmorrow" ? "bg-green-500 text-white rounded-4xl" : ""}`}      
                             >{/* ternary operator */}
                                 HOME
                             </Link>  
