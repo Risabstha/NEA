@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Header from './NavBar/Header';
 import Meeting_Filter from './Home/Meeting_Filter';
-import Meeting_Table from './Home/Meeting_Table';
+import {Outlet } from "react-router-dom";
 
 const Home = ()=>
 {
@@ -9,7 +9,10 @@ const Home = ()=>
         <>
             <Header/>
             <Meeting_Filter/>
-            <Meeting_Table/>
+             <Outlet/>  {/* Outlet is a placeholder that renders child routes inside a parent route. Here used to render Meeting  */}
+            
+            
+            
         </>
     );
 }

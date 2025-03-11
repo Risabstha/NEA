@@ -1,9 +1,10 @@
-import React,{ useState } from 'react'
+import React from 'react'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Login from './Login'
 import AddMeeting from './AddMeeting';
 import Home from './Home';
+import Meeting_Table from './Home/Meeting_Table';
 
 function App() {
   return (
@@ -11,19 +12,16 @@ function App() {
         {/* <Login/> */}
         <BrowserRouter> 
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Home />}>
+                <Route index element={<Meeting_Table />} />       {/* child routes */}
+                <Route path="yesterday" element={<Meeting_Table />} />
+                <Route path="tomorrow" element={<Meeting_Table />} />
+                <Route path="overmorrow" element={<Meeting_Table />} />
+            </Route>
             <Route path="/add-meeting" element={<AddMeeting />} />
             <Route path="/login" element={<Login/>} />
           </Routes>
         </BrowserRouter>
-      
-        {/* <BrowserRouter> 
-          <Routes>
-            <Route path="/" element={<PA_panel />} />
-            <Route path="/add-meeting" element={<Add_Meeting />} />
-            <Route path="/login" element={<Login/>} />
-          </Routes>
-        </BrowserRouter> */}
     </>
   );
 }

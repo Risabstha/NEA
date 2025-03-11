@@ -1,10 +1,25 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 const Meeting_Table = () => {
   const [meetings, setMeeting] = useState([
-    { id: 1, date: "2025-03-11", type: "Project Discussion", location: "Hayat Hotel", description: "Discuss project timeline and deliverables.", time: "10:00 AM" },
+    { id: 1, date: "2025-03-11", type: "Project Discussion", location: "Hayat Hotel", description: "Discuss project timeline and deliverables aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.", time: "10:00 AM" },
     { id: 2, date: "2025-03-10", type: "Client Meeting", location: "Soltie Hotel", description: "Meeting with the client to present progress.", time: "11:50 AM" },
     { id: 3, date: "2025-03-16", type: "Client Meeting", location: "Kalanki", description: "Meeting with the client to present progress.", time: "1:37 AM" },
+    { id: 1, date: "2025-03-11", type: "Project Discussion", location: "Hayat Hotel", description: "Discuss project timeline and deliverables aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.", time: "10:00 AM" },
+    { id: 2, date: "2025-03-10", type: "Client Meeting", location: "Soltie Hotel", description: "Meeting with the client to present progress.", time: "11:50 AM" },
+    { id: 1, date: "2025-03-11", type: "Project Discussion", location: "Hayat Hotel", description: "Discuss project timeline and deliverables aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.", time: "10:00 AM" },
+    { id: 2, date: "2025-03-10", type: "Client Meeting", location: "Soltie Hotel", description: "Meeting with the client to present progress.", time: "11:50 AM" },
+    { id: 1, date: "2025-03-11", type: "Project Discussion", location: "Hayat Hotel", description: "Discuss project timeline and deliverables aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.", time: "10:00 AM" },
+    { id: 2, date: "2025-03-10", type: "Client Meeting", location: "Soltie Hotel", description: "Meeting with the client to present progress.", time: "11:50 AM" },
+    { id: 1, date: "2025-03-11", type: "Project Discussion", location: "Hayat Hotel", description: "Discuss project timeline and deliverables aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.", time: "10:00 AM" },
+    { id: 2, date: "2025-03-10", type: "Client Meeting", location: "Soltie Hotel", description: "Meeting with the client to present progress.", time: "11:50 AM" },
+    { id: 1, date: "2025-03-11", type: "Project Discussion", location: "Hayat Hotel", description: "Discuss project timeline and deliverables aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.", time: "10:00 AM" },
+    { id: 2, date: "2025-03-10", type: "Client Meeting", location: "Soltie Hotel", description: "Meeting with the client to present progress.", time: "11:50 AM" },
+    { id: 1, date: "2025-03-11", type: "Project Discussion", location: "Hayat Hotel", description: "Discuss project timeline and deliverables aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.", time: "10:00 AM" },
+    { id: 2, date: "2025-03-10", type: "Client Meeting", location: "Soltie Hotel", description: "Meeting with the client to present progress.", time: "11:50 AM" },
+    { id: 1, date: "2025-03-11", type: "Project Discussion", location: "Hayat Hotel", description: "Discuss project timeline and deliverables aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.", time: "10:00 AM" },
+    { id: 2, date: "2025-03-10", type: "Client Meeting", location: "Soltie Hotel", description: "Meeting with the client to present progress.", time: "11:50 AM" },
+
   ]);
 
   // Function to convert time to a comparable format
@@ -33,7 +48,7 @@ const Meeting_Table = () => {
 
   return (
     <>
-      <div className="bg-gray-200 p-1 md:pb-[0.5vh] md:p-[1vw] md:pt-[1vh]">
+      <div className="bg-gray-200  p-[1vw] md:pb-[0.5vh] md:p-[1vw] md:mt-[4vh] pt-[6vh]">
         <div className="overflow-x-auto">
           <table className="w-full border-collapse border border-gray-400">
             <thead>

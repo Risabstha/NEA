@@ -30,7 +30,10 @@ const Header = ()=>
                             <Link 
                                 to="/" 
                                 className={`text-black p-[1vw] ml-[3vw] hover:text-gray-300 hover:rounded-4xl hover:bg-gray-900 
-                                ${location.pathname === "/" ? "bg-green-500 text-white rounded-4xl" : ""}`}      
+                                    
+                                    
+                                    // this down here
+                                ${location.pathname === "/"  ? "bg-green-500 text-white rounded-4xl" : ""}`}      
                             >{/* ternary operator */}
                                 HOME
                             </Link>  
