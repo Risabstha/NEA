@@ -66,7 +66,7 @@ const Add = () => {
     return (
         <>
             {isFormVisible && (
-                <div className="absolute left-[9vw] md:left-[24vw] lg:left-[29vw] xl:left-[34vw]
+                <div className="left-[9vw] md:left-[24vw] lg:left-[29vw] xl:left-[34vw]
                                 right-[9vw] md:right-[24vw] lg:right-[29vw] xl:right-[34vw]
                                 p-[1vw] md:p-[1vw]
                                 mt-[2vh] md:mt-[6vh]
