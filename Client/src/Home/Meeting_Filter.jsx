@@ -15,10 +15,9 @@ const Meeting_Filter = ()=>
             </div>
 
                     {/* using aboslute position, so div will be positioned according to it's nearest relative ancestor or window -> used for Floating Effect */}
-            <div className=' absolute top-[25vh] md:top-[34vh]  
-                            left-[4vw] md:left-[22vw]  lg:left-[24vw] xl:left-[29vw]
-                            right-[4vw] md:right-[22vw] lg:right-[24vw] xl:right-[29vw]
-                             w-[90vw] md:w-[54vw] lg:w-[50vw] xl:w-[40vw]
+            <div className='top-[25vh] md:top-[34vh]  
+                            ml-[5vw] md:ml-[23vw] lg:ml-[25vw] xl:ml-[30vw]
+                            w-[90vw] md:w-[54vw] lg:w-[50vw] xl:w-[40vw]
                             rounded-4xl
                             bg-gray-300 '>
                         

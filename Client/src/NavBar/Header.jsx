@@ -26,21 +26,18 @@ const Header = ()=>
                  <div className=' absolute top-[16vh] left-[10vw] right-[10vw] md:w-[80vw] md:rounded-4xl bg-gradient-to-b from-gray-100 to-gray-400'>
                     {/*  Desktop View */}
                     {/* md: it applies css for display with pixel > apprx. 750 , ones with no specifiers are known as default that apply css only if all specified display sizes req. don't meet*/}
-                    <div className="w-[80vw] min-h-[7vh] hidden md:flex justify-between items-center">
-                        <div className="flex space-x-[1.5vw]">
+                    <div className="w-[80vw] h-[7vh] hidden md:flex justify-between items-center">
+                        <div className="flex space-x-[4vw]">
                             <Link 
                                 to="/" 
-                                className={`text-black p-[1vw] ml-[3vw] hover:text-gray-300 hover:rounded-4xl hover:bg-gray-900 
-                                    
-                                    
-                                    // this down here
-                                ${location.pathname === "/" || location.pathname === "/yesterday" || location.pathname === "/tomorrow" || location.pathname === "/overmorrow" ? "bg-green-500 text-white rounded-4xl" : ""}`}      
+                                className={`text-black   pl-[3vw] pr-[3vw] p-[2vh] ml-[7vw] hover:text-gray-300 hover:rounded-4xl hover:bg-gray-900 
+                                ${location.pathname === "/home" || location.pathname === "/yesterday" || location.pathname === "/tomorrow" || location.pathname === "/overmorrow" ? "bg-green-500 text-white rounded-4xl" : ""}`}      
                             >{/* ternary operator */}
-                                HOME
+                                <span>Home </span>
                             </Link>  
                             <Link 
                                 to="/add-meeting" 
-                                className={`text-black p-[1vw] hover:text-gray-300 hover:rounded-4xl hover:bg-gray-900 
+                                className={`text-black  pl-[3vw] pr-[3vw]  p-[2vh] hover:text-gray-300 hover:rounded-4xl hover:bg-gray-900 
                                 ${location.pathname === "/add-meeting"  ? "bg-green-500 text-white rounded-4xl" : "" }`}
                             >
                                 Add Meeting
@@ -48,9 +45,9 @@ const Header = ()=>
                         </div>
                         <div className='flex'>
                             <Link
-                                to="/login"
-                                className={`text-black p-[1vw] mr-[3vw] rounded-4xl hover:bg-gray-900 hover:text-gray-300
-                                ${location.pathname === "/login"}`}
+                                to="/"
+                                className={`text-black  pl-[3vw] pr-[3vw]  p-[2vh] mr-[7vw] rounded-4xl hover:bg-gray-900 hover:text-gray-300
+                                ${location.pathname === "/"}`}
                             >
                                 Logout                                
                             </Link>

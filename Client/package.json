@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.12",
+    "axios": "^1.8.3",
     "bikram-sambat": "^1.7.0",
     "bikram-sambat-js": "^1.0.2",
     "nepali-datepicker-reactjs": "^1.1.7",
@@ -31,5 +32,10 @@
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^15.15.0",
     "vite": "^6.2.0"
-  }
+  },
+  "description": "",
+  "main": "eslint.config.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
