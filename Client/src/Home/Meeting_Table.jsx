@@ -80,7 +80,7 @@ const Meeting_Table = () => {
           <button
             onClick={goToPrevPage}
             disabled={currentPage === 1}
-            className={`px-3 py-2 bg-gray-500 text-white rounded-md ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-700"}`}
+            className={`px-1 py-1 bg-gray-500 text-white rounded-md ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-700"}`}
           >
             Prev.
           </button>
@@ -88,7 +88,7 @@ const Meeting_Table = () => {
           <button
             onClick={goToNextPage}
             disabled={currentPage === totalPages}
-            className={`px-3 py-2 bg-gray-500 text-white rounded-md ${currentPage === totalPages ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-700"}`}
+            className={`px-1 py-1 bg-gray-500 text-white rounded-md ${currentPage === totalPages ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-700"}`}
           >
             Next
           </button>

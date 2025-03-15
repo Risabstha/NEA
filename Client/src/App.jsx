@@ -11,19 +11,21 @@ function App() {
   return (
     <>
         {/* <Login/> */}
+          {/* parents have absolute path "/home" */}
+          {/* child routes have relative path "home" */}
         <BrowserRouter> 
           <Routes>
-                <Route element={<ProtectedRoute/>}>
-                    <Route path="home" element={<Home />}>
-                      <Route index element={<Meeting_Table />} />       {/* child routes */}
-                      <Route path="yesterday" element={<Meeting_Table />} />
-                      <Route path="tomorrow" element={<Meeting_Table />} />
-                      <Route path="overmorrow" element={<Meeting_Table />} />
-                    </Route>
-                <Route path="/add-meeting" element={<AddMeeting />} />
-            </Route>          
             <Route path="/" element={<Login/>} />
-            <Route path="/register" element={<Register/>}/>         
+            <Route path="/register" element={<Register/>}/>     
+            <Route element={<ProtectedRoute/>}>
+                <Route path="/home" element={<Home />}>   
+                  <Route index element={<Meeting_Table />} />       
+                  <Route path="yesterday" element={<Meeting_Table />} />
+                  <Route path="tomorrow" element={<Meeting_Table />} />
+                  <Route path="overmorrow" element={<Meeting_Table />} />
+                </Route>
+                <Route path="/add-meeting" element={<AddMeeting />} />
+            </Route>              
           </Routes>
         </BrowserRouter> 
 

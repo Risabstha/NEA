@@ -14,6 +14,7 @@
     "axios": "^1.8.3",
     "bikram-sambat": "^1.7.0",
     "bikram-sambat-js": "^1.0.2",
+    "lottie-react": "^2.4.1",
     "nepali-datepicker-reactjs": "^1.1.7",
     "node": "^23.9.0",
     "react": "^19.0.0",

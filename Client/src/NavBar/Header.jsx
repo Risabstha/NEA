@@ -29,9 +29,9 @@ const Header = ()=>
                     <div className="w-[80vw] h-[7vh] hidden md:flex justify-between items-center">
                         <div className="flex space-x-[4vw]">
                             <Link 
-                                to="/" 
+                                to="/home" 
                                 className={`text-black   pl-[3vw] pr-[3vw] p-[2vh] ml-[7vw] hover:text-gray-300 hover:rounded-4xl hover:bg-gray-900 
-                                ${location.pathname === "/home" || location.pathname === "/yesterday" || location.pathname === "/tomorrow" || location.pathname === "/overmorrow" ? "bg-green-500 text-white rounded-4xl" : ""}`}      
+                                ${location.pathname === "/home" || location.pathname === "/home/yesterday" || location.pathname === "/home/tomorrow" || location.pathname === "/home/overmorrow" ? "bg-green-500 text-white rounded-4xl" : ""}`}      
                             >{/* ternary operator */}
                                 <span>Home </span>
                             </Link>  
@@ -59,9 +59,9 @@ const Header = ()=>
                     <div className='flex flex-wrap justify-center'>
                         <div className="w-[96vw]  md:hidden flex items-center">                 
                             <Link 
-                                to="/" 
+                                to="/home" 
                                 className={`text-black flex-1 p-2  hover:text-gray-300 hover:bg-gray-900 
-                                ${location.pathname === "/" ? "bg-green-500 text-white" : ""}`}
+                                ${location.pathname === "/home" ? "bg-green-500 text-white" : ""}`}
                             >
                                 Home
                             </Link>              
@@ -81,10 +81,11 @@ const Header = ()=>
                                     Add Meeting
                                 </Link>
                                 
+                                {/* absolute index */}
                                 <Link
-                                to="/login"
+                                to="/"      
                                 className={`text-black p-2 flex w-[96vw] flex-wrap text-left hover:bg-gray-900 hover:text-gray-300
-                                ${location.pathname === "/login"}`}
+                                ${location.pathname === "/"}`}
                             >
                                 Logout                                
                             </Link>

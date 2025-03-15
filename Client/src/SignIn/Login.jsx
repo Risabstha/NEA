@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
+import loadingAnimation from "../assets/loading.json"; // Import JSON animation
+import Lottie from "lottie-react";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -7,9 +9,11 @@ const Login = () => {
     password: '',
   });
   const [errorMessage, setErrorMessage] = useState(null);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate(); // Initialize useNavigate for redirection
 
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
+
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -34,7 +38,14 @@ const Login = () => {
         localStorage.setItem("token", data.token); // Store token in localStorage
 
         // Redirect to Home page
-        navigate("/home");
+        // navigate("/home");
+        e.preventDefault();
+        setLoading(true); // Show loading GIF
+
+        setTimeout(() => {
+          setLoading(false); // Hide loading GIF after 2 sec
+          navigate("/home"); // Redirect to home
+        }, 4000);
       } else {
         setErrorMessage(data.message || "Login failed");
       }
@@ -76,6 +87,13 @@ const Login = () => {
               className="w-full px-4 py-2 bg-gray-200 bg-opacity-50 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
+
+          {loading ? (
+             <div className="flex justify-center mt-4">
+                <Lottie animationData={loadingAnimation} className="w-[50vw] h-[15vh] rotate-60" />
+             </div>
+          ) : ""}
+
           <button type="submit" className="w-full py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700">
             Log In
           </button>

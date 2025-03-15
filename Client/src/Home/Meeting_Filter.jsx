@@ -30,30 +30,32 @@ const Meeting_Filter = ()=>
                                         flex justify-between items-center">
                         
                             <Link 
-                                to="/yesterday" 
+                                to="/home/yesterday" 
                                 className={`text-black p-[0.5vw] hover:text-gray-300 hover:rounded-4xl hover:bg-gray-900 
-                                ${location.pathname === "/yesterday" ? "bg-green-500 p-[0.5vw] text-white rounded-4xl" : ""}`}      
-                                    >{/* ternary operator */}
+                                ${location.pathname === "/home/yesterday" ? "bg-green-500 p-[0.5vw] text-white rounded-4xl" : ""}`}      
+                            >{/* ternary operator */}
                                 Yesterday
                             </Link>
+                            
+                            {/* relative index  */}
                             <Link 
-                                to="/" 
+                                to= "/home"     
                                 className={`text-black p-[0.5vw] hover:text-gray-300 hover:rounded-4xl hover:bg-gray-900 
-                                ${location.pathname === "/" ? "bg-green-500 p-[0.5vw] text-white rounded-4xl" : ""}`}      
+                                ${location.pathname === "/home" ? "bg-green-500 p-[0.5vw] text-white rounded-4xl" : ""}`}      
                                 >{/* ternary operator */}
                                 Today
                             </Link>
                             <Link 
-                                to="/tomorrow" 
+                                to="/home/tomorrow" 
                                 className={`text-black p-[0.5vw] hover:text-gray-300 hover:rounded-4xl hover:bg-gray-900 
-                                ${location.pathname === "/tomorrow" ? "bg-green-500 p-[0.5vw] text-white rounded-4xl" : ""}`}      
+                                ${location.pathname === "/home/tomorrow" ? "bg-green-500 p-[0.5vw] text-white rounded-4xl" : ""}`}      
                                 >{/* ternary operator */}
                                 Tommorrow
                             </Link>
                             <Link 
-                                to="/overmorrow" 
+                                to="/home/overmorrow" 
                                 className={`text-black p-[0.5vw]  hover:text-gray-300 hover:rounded-4xl hover:bg-gray-900  
-                                ${location.pathname === "/overmorrow" ? "bg-green-500 p-[0.5vw] text-white rounded-4xl" : ""}`}      
+                                ${location.pathname === "/home/overmorrow" ? "bg-green-500 p-[0.5vw] text-white rounded-4xl" : ""}`}      
                                 >{/* ternary operator */}
                                 Overmorrow
                             </Link>
