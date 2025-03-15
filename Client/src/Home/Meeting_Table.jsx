@@ -76,19 +76,19 @@ const Meeting_Table = () => {
         </div>
 
         {/* Pagination Controls */}
-        <div className="flex justify-center mt-4 space-x-4">
+        <div className="flex justify-center mt-4 space-x-3">
           <button
             onClick={goToPrevPage}
             disabled={currentPage === 1}
-            className={`px-1 py-1 bg-gray-500 text-white rounded-md ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-700"}`}
+            className={`px-2 py-1 bg-blue-600 text-white rounded-4xl ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"}`}
           >
-            Prev.
+            Prev
           </button>
-          <span className="text-lg font-semibold">Page {currentPage} of {totalPages}</span>
+          <span className="text-md font-sans"> {currentPage} of {totalPages}</span>
           <button
             onClick={goToNextPage}
             disabled={currentPage === totalPages}
-            className={`px-1 py-1 bg-gray-500 text-white rounded-md ${currentPage === totalPages ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-700"}`}
+            className={`px-2 py-1 bg-blue-600 text-white rounded-4xl ${currentPage === totalPages ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"}`}
           >
             Next
           </button>

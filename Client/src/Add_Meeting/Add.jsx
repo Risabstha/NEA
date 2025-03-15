@@ -71,14 +71,14 @@ const Add = () => {
                                 p-[1vw] md:p-[1vw]
                                 mt-[2vh] md:mt-[6vh]
                                 w-[80vw] md:w-[50vw] lg:w-[40vw] xl:w-[30vw]
-                                bg-white shadow-2xl rounded-2xl relative">
+                                bg-gray-150 shadow-2xl rounded-2xl relative">
                     <button
                         onClick={() => setIsFormVisible(false)}
                         className="absolute top-2 right-2 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center hover:bg-red-600"
                     >
                         X
                     </button>
-                    <h2 className="text-xl p-4 flex justify-center font-semibold mb-4">Manage Meetings</h2>
+                    <h2 className="text-xl p-4 flex justify-center font-sans text-blue-700  mb-4">Manage Meetings</h2>
                     
                     <NepaliDatePicker
                         value={newMeeting.date}
@@ -167,7 +167,7 @@ const Add = () => {
                 <div className="flex justify-center p-4 mt-[20px]">
                     <button
                         onClick={() => setIsFormVisible(true)}
-                        className="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600"
+                        className="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700"
                     >
                         Add New
                     </button>

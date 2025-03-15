@@ -34,15 +34,15 @@ const Header = () => {
                             <div className="flex space-x-[4vw]">
                                 <Link
                                     to="/home"
-                                    className={`text-black   pl-[3vw] pr-[3vw] p-[2vh] ml-[7vw] hover:text-gray-300 hover:rounded-4xl hover:bg-gray-900 
-                                ${location.pathname === "/home" || location.pathname === "/home/yesterday" || location.pathname === "/home/tomorrow" || location.pathname === "/home/overmorrow" ? "bg-green-500 text-white rounded-4xl" : ""}`}
+                                    className={`text-black   pl-[3vw] pr-[3vw] p-[2vh] ml-[7vw] hover:text-white hover:rounded-4xl hover:bg-blue-700 
+                                ${location.pathname === "/home" || location.pathname === "/home/yesterday" || location.pathname === "/home/tomorrow" || location.pathname === "/home/overmorrow" ? "bg-blue-600 text-white rounded-4xl" : ""}`}
                                 >{/* ternary operator */}
                                     <span>Home </span>
                                 </Link>
                                 <Link
                                     to="/add-meeting"
-                                    className={`text-black  pl-[3vw] pr-[3vw]  p-[2vh] hover:text-gray-300 hover:rounded-4xl hover:bg-gray-900 
-                                ${location.pathname === "/add-meeting" ? "bg-green-500 text-white rounded-4xl" : ""}`}
+                                    className={`text-black  pl-[3vw] pr-[3vw]  p-[2vh] hover:text-white hover:rounded-4xl hover:bg-blue-700 
+                                ${location.pathname === "/add-meeting" ? "bg-blue-600 text-white rounded-4xl" : ""}`}
                                 >
                                     Add Meeting
                                 </Link>
@@ -50,7 +50,7 @@ const Header = () => {
                             <div className='flex'>
                                 <button
                                     onClick={handleLogout}
-                                    className="text-black  pl-[3vw] pr-[3vw] mr-[7vw] p-[2vh] hover:text-gray-300 hover:rounded-4xl hover:bg-gray-900 "
+                                    className="text-black  pl-[3vw] pr-[3vw] mr-[7vw] p-[2vh] hover:text-white hover:rounded-4xl hover:bg-blue-700 "
                                 >
                                     Logout
                                 </button>
@@ -60,15 +60,15 @@ const Header = () => {
                     </div>
                     {/*  Mobile View Menu */}
                     <div className='flex flex-wrap justify-center'>
-                        <div className="w-[96vw]  md:hidden flex items-center">
+                        <div className="w-[96vw]  md:hidden flex items-center bg-gray-300">
                             <Link
                                 to="/home"
-                                className={`text-black flex-1 p-2  hover:text-gray-300 hover:bg-gray-900 
-                                ${location.pathname === "/home" ? "bg-green-500 text-white" : ""}`}
+                                className={`text-black flex-1 p-2  hover:text-white hover:bg-blue-700
+                                ${location.pathname === "/home" ? "bg-blue-600 text-white" : ""}`}
                             >
                                 Home
                             </Link>
-                            <button onClick={handleIsOpen} className="text-black p-2 hover:text-gray-300 hover:bg-gray-900 focus:outline-none">
+                            <button onClick={handleIsOpen} className="text-black p-2 hover:text-white hover:bg-blue-700 focus:outline-none">
                                 ☰
                             </button>
                         </div>
@@ -78,8 +78,8 @@ const Header = () => {
                             <div className="md:hidden  bg-gray-300">
                                 <Link
                                     to="/add-meeting"
-                                    className={`text-black flex w-[96vw] flex-wrap p-2 hover:text-gray-300 hover:bg-gray-900 
-                                    ${location.pathname === "/add-meeting" ? "bg-green-500 text-white " : ""}`}
+                                    className={`text-black flex w-[96vw] flex-wrap p-2 hover:text-white hover:bg-blue-700
+                                    ${location.pathname === "/add-meeting" ? "bg-blue-600 text-white " : ""}`}
                                 >
                                     Add Meeting
                                 </Link>
@@ -87,7 +87,7 @@ const Header = () => {
                                 {/* absolute index */}
                                 <Link
                                     to="/"
-                                    className={`text-black p-2 flex w-[96vw] flex-wrap text-left hover:bg-gray-900 hover:text-gray-300
+                                    className={`text-black p-2 flex w-[96vw] flex-wrap text-left hover:bg-blue-700 hover:text-white
                                 ${location.pathname === "/"}`}
                                 >
                                     Logout

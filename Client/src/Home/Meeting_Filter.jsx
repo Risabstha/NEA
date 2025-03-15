@@ -11,7 +11,7 @@ const Meeting_Filter = ()=>
         <>
             {/* Filtering meeting  */}
             <div className=" bg-gray-200 p-1 md:pt-[1vh]  md:mt-[1vh]">
-                <h2 className="text-2xl text-center font-bold p-[1vh] md:pt-[5.5vh] md:pb-[3vh]">Meeting Schedule</h2>
+                <h2 className="text-4xl text-center font-sans text-blue-700 p-[1vh] md:pt-[5.5vh] md:pb-[3vh]">Meeting Schedule</h2>
             </div>
 
                     {/* using aboslute position, so div will be positioned according to it's nearest relative ancestor or window -> used for Floating Effect */}
@@ -31,8 +31,8 @@ const Meeting_Filter = ()=>
                         
                             <Link 
                                 to="/home/yesterday" 
-                                className={`text-black p-[0.5vw] hover:text-gray-300 hover:rounded-4xl hover:bg-gray-900 
-                                ${location.pathname === "/home/yesterday" ? "bg-green-500 p-[0.5vw] text-white rounded-4xl" : ""}`}      
+                                className={`text-black p-[0.5vw] hover:text-white hover:rounded-4xl hover:bg-blue-700 
+                                ${location.pathname === "/home/yesterday" ? "bg-blue-600 p-[0.5vw] text-white rounded-4xl" : ""}`}      
                             >{/* ternary operator */}
                                 Yesterday
                             </Link>
@@ -40,22 +40,22 @@ const Meeting_Filter = ()=>
                             {/* relative index  */}
                             <Link 
                                 to= "/home"     
-                                className={`text-black p-[0.5vw] hover:text-gray-300 hover:rounded-4xl hover:bg-gray-900 
-                                ${location.pathname === "/home" ? "bg-green-500 p-[0.5vw] text-white rounded-4xl" : ""}`}      
+                                className={`text-black p-[0.5vw] hover:text-white hover:rounded-4xl hover:bg-blue-700
+                                ${location.pathname === "/home" ? "bg-blue-600 p-[0.5vw] text-white rounded-4xl" : ""}`}      
                                 >{/* ternary operator */}
                                 Today
                             </Link>
                             <Link 
                                 to="/home/tomorrow" 
-                                className={`text-black p-[0.5vw] hover:text-gray-300 hover:rounded-4xl hover:bg-gray-900 
-                                ${location.pathname === "/home/tomorrow" ? "bg-green-500 p-[0.5vw] text-white rounded-4xl" : ""}`}      
+                                className={`text-black p-[0.5vw] hover:text-white hover:rounded-4xl hover:bg-blue-700 
+                                ${location.pathname === "/home/tomorrow" ? "bg-blue-600 p-[0.5vw] text-white rounded-4xl" : ""}`}      
                                 >{/* ternary operator */}
                                 Tommorrow
                             </Link>
                             <Link 
                                 to="/home/overmorrow" 
-                                className={`text-black p-[0.5vw]  hover:text-gray-300 hover:rounded-4xl hover:bg-gray-900  
-                                ${location.pathname === "/home/overmorrow" ? "bg-green-500 p-[0.5vw] text-white rounded-4xl" : ""}`}      
+                                className={`text-black p-[0.5vw]  hover:text-white hover:rounded-4xl hover:bg-blue-700  
+                                ${location.pathname === "/home/overmorrow" ? "bg-blue-600 p-[0.5vw] text-white rounded-4xl" : ""}`}      
                                 >{/* ternary operator */}
                                 Overmorrow
                             </Link>

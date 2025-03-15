@@ -43,26 +43,36 @@ const Register = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-200">
-      <div className="relative w-full max-w-md p-8 bg-opacity-30 backdrop-blur-md bg-gray-300 rounded-2xl shadow-lg">
-        <div className="text-center">
+    <div className="flex items-center justify-center min-h-screen bg-gray-300">
+      <div className="relative w-full max-w-md p-8 bg-opacity-30 backdrop-blur-4xl bg-gray-200 rounded-2xl shadow-2xl">
+        {/* <div className="text-center">
           <div className=" mx-auto mb-4 items-center justify-center">
             <img src="./NEALOGO.png" alt="NEA LOGO" />
           </div>
-        </div>
-        <hr />
-        <h2 className="text-xl font-serif mt-3 text-center">Register</h2>
+        </div> <hr />*/}
+        
+        <h2 className="text-4xl font-mono text-center text-blue-700 my-3">Register</h2>  
+
+        {/* Show Alert Message */}
+        {alertMessage && (
+          <div
+            className={`mt-4 text-center text-lg py-2 rounded-4xl ${isError ? "bg-red-500 text-gray-200" : "bg-green-500 text-gray-200"}`}
+          >
+            {alertMessage}
+          </div>
+        )}
 
         <form className="mt-6" onSubmit={handleSubmit}>
           <div className="mb-4 flex space-x-2">
             <img src="./username.png" className="w-7 h-7 m-2 " alt="User" />
             <input
               type="text"
+              autoComplete="off"
               name="username"
               value={formData.username}
               onChange={handleInputChange}
               placeholder="Username"
-              className="w-full px-4 py-2 bg-gray-200 bg-opacity-50 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 bg-gray-100 bg-opacity-50 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
@@ -74,7 +84,7 @@ const Register = () => {
               value={formData.password}
               onChange={handleInputChange}
               placeholder="Password"
-              className="w-full px-4 py-2 bg-gray-200 bg-opacity-50 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 bg-gray-100 bg-opacity-50 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
@@ -88,15 +98,6 @@ const Register = () => {
           </div>
 
         </form>
-
-        {/* Show Alert Message */}
-        {alertMessage && (
-          <div
-            className={`mt-4 text-center text-lg ${isError ? "text-red-600" : "text-green-600"}`}
-          >
-            {alertMessage}
-          </div>
-        )}
 
         {/* Login Link */}
         <div className="mt-4 text-sm text-gray-700 text-center">

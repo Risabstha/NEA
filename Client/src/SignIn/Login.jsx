@@ -10,6 +10,7 @@ const Login = () => {
   });
   const [errorMessage, setErrorMessage] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [isError, setIsError] = useState(false); // To track if there is an error
   const navigate = useNavigate(); // Initialize useNavigate for redirection
 
   const handleChange = async (e) => {
@@ -37,7 +38,10 @@ const Login = () => {
         // console.log(data);
         localStorage.setItem("token", data.token); // Store token in localStorage
 
-        // Redirect to Home page  and  handling animation 
+        setErrorMessage(null);   //  Clear the error message
+
+        // Redirect to Home page 
+        // and  handling animation 
         e.preventDefault();
         setLoading(true); // Show loading GIF
 
@@ -55,26 +59,27 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-200">
-      <div className="relative w-full max-w-md p-8 bg-opacity-30 backdrop-blur-md bg-gray-300 rounded-2xl shadow-lg">
-        <div className="text-center">
-          <div className="mx-auto mb-4 items-center justify-center">
+    <div className="flex items-center justify-center min-h-screen bg-gray-300">
+      <div className="relative w-full max-w-md p-8 bg-opacity-30 backdrop-blur-4xl bg-gray-200 rounded-2xl shadow-2xl">
+        {/*<div className="text-center">
+           <div className="mx-auto mb-4 items-center justify-center">
             <img src="./NEALOGO.png" alt="NEA LOGO" />
-          </div>
-        </div>
-        <hr />
-        <h2 className="text-xl font-serif text-center mt-3">Login</h2>
+          </div> <hr/>
+        </div>*/}
+        <h2 className="text-4xl font-mono text-center text-blue-700 my-3">Login</h2>  
+        {errorMessage && <div className={`mt-4 text-center text-lg py-2 rounded-4xl ${errorMessage ? "bg-red-500 text-gray-200" : ""}`}>{errorMessage}</div>}
 
         <form className="mt-6" onSubmit={handleSubmit}>
           <div className="mb-4 flex space-x-2">
             <img src="./username.png" className="w-7 h-7 m-2 " alt="user" />
             <input
               type="test"
+              autocomplete="off"
               name="username"
               value={formData.username}
               onChange={handleChange}
               placeholder="Username"
-              className="w-full px-4 py-2 bg-gray-200 bg-opacity-50 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2  bg-gray-100 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div className="mb-4">
@@ -86,7 +91,7 @@ const Login = () => {
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Password"
-                className="w-full px-4 py-2 bg-gray-200 bg-opacity-50 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 bg-gray-100 bg-opacity-50 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
@@ -121,12 +126,10 @@ const Login = () => {
 
           <div className="flex justify-center ">
             <button type="submit" className="py-2 w-40 text-white bg-blue-600 rounded-4xl hover:bg-blue-800">
-              Log In
+              Sign In
             </button>
           </div>
 
-
-          {errorMessage && <div className="mt-4 text-center text-lg text-red-600">{errorMessage}</div>}
           <div className="mt-4 text-sm text-gray-700 text-center">
             Don't have an account?
             <Link to="/register" className="pl-2 text-sm text-gray-900 hover:text-blue-600">
