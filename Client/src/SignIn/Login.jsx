@@ -24,21 +24,20 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5001/api/auth/login', { // Correct API URL
+      const response = await fetch('http://localhost:5001/api/auth/login', { 
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-        },
+            },
         body: JSON.stringify(formData),
       });
 
       const data = await response.json();
       if (response.ok) {
-        console.log(data);
+        // console.log(data);
         localStorage.setItem("token", data.token); // Store token in localStorage
 
-        // Redirect to Home page
-        // navigate("/home");
+        // Redirect to Home page  and  handling animation 
         e.preventDefault();
         setLoading(true); // Show loading GIF
 
@@ -97,15 +96,15 @@ const Login = () => {
           {/* Animation after login sucessfull */}
           {loading ? (
             <div className="flex justify-center mt-4 ">
-              <div className="flex items-center justify-center h-20 p-0 m-0 bg-transparent"> {/* // frame height */}
-                <div className="relative w-24 h-24"> {/* // small: reduced container size */}
+              <div className="flex items-center justify-center h-20 p-0 m-0 bg-transparent"> {/*  frame height */}
+                <div className="relative flex justify-center mt-1 w-24 h-24"> {/* container size */}
 
                   {/* NEA Logo */}
                   <img src={logo} alt="ThunderEffect" className="absolute w-20 h-20" /> {/* // logo size */}
 
                   {/* Flashing Thunder Animation */}
                   <svg
-                    className="absolute top-9 left-9 w-14 h-17 transform -translate-x-1/2 -translate-y-1/2"
+                    className="absolute top-10 left-11 w-14 h-17 transform -translate-x-1/2 -translate-y-1/2"
                     viewBox="0 0 100 100"
                   >
                     <polygon
@@ -121,7 +120,7 @@ const Login = () => {
           ) : ""}
 
           <div className="flex justify-center ">
-            <button type="submit" className="py-2 w-32 text-white bg-blue-600 rounded-4xl hover:bg-blue-800">
+            <button type="submit" className="py-2 w-40 text-white bg-blue-600 rounded-4xl hover:bg-blue-800">
               Log In
             </button>
           </div>

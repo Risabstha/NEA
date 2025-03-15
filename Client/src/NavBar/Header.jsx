@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
-const Header = ()=>
-{
+const Header = () => {
     const [isOpen, setIsOpen] = useState(false);
     const location = useLocation(); //  Get the current route
     const handleIsOpen = () => setIsOpen(!isOpen);
-    
+
+    const navigate = useNavigate();
+    const handleLogout = () => {
+        localStorage.removeItem("token"); // Remove token
+        navigate("/"); // Redirect to login page
+    };
 
     return (
-        
+
         <div>
             <div className='relative'>
                 <div className='bg-gray-300'>
@@ -19,52 +23,51 @@ const Header = ()=>
                     </div>
                     {/* h-[12vh] -> defines the height so p-[1.5vh] can be used to reize the image*/}
                 </div>
-                
+
                 {/* Nav bar section */}
                 <nav >
                     {/* using aboslute position, so div will be positioned according to it's nearest relative ancestor or window -> used for Floating Effect */}
-                 <div className=' absolute top-[16vh] left-[10vw] right-[10vw] md:w-[80vw] md:rounded-4xl bg-gradient-to-b from-gray-100 to-gray-400'>
-                    {/*  Desktop View */}
-                    {/* md: it applies css for display with pixel > apprx. 750 , ones with no specifiers are known as default that apply css only if all specified display sizes req. don't meet*/}
-                    <div className="w-[80vw] h-[7vh] hidden md:flex justify-between items-center">
-                        <div className="flex space-x-[4vw]">
-                            <Link 
-                                to="/home" 
-                                className={`text-black   pl-[3vw] pr-[3vw] p-[2vh] ml-[7vw] hover:text-gray-300 hover:rounded-4xl hover:bg-gray-900 
-                                ${location.pathname === "/home" || location.pathname === "/home/yesterday" || location.pathname === "/home/tomorrow" || location.pathname === "/home/overmorrow" ? "bg-green-500 text-white rounded-4xl" : ""}`}      
-                            >{/* ternary operator */}
-                                <span>Home </span>
-                            </Link>  
-                            <Link 
-                                to="/add-meeting" 
-                                className={`text-black  pl-[3vw] pr-[3vw]  p-[2vh] hover:text-gray-300 hover:rounded-4xl hover:bg-gray-900 
-                                ${location.pathname === "/add-meeting"  ? "bg-green-500 text-white rounded-4xl" : "" }`}
-                            >
-                                Add Meeting
-                            </Link>
-                        </div>
-                        <div className='flex'>
-                            <Link
-                                to="/"
-                                className={`text-black  pl-[3vw] pr-[3vw]  p-[2vh] mr-[7vw] rounded-4xl hover:bg-gray-900 hover:text-gray-300
-                                ${location.pathname === "/"}`}
-                            >
-                                Logout                                
-                            </Link>
-  
+                    <div className=' absolute top-[16vh] left-[10vw] right-[10vw] md:w-[80vw] md:rounded-4xl bg-gradient-to-b from-gray-100 to-gray-400'>
+                        {/*  Desktop View */}
+                        {/* md: it applies css for display with pixel > apprx. 750 , ones with no specifiers are known as default that apply css only if all specified display sizes req. don't meet*/}
+                        <div className="w-[80vw] h-[7vh] hidden md:flex justify-between items-center">
+                            <div className="flex space-x-[4vw]">
+                                <Link
+                                    to="/home"
+                                    className={`text-black   pl-[3vw] pr-[3vw] p-[2vh] ml-[7vw] hover:text-gray-300 hover:rounded-4xl hover:bg-gray-900 
+                                ${location.pathname === "/home" || location.pathname === "/home/yesterday" || location.pathname === "/home/tomorrow" || location.pathname === "/home/overmorrow" ? "bg-green-500 text-white rounded-4xl" : ""}`}
+                                >{/* ternary operator */}
+                                    <span>Home </span>
+                                </Link>
+                                <Link
+                                    to="/add-meeting"
+                                    className={`text-black  pl-[3vw] pr-[3vw]  p-[2vh] hover:text-gray-300 hover:rounded-4xl hover:bg-gray-900 
+                                ${location.pathname === "/add-meeting" ? "bg-green-500 text-white rounded-4xl" : ""}`}
+                                >
+                                    Add Meeting
+                                </Link>
+                            </div>
+                            <div className='flex'>
+                                <button
+                                    onClick={handleLogout}
+                                    className="text-black  pl-[3vw] pr-[3vw] mr-[7vw] p-[2vh] hover:text-gray-300 hover:rounded-4xl hover:bg-gray-900 "
+                                >
+                                    Logout
+                                </button>
+
+                            </div>
                         </div>
                     </div>
-                 </div>
                     {/*  Mobile View Menu */}
                     <div className='flex flex-wrap justify-center'>
-                        <div className="w-[96vw]  md:hidden flex items-center">                 
-                            <Link 
-                                to="/home" 
+                        <div className="w-[96vw]  md:hidden flex items-center">
+                            <Link
+                                to="/home"
                                 className={`text-black flex-1 p-2  hover:text-gray-300 hover:bg-gray-900 
                                 ${location.pathname === "/home" ? "bg-green-500 text-white" : ""}`}
                             >
                                 Home
-                            </Link>              
+                            </Link>
                             <button onClick={handleIsOpen} className="text-black p-2 hover:text-gray-300 hover:bg-gray-900 focus:outline-none">
                                 ☰
                             </button>
@@ -73,26 +76,26 @@ const Header = ()=>
                         {/*  Mobile Dropdown Menu */}
                         {isOpen && (
                             <div className="md:hidden  bg-gray-300">
-                                <Link 
-                                    to="/add-meeting" 
+                                <Link
+                                    to="/add-meeting"
                                     className={`text-black flex w-[96vw] flex-wrap p-2 hover:text-gray-300 hover:bg-gray-900 
-                                    ${location.pathname === "/add-meeting"  ? "bg-green-500 text-white " : ""}`}
+                                    ${location.pathname === "/add-meeting" ? "bg-green-500 text-white " : ""}`}
                                 >
                                     Add Meeting
                                 </Link>
-                                
+
                                 {/* absolute index */}
                                 <Link
-                                to="/"      
-                                className={`text-black p-2 flex w-[96vw] flex-wrap text-left hover:bg-gray-900 hover:text-gray-300
+                                    to="/"
+                                    className={`text-black p-2 flex w-[96vw] flex-wrap text-left hover:bg-gray-900 hover:text-gray-300
                                 ${location.pathname === "/"}`}
-                            >
-                                Logout                                
-                            </Link>
+                                >
+                                    Logout
+                                </Link>
                             </div>
                         )}
                     </div>
-                    
+
                 </nav>
             </div>
         </div>

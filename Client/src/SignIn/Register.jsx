@@ -81,7 +81,7 @@ const Register = () => {
           <div className="flex justify-center ">
             <button
               type="submit"
-              className="py-2 w-32 text-white bg-blue-600 rounded-4xl hover:bg-blue-800"
+              className="py-2 w-40 text-white bg-blue-600 rounded-4xl hover:bg-blue-800"
             >
               Sign Up
             </button>

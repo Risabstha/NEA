@@ -5,7 +5,7 @@ import AddMeeting from './Container/AddMeeting';
 import Home from './Container/Home';
 import Meeting_Table from './Home/Meeting_Table';
 import Register from './SignIn/Register';
-import ProtectedRoute from './ProtectedRoute.jsx';
+import ProtectedRoute from './Protected_Route/ProtectedRoute';
 
 function App() {
   return (
@@ -16,7 +16,8 @@ function App() {
         <BrowserRouter> 
           <Routes>
             <Route path="/" element={<Login/>} />
-            <Route path="/register" element={<Register/>}/>     
+            <Route path="/register" element={<Register/>}/>  
+               {/* protected route  */}
             <Route element={<ProtectedRoute/>}>
                 <Route path="/home" element={<Home />}>   
                   <Route index element={<Meeting_Table />} />       
