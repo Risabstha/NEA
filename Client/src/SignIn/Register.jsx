@@ -47,14 +47,15 @@ const Register = () => {
       <div className="relative w-full max-w-md p-8 bg-opacity-30 backdrop-blur-md bg-gray-300 rounded-2xl shadow-lg">
         <div className="text-center">
           <div className=" mx-auto mb-4 items-center justify-center">
-            <img src="./nea_logo.png" alt="NEA LOGO" />
+            <img src="./NEALOGO.png" alt="NEA LOGO" />
           </div>
         </div>
-
-        <h2 className="text-xl font-semibold mt-3 text-center">MD Register</h2>
+        <hr />
+        <h2 className="text-xl font-serif mt-3 text-center">Register</h2>
 
         <form className="mt-6" onSubmit={handleSubmit}>
-          <div className="mb-4">
+          <div className="mb-4 flex space-x-2">
+            <img src="./username.png" className="w-7 h-7 m-2 " alt="User" />
             <input
               type="text"
               name="username"
@@ -65,7 +66,8 @@ const Register = () => {
             />
           </div>
 
-          <div className="mb-4">
+          <div className="mb-4 flex space-x-2">
+            <img src="./password.png" className="w-7 h-7 m-2 " alt="Password" />
             <input
               type="password"
               name="password"
@@ -76,12 +78,15 @@ const Register = () => {
             />
           </div>
 
-          <button
-            type="submit"
-            className="w-full py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700"
-          >
-            Sign Up
-          </button>
+          <div className="flex justify-center ">
+            <button
+              type="submit"
+              className="py-2 w-32 text-white bg-blue-600 rounded-4xl hover:bg-blue-800"
+            >
+              Sign Up
+            </button>
+          </div>
+
         </form>
 
         {/* Show Alert Message */}

@@ -15,7 +15,7 @@ const Header = ()=>
                 <div className='bg-gray-300'>
                     {/* LOGO section */}
                     <div className='flex justify-center h-[12vh] p-[1.5vh] md:pt-[3vh] md:w-[98vw] md:h-[20vh] md:pb-[7vh]'>
-                        <img className='' src="./nea_logo.png" alt="NEA LOGO" />
+                        <img className='' src="./NEALOGO.png" alt="NEA LOGO" />
                     </div>
                     {/* h-[12vh] -> defines the height so p-[1.5vh] can be used to reize the image*/}
                 </div>
