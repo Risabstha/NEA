@@ -1,39 +1,70 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const Meeting_Table = () => {
-  const [meetings] = useState([
-    { id: 1, date: "2025-03-11", type: "Project Discussion", location: "Hayat Hotel", description: "Discuss project timeline and deliverables.", time: "10:00 AM" },
-    { id: 2, date: "2025-03-10", type: "Client Meeting", location: "Soltie Hotel", description: "Meeting with the client to present progress.", time: "11:50 AM" },
-    { id: 3, date: "2025-03-16", type: "Client Meeting", location: "Kalanki", description: "Meeting with the client to present progress.", time: "1:37 AM" },
-    { id: 4, date: "2025-03-11", type: "Team Sync", location: "Office", description: "Weekly team sync-up meeting.", time: "3:00 PM" },
-    { id: 5, date: "2025-03-12", type: "Budget Review", location: "Conference Room", description: "Reviewing the financial reports.", time: "9:00 AM" },
-    { id: 6, date: "2025-03-13", type: "Planning Session", location: "Online", description: "Planning the next quarter goals.", time: "4:30 PM" },
-    { id: 7, date: "2025-03-14", type: "Strategy Meeting", location: "Office", description: "Discussing company growth strategy.", time: "2:00 PM" },
-    { id: 8, date: "2025-03-15", type: "Stakeholder Meeting", location: "Hotel Everest", description: "Quarterly meeting with stakeholders.", time: "11:00 AM" },
-  ]);
-
-  const convertToDateTime = (date, time) => new Date(`${date} ${time}`);
-
-  // Find the closest upcoming meeting globally 
-  const now = new Date();
-  let closestMeetingId = null; 
-  let minDiff = Infinity; 
-
-  meetings.forEach((meeting) => { //new
-    const meetingTime = convertToDateTime(meeting.date, meeting.time);
-    const diff = meetingTime - now;
-
-    if (diff > 0 && diff < minDiff) { 
-      minDiff = diff;
-      closestMeetingId = meeting.id;
-    }
-  });
-
-  // Pagination state
+  const [meetings, setMeetings] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const meetingsPerPage = 5; // Reduced to better see pagination //new
+  const meetingsPerPage = 10;
 
-  // Calculate pagination range
+  const formatTime = (timeStr) => {
+    if (!timeStr) return "";
+    const [hours, minutes] = timeStr.split(":");
+    const hour = parseInt(hours, 10);
+    const ampm = hour >= 12 ? "PM" : "AM";
+    const formattedHour = hour % 12 || 12;
+    return `${formattedHour}:${minutes} ${ampm}`;
+  };
+
+  const formatDate = (date) => {
+    const d = new Date(date);
+    return d.toISOString().split("T")[0]; // Convert to YYYY-MM-DD format
+  };
+
+  useEffect(() => {
+    const fetchMeetings = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await fetch("http://localhost:5001/api/meetings", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) throw new Error("Failed to fetch meetings");
+
+        let data = await response.json();
+
+        // Ensure valid meetings are sorted properly
+        data = data.filter(meeting => meeting.date && meeting.time); // Remove invalid entries
+
+        data.sort((a, b) => {
+          const dateA = new Date(a.date); // Convert date to Date object
+          const dateB = new Date(b.date);
+
+          if (dateA - dateB !== 0) {
+            return dateA - dateB; // First, sort by date
+          }
+
+          // Convert time to proper 24-hour format
+          const [hourA, minuteA] = a.time.split(":").map(Number);
+          const [hourB, minuteB] = b.time.split(":").map(Number);
+
+          return hourA * 60 + minuteA - (hourB * 60 + minuteB); // Then sort by time
+        });
+
+        setMeetings(data);
+      } catch (error) {
+        console.error("Error fetching meetings:", error);
+        setMeetings([]); // Prevent blank page
+      }
+    };
+
+    fetchMeetings();
+  }, []);
+
+
+  // Pagination logic
   const indexOfLastMeeting = currentPage * meetingsPerPage;
   const indexOfFirstMeeting = indexOfLastMeeting - meetingsPerPage;
   const currentMeetings = meetings.slice(indexOfFirstMeeting, indexOfLastMeeting);
@@ -41,7 +72,7 @@ const Meeting_Table = () => {
   const totalPages = Math.ceil(meetings.length / meetingsPerPage);
   const goToNextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages));
   const goToPrevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
-
+  
   return (
     <>
       <div className="bg-gray-200 p-[1vw] md:pb-[0.5vh] md:p-[1vw] md:mt-[4vh] pt-[6vh]">
@@ -58,24 +89,34 @@ const Meeting_Table = () => {
               </tr>
             </thead>
             <tbody>
-              {currentMeetings.map((meeting, index) => (
-                <tr
-                  key={meeting.id} //new
-                  className={`text-center hover:bg-gray-100 odd:bg-white ${meeting.id === closestMeetingId ? "border-red-500 border-3" : "border-gray-400"}`} //new
-                >
-                  <td className="border border-gray-400 px-4 py-2">{meeting.id}</td>
-                  <td className="border border-gray-400 px-4 py-2">{meeting.date}</td>
-                  <td className="border border-gray-400 px-4 py-2">{meeting.time}</td>
-                  <td className="border border-gray-400 px-4 py-2">{meeting.type}</td>
-                  <td className="border border-gray-400 px-4 py-2">{meeting.location}</td>
-                  <td className="border border-gray-400 px-4 py-2">{meeting.description}</td>
-                </tr>
-              ))}
+              {currentMeetings.map((meeting, index) => {
+                const isHighPriority = meeting.priority === "high"; // Check for high priority
+
+                return (
+                  <tr
+                    key={index}
+                    className={`text-center  ${isHighPriority ? "bg-blue-600 text-white hover:bg-blue-700 odd:bg-blue-600 border-3 ": "odd:bg-white hover:bg-gray-100 " }`}
+                  >
+                    <td className="border border-gray-400 px-4 py-2">
+                      {(currentPage - 1) * meetingsPerPage + index + 1}
+                    </td>
+                    <td className="border border-gray-400 px-4 py-2">
+                      {formatDate(meeting.date)}
+                    </td>
+                    <td className="border border-gray-400 px-4 py-2">
+                      {formatTime(meeting.time)}
+                    </td>
+                    <td className="border border-gray-400 px-4 py-2">{meeting.type}</td>
+                    <td className="border border-gray-400 px-4 py-2">{meeting.location}</td>
+                    <td className="border border-gray-400 px-4 py-2">{meeting.description}</td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
 
-        {/* Pagination Controls */}
+        {/* Pagination Controls*/}
         <div className="flex justify-center mt-4 space-x-3">
           <button
             onClick={goToPrevPage}

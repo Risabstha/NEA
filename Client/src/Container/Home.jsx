@@ -9,7 +9,7 @@ const Home = ()=>
         <>
             <Header/>
             <Meeting_Filter/>
-             <Outlet/>  {/* Outlet is a placeholder that renders child routes inside a parent route. Here used to render Meeting  */}
+            <Outlet/>  {/* Outlet is a placeholder that renders child routes inside a parent route. Here used to render Meeting  */}
             
             
             

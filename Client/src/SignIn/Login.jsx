@@ -61,12 +61,12 @@ const Login = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-300">
       <div className="relative w-full max-w-md p-8 bg-opacity-30 backdrop-blur-4xl bg-gray-200 rounded-2xl shadow-2xl">
-        {/*<div className="text-center">
+        <div className="text-center">
            <div className="mx-auto mb-4 items-center justify-center">
-            <img src="./NEALOGO.png" alt="NEA LOGO" />
-          </div> <hr/>
-        </div>*/}
-        <h2 className="text-4xl font-mono text-center text-blue-700 my-3">Login</h2>  
+            <img src="./NEAText.png" alt="NEA LOGO" />
+          </div>
+        </div>
+        <h2 className="text-2xl font-sans opacity-80 text-center text-blue-700 my-2">Login</h2>  
         {errorMessage && <div className={`mt-4 text-center text-lg py-2 rounded-4xl ${errorMessage ? "bg-red-500 text-gray-200" : ""}`}>{errorMessage}</div>}
 
         <form className="mt-6" onSubmit={handleSubmit}>
@@ -74,11 +74,11 @@ const Login = () => {
             <img src="./username.png" className="w-7 h-7 m-2 " alt="user" />
             <input
               type="test"
-              autocomplete="off"
               name="username"
               value={formData.username}
               onChange={handleChange}
               placeholder="Username"
+              autoComplete="off"
               className="w-full px-4 py-2  bg-gray-100 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
@@ -109,7 +109,7 @@ const Login = () => {
 
                   {/* Flashing Thunder Animation */}
                   <svg
-                    className="absolute top-10 left-11 w-14 h-17 transform -translate-x-1/2 -translate-y-1/2"
+                    className="absolute top-10 left-11 w-11 h-13 transform -translate-x-1/2 -translate-y-1/2"
                     viewBox="0 0 100 100"
                   >
                     <polygon

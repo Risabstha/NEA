@@ -19,7 +19,7 @@ function App() {
             <Route path="/register" element={<Register/>}/>  
                {/* protected route  */}
             <Route element={<ProtectedRoute/>}>
-                <Route path="/home" element={<Home />}>   
+                <Route path="/home" element={<Home/>}>   
                   <Route index element={<Meeting_Table />} />       
                   <Route path="yesterday" element={<Meeting_Table />} />
                   <Route path="tomorrow" element={<Meeting_Table />} />

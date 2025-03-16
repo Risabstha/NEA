@@ -16,7 +16,9 @@ const Header = () => {
 
         <div>
             <div className='relative'>
-                <div className='bg-gray-300'>
+            <div className="rounded-b-3xl" style={{ backgroundColor: "#C0C0C0" }}>  
+
+
                     {/* LOGO section */}
                     <div className='flex justify-center h-[12vh] p-[1.5vh] md:pt-[3vh] md:w-[98vw] md:h-[20vh] md:pb-[7vh]'>
                         <img className='' src="./NEALOGO.png" alt="NEA LOGO" />
@@ -30,18 +32,18 @@ const Header = () => {
                     <div className=' absolute top-[16vh] left-[10vw] right-[10vw] md:w-[80vw] md:rounded-4xl bg-gradient-to-b from-gray-100 to-gray-400'>
                         {/*  Desktop View */}
                         {/* md: it applies css for display with pixel > apprx. 750 , ones with no specifiers are known as default that apply css only if all specified display sizes req. don't meet*/}
-                        <div className="w-[80vw] h-[7vh] hidden md:flex justify-between items-center">
-                            <div className="flex space-x-[4vw]">
+                        <div className="w-[80vw]  h-[7vh] hidden md:flex justify-between items-center">
+                            <div className="flex space-x-[4vw] h-[6vh]">
                                 <Link
                                     to="/home"
-                                    className={`text-black   pl-[3vw] pr-[3vw] p-[2vh] ml-[7vw] hover:text-white hover:rounded-4xl hover:bg-blue-700 
+                                    className={`text-black  pl-[3vw] pr-[3vw] p-[1.2vh] ml-[7vw] hover:text-white hover:rounded-4xl hover:bg-blue-700 
                                 ${location.pathname === "/home" || location.pathname === "/home/yesterday" || location.pathname === "/home/tomorrow" || location.pathname === "/home/overmorrow" ? "bg-blue-600 text-white rounded-4xl" : ""}`}
                                 >{/* ternary operator */}
-                                    <span>Home </span>
+                                    Home
                                 </Link>
                                 <Link
                                     to="/add-meeting"
-                                    className={`text-black  pl-[3vw] pr-[3vw]  p-[2vh] hover:text-white hover:rounded-4xl hover:bg-blue-700 
+                                    className={`text-black  pl-[3vw] pr-[3vw]  p-[1.2vh] hover:text-white hover:rounded-4xl hover:bg-blue-700 
                                 ${location.pathname === "/add-meeting" ? "bg-blue-600 text-white rounded-4xl" : ""}`}
                                 >
                                     Add Meeting
@@ -50,7 +52,7 @@ const Header = () => {
                             <div className='flex'>
                                 <button
                                     onClick={handleLogout}
-                                    className="text-black  pl-[3vw] pr-[3vw] mr-[7vw] p-[2vh] hover:text-white hover:rounded-4xl hover:bg-blue-700 "
+                                    className="text-black  pl-[3vw] pr-[3vw] mr-[7vw] p-[1.2vh] hover:text-white hover:rounded-4xl hover:bg-blue-700 "
                                 >
                                     Logout
                                 </button>

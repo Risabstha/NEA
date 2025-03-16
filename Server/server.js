@@ -1,12 +1,13 @@
 import express from "express";
+import dotenv from "dotenv";
+dotenv.config();
 import cors from "cors";
 import connectDB from "./config/db.js";
-import dotenv from "dotenv";
 import authRoutes from "./routes/authRoutes.js";
 import meetingRoutes from "./routes/meetingRoutes.js";
 import { errorHandler } from "./middleware/errorMiddleware.js";
+import Meeting from './models/meetingModel.js'; // Adjust the path according to your file structure
 
-dotenv.config();
 connectDB();
 
 const app = express();
