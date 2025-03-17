@@ -321,7 +321,13 @@ const Add = () => {
                 </div>
             )}
 
-            {/* Added meeting table */}
+            {/* Show "No Meetings" when there are no meetings */}
+          {meetings.length === 0 ? (
+            <div className="text-center text-lg font-semibold text-gray-600 p-4">
+              No Meetings 
+            </div>
+          ) : (
+           
             <div className={`overflow-x-auto p-1 md:p-4 ${isFormVisible ? 'mt-[1vh] md:mt-[1vh]' : 'mt-[2vh] md:mt-[2vh]'}`}>
                 <table className="w-full border-collapse border border-gray-400">
                     <thead>
@@ -363,24 +369,33 @@ const Add = () => {
                     </tbody>
                 </table>
             </div>
-            {/* Pagination Controls*/}
-            <div className="flex justify-center mt-4 space-x-3">
-                <button
+          )}
+            {/* Pagination - Show only when meetings exist */}
+            {meetings.length > meetingsPerPage && (
+                <div className="flex justify-center mt-4 space-x-3">
+                  <button
                     onClick={goToPrevPage}
                     disabled={currentPage === 1}
-                    className={`px-2 py-1 bg-blue-600 text-white rounded-4xl ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"}`}
-                >
+                    className={`px-2 py-1 bg-blue-600 text-white rounded-4xl ${
+                      currentPage === 1 ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"
+                    }`}
+                  >
                     Prev
-                </button>
-                <span className="text-md font-sans"> {currentPage} of {totalPages}</span>
-                <button
+                  </button>
+                  <span className="text-md font-sans">
+                    {currentPage} of {totalPages}
+                  </span>
+                  <button
                     onClick={goToNextPage}
                     disabled={currentPage === totalPages}
-                    className={`px-2 py-1 bg-blue-600 text-white rounded-4xl ${currentPage === totalPages ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"}`}
-                >
+                    className={`px-2 py-1 bg-blue-600 text-white rounded-4xl ${
+                      currentPage === totalPages ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"
+                    }`}
+                  >
                     Next
-                </button>
-            </div>
+                  </button>
+                </div>
+              )}
             
         </>
     );
