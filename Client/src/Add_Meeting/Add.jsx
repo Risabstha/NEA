@@ -194,7 +194,7 @@ const Add = () => {
     };
     // Pagination logic
     const [currentPage, setCurrentPage] = useState(1);
-    const meetingsPerPage = 4;
+    const meetingsPerPage = 10;
     const indexOfLastMeeting = currentPage * meetingsPerPage;
     const indexOfFirstMeeting = indexOfLastMeeting - meetingsPerPage;
     const currentMeetings = meetings.slice(indexOfFirstMeeting, indexOfLastMeeting);
@@ -239,6 +239,7 @@ const Add = () => {
                         placeholder="Meeting Type"
                         value={newMeeting.type}
                         onChange={handleChange}
+                        autoComplete="off"
                         className="border p-2 w-full mb-2"
                     />
                     <input
@@ -247,12 +248,14 @@ const Add = () => {
                         placeholder="Location"
                         value={newMeeting.location}
                         onChange={handleChange}
+                        autoComplete="off"
                         className="border p-2 w-full mb-2"
                     />
                     <input
                         type="text"
                         name="description"
                         placeholder="Description"
+                        autoComplete="off"
                         value={newMeeting.description}
                         onChange={handleChange}
                         className="border p-2 w-full mb-2"
