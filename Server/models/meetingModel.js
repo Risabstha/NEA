@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+
 const meetingSchema = new mongoose.Schema({
   location: { type: String, required: true },
   date: { type: Date, required: true },
@@ -11,9 +12,16 @@ const meetingSchema = new mongoose.Schema({
     enum: ['normal', 'high'],
     default: 'normal',
   },
+  createdAt:{
+  type:Date,
+  default:Date.now,
+  expires: 30*60*60*24,
+}
 });
 
+
 const Meeting = mongoose.model("Meeting", meetingSchema);
+
 export default Meeting;
 
 
