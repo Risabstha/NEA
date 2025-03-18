@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { ADToBS } from "bikram-sambat-js";
-// import { NepaliDate } from 'nepali-calendar';
 
 const Meeting_Table = () => {
   const [meetings, setMeetings] = useState([]);
@@ -94,9 +93,11 @@ const Meeting_Table = () => {
         <div className="overflow-x-auto">
           {/* Show "No Meetings" when there are no meetings */}
           {meetings.length === 0 ? (
-            <div className="text-center text-lg font-semibold text-gray-600 p-4">
-              No Meetings
-            </div>
+                
+                <div className="text-center text-2xl font-semibold text-gray-600 p-4">
+                    No Meetings
+                </div>
+            
           ) : (
             <>
               <table className="w-full border-collapse border border-gray-400">

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Link, useNavigate, useLocation } from "react-router-dom";
-
+import { MdLogout } from "react-icons/md";
 
 const MdMeeting_Filter = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -22,9 +22,9 @@ const MdMeeting_Filter = () => {
 
                 <button
                     onClick={handleLogout}
-                    className="absolute right-5 text-black px-[3vw] p-[1.2vh] hover:text-white hover:rounded-4xl hover:bg-blue-700"
+                    className="absolute right-5 text-black text-3xl p-2 hover:text-blue-600 "
                 >
-                    Logout
+                    <MdLogout />
                 </button>
             </div>
 

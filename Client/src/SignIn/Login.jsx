@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
 import "./ThunderEffect.css"
 import logo from "../../public/ThunderEffect.png"; // Import the NEA logo
+import { FaUserAlt } from "react-icons/fa";
+import { FaLock } from "react-icons/fa6";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -66,24 +68,26 @@ const Login = () => {
             <img src="./NEAText.png" alt="NEA LOGO" />
           </div>
         </div>
-        <div className="text-xl font-sans opacity-80 text-center flex justify-center text-blue-700 ">    
-            <Link to="/" >
+        <div className="text-xl font-sans opacity-80 text-center flex justify-center text-blue-700 ">
+          <Link to="/" >
             <div className={`w-40 border-1 hover:bg-blue-700 hover:text-white  hover:border-blue-500 rounded-l-4xl  py-1
           ${location.pathname === "/" ? "bg-blue-600 text-white rounded-l-4xl border-blue-600" : ""}`}>
               Login</div>
-  
-            </Link>
-            <Link to="/mdlogin"  >
+
+          </Link>
+          <Link to="/mdlogin"  >
             <div className="w-40 border-1 hover:bg-blue-700 hover:text-white hover:border-blue-500 rounded-r-4xl  py-1">MD-Login</div>
-            </Link>
-          
+          </Link>
+
         </div>
 
         {errorMessage && <div className={`mt-4 text-center text-lg py-2 rounded-4xl ${errorMessage ? "bg-red-500 text-gray-200" : ""}`}>{errorMessage}</div>}
 
         <form className="mt-6" onSubmit={handleSubmit}>
           <div className="mb-4 flex space-x-2">
-            <img src="./username.png" className="w-7 h-7 m-2 " alt="user" />
+            <div className="text-2xl m-2 ">
+              <FaUserAlt />
+            </div>
             <input
               type="test"
               name="username"
@@ -96,7 +100,10 @@ const Login = () => {
           </div>
           <div className="mb-4">
             <div className="mb-4 flex space-x-2">
-              <img src="./password.png" className="w-7 h-7 m-2 " alt="Password" />
+              <div className="text-2xl m-2 ">
+                <FaLock />
+              </div>
+
               <input
                 type="password"
                 name="password"

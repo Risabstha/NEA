@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { signupUser } from "../api/apiHelper"; // Assuming the function is imported from apiHelper.js
+import { FaUserAlt } from "react-icons/fa";
+import { FaLock } from "react-icons/fa6";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -49,9 +51,9 @@ const Register = () => {
           <div className=" mx-auto mb-4 items-center justify-center">
             <img src="./NEAText.png" alt="NEA LOGO" />
           </div>
-        </div> 
-        
-        <h2 className="text-2xl opacity-80 font-sans text-center text-blue-700 my-3">Register</h2>  
+        </div>
+
+        <h2 className="text-2xl opacity-80 font-sans text-center text-blue-700 my-3">Register</h2>
 
         {/* Show Alert Message */}
         {alertMessage && (
@@ -64,7 +66,9 @@ const Register = () => {
 
         <form className="mt-6" onSubmit={handleSubmit}>
           <div className="mb-4 flex space-x-2">
-            <img src="./username.png" className="w-7 h-7 m-2 " alt="User" />
+            <div className="text-2xl m-2 ">
+              <FaUserAlt />
+            </div>
             <input
               type="text"
               name="username"
@@ -77,7 +81,9 @@ const Register = () => {
           </div>
 
           <div className="mb-4 flex space-x-2">
-            <img src="./password.png" className="w-7 h-7 m-2 " alt="Password" />
+            <div className="text-2xl m-2 ">
+              <FaLock />
+            </div>
             <input
               type="password"
               name="password"
