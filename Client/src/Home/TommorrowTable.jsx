@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { ADToBS } from "bikram-sambat-js";
 // import { NepaliDate } from 'nepali-calendar';
 
-const Meeting_Table = () => {
+const TommorrowTable = () => {
   const [meetings, setMeetings] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const meetingsPerPage = 10;
@@ -50,8 +50,10 @@ const Meeting_Table = () => {
         data = data.filter((meeting) => meeting.date && meeting.time); // Remove invalid entries
 
         // Convert AD date to BS for filtering
-        const todayAD = new Date().toISOString().split("T")[0]; // Current AD date (YYYY-MM-DD)
-        const todayBS = convertADDateToBS(todayAD); // Convert to BS
+        const todayAD = new Date();
+        todayAD.setDate(todayAD.getDate() + 1); // Add 1 day
+        const tommorrowAD = todayAD.toISOString().split("T")[0]; // Convert to YYYY-MM-DD
+        const tommorrowBS = convertADDateToBS(tommorrowAD); // Convert to BS
 
         // Convert meeting AD dates to BS and filter
         data.forEach((meeting) => {
@@ -62,7 +64,7 @@ const Meeting_Table = () => {
 
 
         data = data.filter((meeting) => {
-          const isMatch = meeting.date === todayBS;
+          const isMatch = (meeting.date) === (tommorrowBS);
           // console.log(`Meeting Date: ${meeting.date}, Today BS: ${todayBS}, Match: ${isMatch}`);
           return isMatch;
         });
@@ -118,7 +120,7 @@ const Meeting_Table = () => {
                       <tr
                         key={index}
                         className={`text-center ${isHighPriority
-                          ? "bg-blue-400 text-black hover:bg-blue-300 odd:bg-blue-400 "
+                          ? "bg-blue-600 text-white hover:bg-blue-700 odd:bg-blue-600 border-3"
                           : "odd:bg-white hover:bg-gray-100"
                           }`}
                       >
@@ -172,4 +174,4 @@ const Meeting_Table = () => {
   );
 };
 
-export default Meeting_Table;
+export default TommorrowTable;

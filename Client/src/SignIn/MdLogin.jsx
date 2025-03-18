@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
 import "./ThunderEffect.css"
 import logo from "../../public/ThunderEffect.png"; // Import the NEA logo
 
-const Login = () => {
+const MdLogin = () => {
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -47,7 +47,7 @@ const Login = () => {
 
         setTimeout(() => {
           setLoading(false); // Hide loading GIF after 2 sec
-          navigate("/home"); // Redirect to home
+          navigate("/mdhome"); // Redirect to home
         }, 2500);
       } else {
         setErrorMessage(data.message || "Login failed");
@@ -66,7 +66,7 @@ const Login = () => {
             <img src="./NEAText.png" alt="NEA LOGO" />
           </div>
         </div>
-        <h2 className="text-2xl font-sans opacity-80 text-center text-blue-700 my-2">Login</h2>  
+        <h2 className="text-2xl font-sans opacity-80 text-center text-blue-700 my-2">Md Login</h2>  
         {errorMessage && <div className={`mt-4 text-center text-lg py-2 rounded-4xl ${errorMessage ? "bg-red-500 text-gray-200" : ""}`}>{errorMessage}</div>}
 
         <form className="mt-6" onSubmit={handleSubmit}>
@@ -137,15 +137,15 @@ const Login = () => {
             </Link>
           </div>
           <div className="mt-4 text-sm text-gray-700 text-center">
-            MD LOGIN
-            <Link to="/mdlogin" className="pl-2 text-sm text-gray-900 hover:text-blue-600">
-              Sign Up
-            </Link>
-          </div>
+                      LOGIN
+                      <Link to="/" className="pl-2 text-sm text-gray-900 hover:text-blue-600">
+                        Sign in
+                      </Link>
+                    </div>
         </form>
       </div>
     </div>
   );
 };
 
-export default Login;
+export default MdLogin;
