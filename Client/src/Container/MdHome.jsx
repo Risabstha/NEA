@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import Meeting_Filter from '../Home/Meeting_Filter';
+import MdMeeting_Filter from '../Home/MdMeeting_FIlter';
 import { Outlet } from "react-router-dom";
 
 const MdHome = () => {
     return (
         <>
             
-            <Meeting_Filter />
+            <MdMeeting_Filter />
             <Outlet />  {/* Outlet is a placeholder that renders child routes inside a parent route. Here used to render Meeting  */}
 
         </>

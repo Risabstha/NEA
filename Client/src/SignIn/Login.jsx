@@ -25,11 +25,11 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5001/api/auth/login', { 
+      const response = await fetch('http://localhost:5001/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-            },
+        },
         body: JSON.stringify(formData),
       });
 
@@ -62,11 +62,23 @@ const Login = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-300">
       <div className="relative w-full max-w-md p-8 bg-opacity-30 backdrop-blur-4xl bg-gray-200 rounded-2xl shadow-2xl">
         <div className="text-center">
-           <div className="mx-auto mb-4 items-center justify-center">
+          <div className="mx-auto mb-4 items-center justify-center">
             <img src="./NEAText.png" alt="NEA LOGO" />
           </div>
         </div>
-        <h2 className="text-2xl font-sans opacity-80 text-center text-blue-700 my-2">Login</h2>  
+        <div className="text-xl font-sans opacity-80 text-center flex justify-center text-blue-700 ">    
+            <Link to="/" >
+            <div className={`w-40 border-1 hover:bg-blue-700 hover:text-white  hover:border-blue-500 rounded-l-4xl  py-1
+          ${location.pathname === "/" ? "bg-blue-600 text-white rounded-l-4xl border-blue-600" : ""}`}>
+              Login</div>
+  
+            </Link>
+            <Link to="/mdlogin"  >
+            <div className="w-40 border-1 hover:bg-blue-700 hover:text-white hover:border-blue-500 rounded-r-4xl  py-1">MD-Login</div>
+            </Link>
+          
+        </div>
+
         {errorMessage && <div className={`mt-4 text-center text-lg py-2 rounded-4xl ${errorMessage ? "bg-red-500 text-gray-200" : ""}`}>{errorMessage}</div>}
 
         <form className="mt-6" onSubmit={handleSubmit}>
@@ -136,12 +148,7 @@ const Login = () => {
               Sign Up
             </Link>
           </div>
-          <div className="mt-4 text-sm text-gray-700 text-center">
-            MD LOGIN
-            <Link to="/mdlogin" className="pl-2 text-sm text-gray-900 hover:text-blue-600">
-              Sign Up
-            </Link>
-          </div>
+
         </form>
       </div>
     </div>
