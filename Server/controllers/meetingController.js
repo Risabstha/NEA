@@ -1,13 +1,5 @@
 import Meeting from "../models/meetingModel.js";
 
-// export const getMeetings = async (req, res) => {
-//   try {
-//     const meetings = await Meeting.find();
-//     res.json(meetings);
-//   } catch (error) {
-//     res.status(500).json({ message: "Server error" });
-//   }
-// };
 export const getMeetings = async (req, res) => {
   try {
     if (!req.user) {
@@ -22,16 +14,7 @@ export const getMeetings = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
-// export const createMeeting = async (req, res) => {
-//   const { location, date, time, remarks } = req.body;
-//   try {
-//     const newMeeting = new Meeting({ location, date, time, remarks });
-//     await newMeeting.save();
-//     res.status(201).json(newMeeting);
-//   } catch (error) {
-//     res.status(500).json({ message: "Server error" });
-//   }
-// };
+
 export const createMeeting = async (req, res) => {
   try {
     const { date, type, location, description, time, priority } = req.body;
@@ -61,23 +44,6 @@ export const createMeeting = async (req, res) => {
   }
 };
 
-// export const updateMeeting = async (req, res) => {
-//   try {
-//     const updatedMeeting = await Meeting.findByIdAndUpdate(req.params.id, req.body, { new: true });
-//     res.json(updatedMeeting);
-//   } catch (error) {
-//     res.status(500).json({ message: "Server error" });
-//   }
-// };
-
-// export const deleteMeeting = async (req, res) => {
-//   try {
-//     await Meeting.findByIdAndDelete(req.params.id);
-//     res.json({ message: "Meeting deleted" });
-//   } catch (error) {
-//     res.status(500).json({ message: "Server error" });
-//   }
-// };
 
 // Delete a meeting
 export const deleteMeeting = async (req, res) => {
@@ -128,41 +94,3 @@ export const getStartAndEndOfDate = (date) => {
 
   return { startOfDay, endOfDay };
 };
-
-// export const getData = async (req, res) => {
-//   const { filter } = req.query; // filter can be 'yesterday', 'today', 'tomorrow', or 'overmorrow'
-//   let startDate, endDate;
-
-//   const today = new Date();
-
-//   if (filter === 'yesterday') {
-//     const yesterday = new Date(today);
-//     yesterday.setDate(today.getDate() - 1);
-//     ({ startOfDay: startDate, endOfDay: endDate } = getStartAndEndOfDate(yesterday));
-//   } else if (filter === 'today') {
-//     ({ startOfDay: startDate, endOfDay: endDate } = getStartAndEndOfDate(today));
-//   } else if (filter === 'tomorrow') {
-//     const tomorrow = new Date(today);
-//     tomorrow.setDate(today.getDate() + 1);
-//     ({ startOfDay: startDate, endOfDay: endDate } = getStartAndEndOfDate(tomorrow));
-//   } else if (filter === 'overmorrow') {
-//     const overmorrow = new Date(today);
-//     overmorrow.setDate(today.getDate() + 2);
-//     ({ startOfDay: startDate, endOfDay: endDate } = getStartAndEndOfDate(overmorrow));
-//   }
-
-//   try {
-//     const data = await Data.find({
-//       date: {
-//         $gte: startDate,  // greater than or equal to the start of the day
-//         $lte: endDate,    // less than or equal to the end of the day
-//       },
-//     });
-
-//     res.json(data);
-//   } catch (err) {
-//     res.status(500).send('Error fetching data');
-//   }
-// };
-
-

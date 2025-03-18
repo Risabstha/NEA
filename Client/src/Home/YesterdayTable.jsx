@@ -96,9 +96,12 @@ const Yesterdaytable = () => {
                 <div className="overflow-x-auto">
                     {/* Show "No Meetings" when there are no meetings */}
                     {meetings.length === 0 ? (
-                        <div className="text-center text-lg font-semibold text-gray-600 p-4">
-                            No Meetings
-                        </div>
+                        
+                            <div className="text-center text-2xl font-semibold text-gray-600 p-4">
+                                No Meetings
+                            </div>
+                        
+
                     ) : (
                         <>
                             <table className="w-full border-collapse border border-gray-400">
@@ -118,10 +121,10 @@ const Yesterdaytable = () => {
 
                                         return (
                                             <tr
-                                            className={`text-center ${isHighPriority
-                                                ? "bg-blue-300 text-black hover:bg-blue-400 odd:bg-blue-300 "
-                                                : "odd:bg-white hover:bg-gray-100"
-                                                }`}
+                                                className={`text-center ${isHighPriority
+                                                    ? "bg-blue-300 text-black hover:bg-blue-400 odd:bg-blue-300 "
+                                                    : "odd:bg-white hover:bg-gray-100"
+                                                    }`}
                                             >
                                                 <td className="border border-gray-400 px-4 py-2">
                                                     {(currentPage - 1) * meetingsPerPage + index + 1}

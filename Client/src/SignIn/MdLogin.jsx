@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
 import "./ThunderEffect.css"
 import logo from "../../public/ThunderEffect.png"; // Import the NEA logo
+import { FaUserAlt } from "react-icons/fa";
+import { FaLock } from "react-icons/fa6";
 
 const MdLogin = () => {
     const [formData, setFormData] = useState({
@@ -84,7 +86,9 @@ const MdLogin = () => {
 
                 <form className="mt-6" onSubmit={handleSubmit}>
                     <div className="mb-4 flex space-x-2">
-                        <img src="./username.png" className="w-7 h-7 m-2 " alt="user" />
+                        <div className="text-2xl m-2 ">
+                            <FaUserAlt />
+                        </div>
                         <input
                             type="test"
                             name="username"
@@ -97,7 +101,9 @@ const MdLogin = () => {
                     </div>
                     <div className="mb-4">
                         <div className="mb-4 flex space-x-2">
-                            <img src="./password.png" className="w-7 h-7 m-2 " alt="Password" />
+                            <div className="text-2xl m-2 ">
+                                <FaLock />
+                            </div>
                             <input
                                 type="password"
                                 name="password"
