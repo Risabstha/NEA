@@ -118,7 +118,7 @@ const Meeting_Table = () => {
                       <tr
                         key={index}
                         className={`text-center ${isHighPriority
-                          ? "bg-blue-400 text-black hover:bg-blue-300 odd:bg-blue-400 "
+                          ? "bg-blue-300 text-black hover:bg-blue-400 odd:bg-blue-300 "
                           : "odd:bg-white hover:bg-gray-100"
                           }`}
                       >

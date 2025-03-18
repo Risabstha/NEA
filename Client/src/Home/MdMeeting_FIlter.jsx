@@ -15,18 +15,19 @@ const MdMeeting_Filter = () => {
     return (
         <>
             {/* Filtering meeting  */}
-            <div className=" bg-gray-200 p-1 md:pt-[1vh] flex justify-between items-center ">
-                <h2 className="text-3xl text-center font-sans text-blue-700 p-[1vh] md:pt-1 md:pb-3">Meeting Schedule</h2>
-                <div>
-                    <button
-                        onClick={handleLogout}
-                        className="text-black  pl-[3vw] pr-[3vw] mr-[7vw] p-[1.2vh] hover:text-white hover:rounded-4xl hover:bg-blue-700 "
-                    >
-                        Logout
-                    </button>
+            <div className="bg-gray-200 p-1 md:pt-[1vh] flex justify-center relative items-center">
+                <h2 className="text-3xl text-center font-sans text-blue-700 p-[1vh] md:pt-1 md:pb-3">
+                    Meeting Schedule
+                </h2>
 
-                </div>
+                <button
+                    onClick={handleLogout}
+                    className="absolute right-5 text-black px-[3vw] p-[1.2vh] hover:text-white hover:rounded-4xl hover:bg-blue-700"
+                >
+                    Logout
+                </button>
             </div>
+
 
             {/* using aboslute position, so div will be positioned according to it's nearest relative ancestor or window -> used for Floating Effect */}
             <div className='top-[25vh] md:top-[34vh]  

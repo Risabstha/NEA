@@ -120,7 +120,7 @@ const TommorrowTable = () => {
                       <tr
                         key={index}
                         className={`text-center ${isHighPriority
-                          ? "bg-blue-600 text-white hover:bg-blue-700 odd:bg-blue-600 border-3"
+                          ? "bg-blue-300 text-black hover:bg-blue-400 odd:bg-blue-300 "
                           : "odd:bg-white hover:bg-gray-100"
                           }`}
                       >
