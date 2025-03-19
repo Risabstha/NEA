@@ -48,6 +48,20 @@ const Meeting_Table = () => {
         // Filter and convert dates
         data = data.filter((meeting) => meeting.date && meeting.time); // Remove invalid entries
 
+        data.sort((a, b) => {
+          const dateA = new Date(a.date); // Convert date to Date object
+          const dateB = new Date(b.date);
+
+          if (dateA - dateB !== 0) {
+            return dateA - dateB; // First, sort by date
+          }
+          // Convert time to proper 24-hour format
+          const [hourA, minuteA] = a.time.split(":").map(Number);
+          const [hourB, minuteB] = b.time.split(":").map(Number);
+
+          return hourA * 60 + minuteA - (hourB * 60 + minuteB); // Then sort by time
+        });
+
         // Convert AD date to BS for filtering
         const todayAD = new Date().toISOString().split("T")[0]; // Current AD date (YYYY-MM-DD)
         const todayBS = convertADDateToBS(todayAD); // Convert to BS
@@ -93,11 +107,11 @@ const Meeting_Table = () => {
         <div className="overflow-x-auto">
           {/* Show "No Meetings" when there are no meetings */}
           {meetings.length === 0 ? (
-                
-                <div className="text-center text-2xl font-semibold text-gray-600 p-4">
-                    No Meetings
-                </div>
-            
+
+            <div className="text-center text-xl font-bold   text-gray-600 p-4">
+              No Meetings
+            </div>
+
           ) : (
             <>
               <table className="w-full border-collapse border border-gray-400">

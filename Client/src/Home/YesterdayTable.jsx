@@ -96,11 +96,11 @@ const Yesterdaytable = () => {
                 <div className="overflow-x-auto">
                     {/* Show "No Meetings" when there are no meetings */}
                     {meetings.length === 0 ? (
-                        
-                            <div className="text-center text-2xl font-semibold text-gray-600 p-4">
-                                No Meetings
-                            </div>
-                        
+
+                        <div className="text-center text-xl font-bold   text-gray-600 p-4">
+                            No Meetings
+                        </div>
+
 
                     ) : (
                         <>
