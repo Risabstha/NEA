@@ -98,7 +98,7 @@ const TommorrowTable = () => {
           {meetings.length === 0 ? (
 
             <div className="text-center text-xl font-bold   text-gray-600 p-4">
-              No Meetings
+              No Meetings 📅
             </div>
 
           ) : (
