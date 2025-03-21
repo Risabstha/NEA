@@ -4,6 +4,7 @@ import { ADToBS } from "bikram-sambat-js";
 const Meeting_Table = () => {
   const [meetings, setMeetings] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [showNoMeetings, setShowNoMeetings] = useState(false);
   const meetingsPerPage = 10;
 
   const formatTime = (timeStr) => {
@@ -29,6 +30,7 @@ const Meeting_Table = () => {
       return null;
     }
   };
+
   useEffect(() => {
     const fetchMeetings = async () => {
       try {
@@ -54,18 +56,21 @@ const Meeting_Table = () => {
 
         // Convert meeting AD dates to BS and filter
         data.forEach((meeting) => {
-          // meeting.date = (meeting.date); // Convert each meeting date to BS
           meeting.date = (meeting.date).split("T")[0];
-          // console.log(meeting.date)
         });
-
 
         data = data.filter((meeting) => {
           const isMatch = meeting.date === todayBS;
-          // console.log(`Meeting Date: ${meeting.date}, Today BS: ${todayBS}, Match: ${isMatch}`);
           return isMatch;
         });
         setMeetings(data);
+
+        // Delay showing the "No Meetings" image and text by 0.2 second
+        if (data.length === 0) {
+          setTimeout(() => setShowNoMeetings(true), 200);
+        } else {
+          setShowNoMeetings(false);
+        }
       } catch (error) {
         console.error("Error fetching meetings:", error);
         setMeetings([]); // Prevent blank page
@@ -93,11 +98,14 @@ const Meeting_Table = () => {
         <div className="overflow-x-auto">
           {/* Show "No Meetings" when there are no meetings */}
           {meetings.length === 0 ? (
-                
-                <div className="text-center text-2xl font-semibold text-gray-600 p-4">
-                    No Meetings
-                </div>
-            
+            <div className="text-center text-2xl font-semibold text-gray-600 p-4">
+              {showNoMeetings && (
+                <>
+                <img src="\1742369609904.png" alt="No Meetings" className="mx-auto mb-4" style={{ width: "80px", height: "80px" }} />
+                  No Meetings Scheduled
+                </>
+              )}
+            </div>
           ) : (
             <>
               <table className="w-full border-collapse border border-gray-400">
