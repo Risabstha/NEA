@@ -15,6 +15,14 @@ const Add = () => {
         return `${formattedHour}:${minutes} ${ampm}`;
     };
 
+    // Function to get current date and time in Kathmandu timezone (UTC+5:45)
+    const getKathmanduDate = () => {
+        const now = new Date();
+        const offset = 5.75 * 60; // Kathmandu is UTC+5:45 (5.75 hours)
+        const kathmanduTime = new Date(now.getTime() + offset * 60 * 1000);
+        return kathmanduTime.toISOString().split("T")[0]; // Format: YYYY-MM-DD
+    };
+
     // State for meetings
     const [meetings, setMeetings] = useState([]);
     const [newMeeting, setNewMeeting] = useState({ date: "", type: "", location: "", description: "", time: "", priority: "normal" });
@@ -45,14 +53,18 @@ const Add = () => {
         setNewMeeting({ ...newMeeting, [e.target.name]: e.target.value });
     };
 
-    // nepali date picker functionality
+    // Nepali date picker functionality
     useEffect(() => {
         // Ensure default date is set on component mount
+        const todayAD = getKathmanduDate(); // Get today's date in Kathmandu timezone
+        const todayBS = ADToBS(todayAD); // Convert to BS
         setNewMeeting((prev) => ({ ...prev, date: todayBS }));
     }, []); // Runs only once on mount
 
-    const todayBS = ADToBS(new Date()); // Convert AD to BS
     const handleDateChange = (date) => {
+        const todayAD = getKathmanduDate(); // Get today's date in Kathmandu timezone
+        const todayBS = ADToBS(todayAD); // Convert to BS
+
         if (date < todayBS) {
             alert("Past Date cannot be selected!!");
             setNewMeeting((prev) => ({ ...prev, date: "" })); // Reset date to empty
@@ -160,6 +172,9 @@ const Add = () => {
                 response = await axios.post("http://localhost:5001/api/meetings", payload, config);
                 setMeetings((prevMeetings) => sortMeetings([...prevMeetings, response.data])); // Sort after adding
             }
+
+            const todayAD = getKathmanduDate(); // Get today's date in Kathmandu timezone
+            const todayBS = ADToBS(todayAD); // Convert to BS
 
             setNewMeeting({
                 date: todayBS,
