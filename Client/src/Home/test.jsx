@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ADToBS } from "bikram-sambat-js";
-// import { NepaliDate } from 'nepali-calendar';
 
-const TommorrowTable = () => {
+const Meeting_Table = () => {
   const [meetings, setMeetings] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const meetingsPerPage = 10;
@@ -49,11 +48,23 @@ const TommorrowTable = () => {
         // Filter and convert dates
         data = data.filter((meeting) => meeting.date && meeting.time); // Remove invalid entries
 
+        data.sort((a, b) => {
+          const dateA = new Date(a.date); // Convert date to Date object
+          const dateB = new Date(b.date);
+
+          if (dateA - dateB !== 0) {
+            return dateA - dateB; // First, sort by date
+          }
+          // Convert time to proper 24-hour format
+          const [hourA, minuteA] = a.time.split(":").map(Number);
+          const [hourB, minuteB] = b.time.split(":").map(Number);
+
+          return hourA * 60 + minuteA - (hourB * 60 + minuteB); // Then sort by time
+        });
+
         // Convert AD date to BS for filtering
-        const todayAD = new Date();
-        todayAD.setDate(todayAD.getDate() + 1); // Add 1 day
-        const tommorrowAD = todayAD.toISOString().split("T")[0]; // Convert to YYYY-MM-DD
-        const tommorrowBS = convertADDateToBS(tommorrowAD); // Convert to BS
+        const todayAD = new Date().toISOString().split("T")[0]; // Current AD date (YYYY-MM-DD)
+        const todayBS = convertADDateToBS(todayAD); // Convert to BS
 
         // Convert meeting AD dates to BS and filter
         data.forEach((meeting) => {
@@ -64,7 +75,7 @@ const TommorrowTable = () => {
 
 
         data = data.filter((meeting) => {
-          const isMatch = (meeting.date) === (tommorrowBS);
+          const isMatch = meeting.date === todayBS;
           // console.log(`Meeting Date: ${meeting.date}, Today BS: ${todayBS}, Match: ${isMatch}`);
           return isMatch;
         });
@@ -97,10 +108,10 @@ const TommorrowTable = () => {
           {/* Show "No Meetings" when there are no meetings */}
           {meetings.length === 0 ? (
 
-              <div className="text-center text-xl font-bold   text-gray-600 p-4">
-                            No Meetings 📅
-                          </div>
-           
+            <div className="text-center text-xl font-bold   text-gray-600 p-4">
+              No Meetings 📅
+            </div>
+
           ) : (
             <>
               <table className="w-full border-collapse border border-gray-400">
@@ -176,4 +187,4 @@ const TommorrowTable = () => {
   );
 };
 
-export default TommorrowTable;
+export default Meeting_Table;

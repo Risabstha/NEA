@@ -336,8 +336,9 @@ const Add = () => {
                             <th className="border w-[11vw] p-2">Date (BS)</th>
                             <th className="border w-[9vw] p-2">Time</th>
                             <th className="border w-[21vw] p-2">Meeting Type</th>
-                            <th className="border w-[22vw] p-2">Location</th>
-                            <th className="border w-[24vw] p-2">Description</th>
+                            <th className="border w-[20vw] p-2">Location</th>
+                            <th className="border w-[20vw] p-2">Description</th>
+                            <th className="border w-[6vw] p-2">Priority</th>
                             <th className="border w-[10vw] p-2">Actions</th>
                         </tr>
                     </thead>
@@ -350,6 +351,7 @@ const Add = () => {
                                 <td className="border p-2">{meeting.type}</td>
                                 <td className="border p-2">{meeting.location}</td>
                                 <td className="border p-2">{meeting.description}</td>
+                                <td className="border p-2">{meeting.priority}</td>
                                 <td className="border p-2">
                                     <button
                                         onClick={() => handleEdit(meeting)}
