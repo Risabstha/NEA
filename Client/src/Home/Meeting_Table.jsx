@@ -115,8 +115,8 @@ const Meeting_Table = () => {
             </div>
           ) : (
             <>
-              <table className="w-full border-collapse border text-2xl border-gray-400">
-                <thead>
+              <table className="w-full border-collapse border  border-gray-400">
+                <thead className="text-xl ">
                   <tr className="bg-gray-200">
                     <th className="border w-[4vw] border-gray-400 px-4 py-2">SN</th>
                     <th className="border w-[13vw] border-gray-400 px-4 py-2">Date</th>
@@ -126,7 +126,7 @@ const Meeting_Table = () => {
                     <th className="border w-[35vw] border-gray-400 px-4 py-2">Description</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="text-2xl">
                   {meetings.map((meeting, index) => {
                     const isHighPriority = meeting.priority === "high";
                     const isNextMeeting = index === nextMeetingIndex;
@@ -139,7 +139,7 @@ const Meeting_Table = () => {
                               ? "bg-blue-300 text-black hover:bg-blue-400 odd:bg-blue-300"
                               : "odd:bg-white hover:bg-gray-100"
                           }
-                          ${isNextMeeting ? "border-4 border-red-500 font-semibold text-3xl"  : "border border-gray-400"}
+                          ${isNextMeeting ? "border-5 border-red-500 font-semibold text-2xl"  : "border border-gray-400"}
                         `}
                         
                       >
