@@ -21,6 +21,28 @@ const Add = () => {
     const [editingId, setEditingId] = useState(null);
     const [isFormVisible, setIsFormVisible] = useState(true);
 
+    const [sortOrder, setSortOrder] = useState("asc"); // State for sorting order
+
+    // Function to handle sorting by date
+    const handleSortByDate = () => {
+        const newOrder = sortOrder === "asc" ? "desc" : "asc";
+        setSortOrder(newOrder);
+
+        const sortedMeetings = [...meetings].sort((a, b) => {
+            const dateA = new Date(a.date);
+            const dateB = new Date(b.date);
+
+            if (newOrder === "desc") {
+                return dateA - dateB; // Ascending order
+            
+            } else {
+                return dateB - dateA; // Descending order
+            }
+        });
+        setMeetings(sortedMeetings);
+    };
+
+
     const handleChange = (e) => {
         setNewMeeting({ ...newMeeting, [e.target.name]: e.target.value });
     };
@@ -65,8 +87,8 @@ const Add = () => {
                     const dateA = new Date(a.date); // Convert date to Date object
                     const dateB = new Date(b.date);
 
-                    if (dateA - dateB !== 0) {
-                        return dateA - dateB; // First, sort by date
+                    if (dateB - dateA !== 0) {
+                        return dateB - dateA; // First, sort by date
                     }
 
                     // Convert time to proper 24-hour format
@@ -77,6 +99,8 @@ const Add = () => {
                 });
 
                 setMeetings(data);
+                // setMeetings(sortMeetings(data));
+
             } catch (error) {
                 console.error("Error fetching meetings:", error);
                 setMeetings([]); // Prevent blank page
@@ -131,17 +155,22 @@ const Add = () => {
             if (editingId) {
                 // Update existing meeting
                 response = await axios.put(`http://localhost:5001/api/meetings/${editingId}`, payload, config);
-                setMeetings((prevMeetings) => {
-                    const updatedMeetings = prevMeetings.map((meeting) =>
+
+                setMeetings((prevMeetings) =>
+                    prevMeetings.map((meeting) =>
                         meeting._id === editingId ? response.data : meeting
-                    );
-                    return sortMeetings(updatedMeetings); // Sort after update
-                });
+                    )
+                );
+                
                 setEditingId(null);
             } else {
                 // Create new meeting
                 response = await axios.post("http://localhost:5001/api/meetings", payload, config);
-                setMeetings((prevMeetings) => sortMeetings([...prevMeetings, response.data])); // Sort after adding
+                // setMeetings((prevMeetings) => sortMeetings([...prevMeetings, response.data])); // Sort after adding
+                // setMeetings((prevMeetings) => sortMeetings([...prevMeetings, response.data]));
+                setMeetings((prevMeetings) => [response.data, ...prevMeetings]); // New meeting on top
+
+
             }
     
             setNewMeeting({
@@ -157,44 +186,34 @@ const Add = () => {
             console.error("Error saving meeting:", error.response?.data || error.message);
         }
     };
-    const sortMeetings = (meetingsList) => {
-        return [...meetingsList].sort((a, b) => {
-            const dateA = new Date(a.date);
-            const dateB = new Date(b.date);
-    
-            if (dateA - dateB !== 0) {
-                return dateA - dateB; // Sort by date first
-            }
-    
-            const [hourA, minuteA] = a.time.split(":").map(Number);
-            const [hourB, minuteB] = b.time.split(":").map(Number);
-    
-            return hourA * 60 + minuteA - (hourB * 60 + minuteB); // Then sort by time
-        });
-    };
+
     
 
     const handleDelete = async (id) => {
+        const isConfirmed = window.confirm("Are you sure you want to delete this meeting?");
+        if (!isConfirmed) return; // Stop execution if user cancels
+    
         try {
             const token = localStorage.getItem("token");
             if (!token) {
                 alert("Token is missing or invalid. Please log in again.");
                 return;
             }
-
+    
             await axios.delete(`http://localhost:5001/api/meetings/${id}`, {
-                headers: { Authorization: `Bearer ${token} ` },
+                headers: { Authorization: `Bearer ${token}` },
             });
-
+    
             setMeetings((prevMeetings) => prevMeetings.filter((meeting) => meeting._id !== id));
             console.log("Meeting deleted successfully");
         } catch (error) {
             console.error("Error deleting meeting:", error.response?.data || error.message);
         }
     };
+    
     // Pagination logic
     const [currentPage, setCurrentPage] = useState(1);
-    const meetingsPerPage = 10;
+    const meetingsPerPage = 5;
     const indexOfLastMeeting = currentPage * meetingsPerPage;
     const indexOfFirstMeeting = indexOfLastMeeting - meetingsPerPage;
     const currentMeetings = meetings.slice(indexOfFirstMeeting, indexOfLastMeeting);
@@ -323,55 +342,54 @@ const Add = () => {
 
             {/* Show "No Meetings" when there are no meetings */}
           {meetings.length === 0 ? (
-            <div className="text-center text-lg font-semibold text-gray-600 p-4">
-              No Meetings 
-            </div>
-          ) : (
-           
-            <div className={`overflow-x-auto p-1 md:p-4 ${isFormVisible ? 'mt-[1vh] md:mt-[1vh]' : 'mt-[2vh] md:mt-[2vh]'}`}>
-                <table className="w-full border-collapse border border-gray-400">
-                    <thead>
-                        <tr className="bg-gray-200">
-                            <th className="border w-[3vw] p-2">SN</th>
-                            <th className="border w-[11vw] p-2">Date (BS)</th>
-                            <th className="border w-[9vw] p-2">Time</th>
-                            <th className="border w-[21vw] p-2">Meeting Type</th>
-                            <th className="border w-[20vw] p-2">Location</th>
-                            <th className="border w-[20vw] p-2">Description</th>
-                            <th className="border w-[6vw] p-2">Priority</th>
-                            <th className="border w-[10vw] p-2">Actions</th>
+                <div className="text-center text-lg font-semibold text-gray-600 p-4">
+                    No Meetings
+                </div>
+            ) : (
+                <div className={`overflow-x-auto p-1 md:p-4 ${isFormVisible ? 'mt-[1vh] md:mt-[1vh]' : 'mt-[2vh] md:mt-[2vh]'}`}>
+                    <table className="w-full border-collapse border border-gray-400">
+                        <thead>
+                            <tr className="bg-gray-200">
+                                <th className="border w-[3vw] p-2">SN</th>
+                                <th className="border w-[11vw] p-2 cursor-pointer" onClick={handleSortByDate}>
+                                    Date (BS) {sortOrder === "asc" ? "↑" : "↓"}
+                                </th>
+                                <th className="border w-[9vw] p-2">Time</th>
+                                <th className="border w-[21vw] p-2">Meeting Type</th>
+                                <th className="border w-[22vw] p-2">Location</th>
+                                <th className="border w-[24vw] p-2">Description</th>
+                                <th className="border w-[10vw] p-2">Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        {currentMeetings.map((meeting, index) => (
-                            <tr key={index} className="text-center hover:bg-gray-100 odd:bg-white">
-                                <td className="border p-2">{(currentPage - 1) * meetingsPerPage + index + 1}</td>
-                                <td className="border p-2">{formatDate(meeting.date)}</td>
-                                <td className="border p-2">{formatTime(meeting.time)}</td>
-                                <td className="border p-2">{meeting.type}</td>
-                                <td className="border p-2">{meeting.location}</td>
-                                <td className="border p-2">{meeting.description}</td>
-                                <td className="border p-2">{meeting.priority}</td>
-                                <td className="border p-2">
-                                    <button
-                                        onClick={() => handleEdit(meeting)}
-                                        className="bg-yellow-500 text-white px-2 py-1 mr-2 rounded hover:bg-yellow-600"
-                                    >
-                                        Edit
-                                    </button>
-                                    <button
-                                        onClick={() => handleDelete(meeting._id)}
-                                        className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
-                                    >
-                                        Delete
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-          )}
+                        <tbody>
+                            {currentMeetings.map((meeting, index) => (
+                                <tr key={index} className="text-center hover:bg-gray-100 odd:bg-white">
+                                    <td className="border p-2">{(currentPage - 1) * meetingsPerPage + index + 1}</td>
+                                    <td className="border p-2">{formatDate(meeting.date)}</td>
+                                    <td className="border p-2">{formatTime(meeting.time)}</td>
+                                    <td className="border p-2">{meeting.type}</td>
+                                    <td className="border p-2">{meeting.location}</td>
+                                    <td className="border p-2">{meeting.description}</td>
+                                    <td className="border p-2">
+                                        <button
+                                            onClick={() => handleEdit(meeting)}
+                                            className="bg-yellow-500 text-white px-2 py-1 mr-2 rounded hover:bg-yellow-600"
+                                        >
+                                            Edit
+                                        </button>
+                                        <button
+                                            onClick={() => handleDelete(meeting._id)}
+                                            className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+                                        >
+                                            Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            )}
             {/* Pagination - Show only when meetings exist */}
             {meetings.length > meetingsPerPage && (
                 <div className="flex justify-center mt-4 space-x-3">

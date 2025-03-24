@@ -49,7 +49,7 @@ const Meeting_Filter = ()=>
                                 className={`text-black p-[0.5vw] hover:text-white hover:rounded-4xl hover:bg-blue-700 
                                 ${location.pathname === "/home/tomorrow" ? "bg-blue-600 p-[0.5vw] text-white rounded-4xl" : ""}`}      
                                 >{/* ternary operator */}
-                                Tommorrow
+                                Tomorrow
                             </Link>
                             <Link 
                                 to="/home/overmorrow" 
