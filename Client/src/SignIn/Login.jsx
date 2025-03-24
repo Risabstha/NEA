@@ -76,7 +76,7 @@ const Login = () => {
 
           </Link>
           <Link to="/mdlogin"  >
-            <div className="w-40 border-1 hover:bg-blue-700 hover:text-white hover:border-blue-500 rounded-r-4xl  py-1">MD-Login</div>
+            <div className="w-40 border-1 hover:bg-blue-700 hover:text-white hover:border-blue-500 rounded-r-4xl  py-1">MD-Meeting</div>
           </Link>
 
         </div>

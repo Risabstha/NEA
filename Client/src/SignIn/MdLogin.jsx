@@ -78,7 +78,7 @@ const MdLogin = () => {
                     <Link to="/mdlogin"  >
                         <div className={`w-40 border-1 hover:bg-blue-700 hover:text-white  hover:border-blue-500 rounded-r-4xl  py-1
                          ${location.pathname === "/mdlogin" ? "bg-blue-600 text-white rounded-r-4xl border-blue-600" : ""}`}>
-                            MD-Login</div>
+                            MD-Meeting</div>
                     </Link>
 
                 </div>

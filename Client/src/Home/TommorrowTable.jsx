@@ -68,6 +68,15 @@ const TommorrowTable = () => {
           // console.log(`Meeting Date: ${meeting.date}, Today BS: ${todayBS}, Match: ${isMatch}`);
           return isMatch;
         });
+
+        data.sort((a, b) => {
+    
+          // Convert time to minutes for sorting
+          const [hourA, minuteA] = a.time.split(":").map(Number);
+          const [hourB, minuteB] = b.time.split(":").map(Number);
+
+          return hourA * 60 + minuteA - (hourB * 60 + minuteB); // Sort by time (ascending)
+      });
         setMeetings(data);
       } catch (error) {
         console.error("Error fetching meetings:", error);
@@ -103,15 +112,15 @@ const TommorrowTable = () => {
            
           ) : (
             <>
-              <table className="w-full border-collapse border border-gray-400">
+              <table className="w-full border-collapse border text-xl border-gray-400">
                 <thead>
                   <tr className="bg-gray-200">
-                    <th className="border border-gray-400 px-4 py-2">SN</th>
-                    <th className="border border-gray-400 px-4 py-2">Date</th>
-                    <th className="border border-gray-400 px-4 py-2">Time</th>
-                    <th className="border border-gray-400 px-4 py-2">Meeting Type</th>
-                    <th className="border border-gray-400 px-4 py-2">Location</th>
-                    <th className="border border-gray-400 px-4 py-2">Description</th>
+                    <th className="border w-[4vw] border-gray-400 px-4 py-2">SN</th>
+                    <th className="border w-[13vw] border-gray-400 px-4 py-2">Date</th>
+                    <th className="border w-[11vw] border-gray-400 px-4 py-2">Time</th>
+                    <th className="border w-[20vw] border-gray-400 px-4 py-2">Meeting Type</th>
+                    <th className="border w-[20vw] border-gray-400 px-4 py-2">Location</th>
+                    <th className="border w-[35vw] border-gray-400 px-4 py-2">Description</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -126,18 +135,18 @@ const TommorrowTable = () => {
                           : "odd:bg-white hover:bg-gray-100"
                           }`}
                       >
-                        <td className="border border-gray-400 px-4 py-2">
+                        <td className="border w-[4vw] border-gray-400 px-4 py-2">
                           {(currentPage - 1) * meetingsPerPage + index + 1}
                         </td>
-                        <td className="border border-gray-400 px-4 py-2">
+                        <td className="border w-[13vw] border-gray-400 px-4 py-2">
                           {formatDate(meeting.date)}
                         </td>
-                        <td className="border border-gray-400 px-4 py-2">
+                        <td className="border w-[11vw] border-gray-400 px-4 py-2">
                           {formatTime(meeting.time)}
                         </td>
-                        <td className="border border-gray-400 px-4 py-2">{meeting.type}</td>
-                        <td className="border border-gray-400 px-4 py-2">{meeting.location}</td>
-                        <td className="border border-gray-400 px-4 py-2">{meeting.description}</td>
+                        <td className="border w-[20vw] border-gray-400 px-4 py-2">{meeting.type}</td>
+                        <td className="border w-[20vw] border-gray-400 px-4 py-2">{meeting.location}</td>
+                        <td className="border w-[35vw] border-gray-400 px-4 py-2">{meeting.description}</td>
                       </tr>
                     );
                   })}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { NepaliDatePicker } from "nepali-datepicker-reactjs";
 import "nepali-datepicker-reactjs/dist/index.css";
-import { ADToBS } from "bikram-sambat-js";
+import { ADToBS, BSToAD } from "bikram-sambat-js";
 import axios from "axios";
 
 const Add = () => {
@@ -64,6 +64,15 @@ const Add = () => {
         }
     };
 
+    const convertADDateToBS = (adDate) => {
+        try {
+            return ADToBS(adDate); // Convert AD to BS
+        } catch (error) {
+            console.error("Error converting AD to BS:", error);
+            return null;
+        }
+    };
+    
     useEffect(() => {
         const fetchMeetings = async () => {
             try {
@@ -75,43 +84,54 @@ const Add = () => {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-
+    
                 if (!response.ok) throw new Error("Failed to fetch meetings");
-
+    
                 let data = await response.json();
-
+    
                 // Ensure valid meetings are sorted properly
                 data = data.filter(meeting => meeting.date && meeting.time); // Remove invalid entries
-
+    
+                // Get today's date and last week's date in AD
+                const todayAD = new Date();
+                const monthAD = new Date();
+                monthAD.setDate(todayAD.getDate() - 30); // Get the date 30 days ago
+    
+                // Convert both to BS
+                const monthBS = convertADDateToBS(monthAD.toISOString().split("T")[0]); // Convert AD -> BS
+        
+                // Filter meetings that fall within the last 7 days in BS
+                data = data.filter(meeting => {
+                    return meeting.date >= monthBS; // Keep meetings within range
+                });
+    
+                // Sort meetings by date (descending) and time (ascending)
                 data.sort((a, b) => {
-                    const dateA = new Date(a.date); // Convert date to Date object
+                    const dateA = new Date(a.date);
                     const dateB = new Date(b.date);
-
+    
                     if (dateB - dateA !== 0) {
-                        return dateB - dateA; // First, sort by date
+                        return dateB - dateA; // Sort by date (descending)
                     }
-
-                    // Convert time to proper 24-hour format
+    
+                    // Convert time to minutes for sorting
                     const [hourA, minuteA] = a.time.split(":").map(Number);
                     const [hourB, minuteB] = b.time.split(":").map(Number);
-
-                    return hourA * 60 + minuteA - (hourB * 60 + minuteB); // Then sort by time
+    
+                    return hourA * 60 + minuteA - (hourB * 60 + minuteB); // Sort by time (ascending)
                 });
-
+    
                 setMeetings(data);
-                // setMeetings(sortMeetings(data));
-
+    
             } catch (error) {
                 console.error("Error fetching meetings:", error);
                 setMeetings([]); // Prevent blank page
             }
         };
-
+    
         fetchMeetings();
     }, []);
-
-
-
+    
     const handleEdit = (meeting) => {
         setNewMeeting({
             ...meeting,
@@ -166,8 +186,6 @@ const Add = () => {
             } else {
                 // Create new meeting
                 response = await axios.post("http://localhost:5001/api/meetings", payload, config);
-                // setMeetings((prevMeetings) => sortMeetings([...prevMeetings, response.data])); // Sort after adding
-                // setMeetings((prevMeetings) => sortMeetings([...prevMeetings, response.data]));
                 setMeetings((prevMeetings) => [response.data, ...prevMeetings]); // New meeting on top
 
 
@@ -270,7 +288,7 @@ const Add = () => {
                         autoComplete="off"
                         className="border p-2 w-full mb-2"
                     />
-                    <input
+                    <textarea
                         type="text"
                         name="description"
                         placeholder="Description"
@@ -364,22 +382,22 @@ const Add = () => {
                         <tbody>
                             {currentMeetings.map((meeting, index) => (
                                 <tr key={index} className="text-center hover:bg-gray-100 odd:bg-white">
-                                    <td className="border p-2">{(currentPage - 1) * meetingsPerPage + index + 1}</td>
-                                    <td className="border p-2">{formatDate(meeting.date)}</td>
-                                    <td className="border p-2">{formatTime(meeting.time)}</td>
-                                    <td className="border p-2">{meeting.type}</td>
-                                    <td className="border p-2">{meeting.location}</td>
-                                    <td className="border p-2">{meeting.description}</td>
-                                    <td className="border p-2">
+                                    <td className="border p-2 w-[3vw]">{(currentPage - 1) * meetingsPerPage + index + 1}</td>
+                                    <td className="border p-2 w-[11vw]">{formatDate(meeting.date)}</td>
+                                    <td className="border p-2 w-[9vw] ">{formatTime(meeting.time)}</td>
+                                    <td className="border p-2 w-[16vw]" >{meeting.type}</td>
+                                    <td className="border p-2 w-[16vw]" >{meeting.location}</td>
+                                    <td className="border p-2 w-[30vw]" >{meeting.description}</td>
+                                    <td className="border p-2 w-[14vw]" >
                                         <button
                                             onClick={() => handleEdit(meeting)}
-                                            className="bg-yellow-500 text-white px-2 py-1 mr-2 rounded hover:bg-yellow-600"
+                                            className="bg-yellow-500 text-white px-2 py-1 mr-1.5 rounded hover:bg-yellow-600"
                                         >
                                             Edit
                                         </button>
                                         <button
                                             onClick={() => handleDelete(meeting._id)}
-                                            className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+                                            className="bg-red-500 text-white px-2 py-1 ml-1.5 rounded hover:bg-red-600"
                                         >
                                             Delete
                                         </button>
