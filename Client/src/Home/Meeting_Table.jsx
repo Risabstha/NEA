@@ -4,7 +4,7 @@ import { ADToBS } from "bikram-sambat-js";
 const Meeting_Table = () => {
   const [meetings, setMeetings] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [showNoMeetings, setShowNoMeetings] = useState(false);
+  const [showNoMeetings, setShowNoMeetings] = useState(false); // New state for "No Meetings"
   const meetingsPerPage = 10;
 
   const formatTime = (timeStr) => {
@@ -18,13 +18,12 @@ const Meeting_Table = () => {
 
   const formatDate = (date) => {
     const d = new Date(date);
-    return d.toISOString().split("T")[0]; // Convert to YYYY-MM-DD format
+    return d.toLocaleString('en-US', { timeZone: 'Asia/Kathmandu' }).split(',')[0];
   };
 
   const convertADDateToBS = (adDate) => {
     try {
-      const bsDate = ADToBS(adDate); // Convert AD to BS
-      return bsDate;
+      return ADToBS(adDate);
     } catch (error) {
       console.error("Error converting AD to BS:", error);
       return null;
@@ -46,65 +45,73 @@ const Meeting_Table = () => {
         if (!response.ok) throw new Error("Failed to fetch meetings");
 
         let data = await response.json();
+        data = data.filter((meeting) => meeting.date && meeting.time);
 
-        // Filter and convert dates
-        data = data.filter((meeting) => meeting.date && meeting.time); // Remove invalid entries
+        const todayAD = new Date().toISOString().split("T")[0];
+        const todayBS = convertADDateToBS(todayAD);
 
-        // Convert AD date to BS for filtering
-        const todayAD = new Date().toISOString().split("T")[0]; // Current AD date (YYYY-MM-DD)
-        const todayBS = convertADDateToBS(todayAD); // Convert to BS
-
-        // Convert meeting AD dates to BS and filter
         data.forEach((meeting) => {
-          meeting.date = (meeting.date).split("T")[0];
+          meeting.date = meeting.date.split("T")[0];
         });
 
-        data = data.filter((meeting) => {
-          const isMatch = meeting.date === todayBS;
-          return isMatch;
-        });
+        data = data.filter((meeting) => meeting.date === todayBS);
+
         setMeetings(data);
 
-        // Delay showing the "No Meetings" image and text by 0.2 second
+        // Set showNoMeetings based on whether there are meetings
         if (data.length === 0) {
-          setTimeout(() => setShowNoMeetings(true), 200);
+          setTimeout(() => setShowNoMeetings(true), 200); // Delay for smooth transition
         } else {
           setShowNoMeetings(false);
         }
       } catch (error) {
         console.error("Error fetching meetings:", error);
-        setMeetings([]); // Prevent blank page
+        setMeetings([]);
+        setShowNoMeetings(true); // Show "No Meetings" on error
       }
     };
 
     fetchMeetings();
-    const interval = setInterval(fetchMeetings, 60000); // Fetch every 60s
+    const interval = setInterval(fetchMeetings, 60000);
 
-    return () => clearInterval(interval); // Cleanup on unmount
+    return () => clearInterval(interval);
   }, []);
 
-  //pagination logic
+  // Pagination
   const indexOfLastMeeting = currentPage * meetingsPerPage;
   const indexOfFirstMeeting = indexOfLastMeeting - meetingsPerPage;
   const currentMeetings = meetings.slice(indexOfFirstMeeting, indexOfLastMeeting);
-
   const totalPages = Math.ceil(meetings.length / meetingsPerPage);
+
   const goToNextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages));
   const goToPrevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
+
+  // Find the next nearest meeting index
+  const findNextMeetingIndex = () => {
+    const now = new Date();
+    return meetings.findIndex((meeting) => {
+      const [hour, minute] = meeting.time.split(":").map(Number);
+      const meetingTime = new Date(now);
+      meetingTime.setHours(hour, minute, 0, 0);
+      return meetingTime > now;
+    });
+  };
+
+  const nextMeetingIndex = findNextMeetingIndex();
 
   return (
     <>
       <div className="bg-gray-200 p-[1vw] md:pb-[0.5vh] md:p-[1vw] md:mt-[4vh] pt-[6vh]">
         <div className="overflow-x-auto">
-          {/* Show "No Meetings" when there are no meetings */}
-          {meetings.length === 0 ? (
+          {showNoMeetings ? (
             <div className="text-center text-2xl font-semibold text-gray-600 p-4">
-              {showNoMeetings && (
-                <>
-                <img src="\1742369609904.png" alt="No Meetings" className="mx-auto mb-4" style={{ width: "80px", height: "80px" }} />
-                  No Meetings Scheduled
-                </>
-              )}
+              <img
+                src="/nocalender.png"
+                alt="No Meetings"
+                className="mx-auto mb-4"
+                style={{ width: "80px", height: "80px" }}
+              />
+              No Meetings Scheduled
             </div>
           ) : (
             <>
@@ -122,14 +129,20 @@ const Meeting_Table = () => {
                 <tbody>
                   {currentMeetings.map((meeting, index) => {
                     const isHighPriority = meeting.priority === "high";
+                    const isNextMeeting = index === nextMeetingIndex;
 
                     return (
                       <tr
                         key={index}
-                        className={`text-center ${isHighPriority
-                          ? "bg-blue-300 text-black hover:bg-blue-400 odd:bg-blue-300 "
-                          : "odd:bg-white hover:bg-gray-100"
-                          }`}
+                        className={`text-center 
+                          ${
+                            isHighPriority
+                              ? "bg-blue-300 text-black hover:bg-blue-400 odd:bg-blue-300"
+                              : "odd:bg-white hover:bg-gray-100"
+                          }
+                          ${isNextMeeting ? "border-4 border-red-500" : "border border-gray-400"}
+                        `}
+                        style={isNextMeeting ? { fontSize: '1.25rem', fontWeight: 'bold' } : {}}
                       >
                         <td className="border border-gray-400 px-4 py-2">
                           {(currentPage - 1) * meetingsPerPage + index + 1}
@@ -149,14 +162,14 @@ const Meeting_Table = () => {
                 </tbody>
               </table>
 
-              {/* Pagination - Show only when meetings exist */}
               {meetings.length > meetingsPerPage && (
                 <div className="flex justify-center mt-4 space-x-3">
                   <button
                     onClick={goToPrevPage}
                     disabled={currentPage === 1}
-                    className={`px-2 py-1 bg-blue-600 text-white rounded-4xl ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"
-                      }`}
+                    className={`px-2 py-1 bg-blue-600 text-white rounded-4xl ${
+                      currentPage === 1 ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"
+                    }`}
                   >
                     Prev
                   </button>
@@ -166,8 +179,9 @@ const Meeting_Table = () => {
                   <button
                     onClick={goToNextPage}
                     disabled={currentPage === totalPages}
-                    className={`px-2 py-1 bg-blue-600 text-white rounded-4xl ${currentPage === totalPages ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"
-                      }`}
+                    className={`px-2 py-1 bg-blue-600 text-white rounded-4xl ${
+                      currentPage === totalPages ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"
+                    }`}
                   >
                     Next
                   </button>

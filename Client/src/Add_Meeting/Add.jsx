@@ -207,6 +207,13 @@ const Add = () => {
     };
 
     const handleDelete = async (id) => {
+        // Ask for confirmation before deleting
+        const isConfirmed = window.confirm("Are you sure you want to delete this meeting?");
+        
+        if (!isConfirmed) {
+            return; // If the user cancels, do nothing
+        }
+
         try {
             const token = localStorage.getItem("token");
             if (!token) {
