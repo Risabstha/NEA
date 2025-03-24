@@ -4,7 +4,15 @@ import { ADToBS } from "bikram-sambat-js";
 const OvermorrowTable = () => {
     const [meetings, setMeetings] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const [showNoMeetings, setShowNoMeetings] = useState(false);
     const meetingsPerPage = 10;
+
+    const getKathmanduDate = () => {
+        const now = new Date();
+        const offset = 5.75 * 60; // Kathmandu is UTC+5:45 (5.75 hours)
+        const kathmanduTime = new Date(now.getTime() + offset * 60 * 1000);
+        return kathmanduTime.toISOString().split("T")[0]; // Format: YYYY-MM-DD
+    };
 
     const formatTime = (timeStr) => {
         if (!timeStr) return "";
@@ -49,8 +57,8 @@ const OvermorrowTable = () => {
                 data = data.filter((meeting) => meeting.date && meeting.time); // Remove invalid entries
 
                 // Convert AD date to BS for filtering
-                const todayAD = new Date();
-                todayAD.setDate(todayAD.getDate() + 2); // Add 1 day
+                const todayAD = new Date(getKathmanduDate());       //here
+                todayAD.setDate(todayAD.getDate() + 2); // Add 2 day
                 const overmorrowAD = todayAD.toISOString().split("T")[0]; // Convert to YYYY-MM-DD
                 const overmorrowBS = convertADDateToBS(overmorrowAD); // Convert to BS
 
@@ -69,14 +77,20 @@ const OvermorrowTable = () => {
                 });
 
                 data.sort((a, b) => {
-    
+
                     // Convert time to minutes for sorting
                     const [hourA, minuteA] = a.time.split(":").map(Number);
                     const [hourB, minuteB] = b.time.split(":").map(Number);
-    
+
                     return hourA * 60 + minuteA - (hourB * 60 + minuteB); // Sort by time (ascending)
-                }); 
+                });
                 setMeetings(data);
+                // Set showNoMeetings based on whether there are meetings
+                if (data.length === 0) {
+                    setTimeout(() => setShowNoMeetings(true), 200); // Delay for smooth transition
+                } else {
+                    setShowNoMeetings(false);
+                }
             } catch (error) {
                 console.error("Error fetching meetings:", error);
                 setMeetings([]); // Prevent blank page
@@ -103,10 +117,16 @@ const OvermorrowTable = () => {
             <div className="bg-gray-200 p-[1vw] md:pb-[0.5vh] md:p-[1vw] md:mt-[4vh] pt-[6vh]">
                 <div className="overflow-x-auto">
                     {/* Show "No Meetings" when there are no meetings */}
-                    {meetings.length === 0 ? (
+                    {showNoMeetings ? (
 
-                        <div className="text-center text-xl font-bold   text-gray-600 p-4">
-                            No Meetings 📅
+                        <div className="text-center text-2xl font-semibold text-gray-600 p-4">
+                            <img
+                                src="/calender.png"
+                                alt="No Meetings"
+                                className="mx-auto mb-4"
+                                style={{ width: "80px", height: "80px" }}
+                            />
+                            No Meetings Scheduled
                         </div>
 
                     ) : (
@@ -128,7 +148,7 @@ const OvermorrowTable = () => {
 
                                         return (
                                             <tr
-                                                key={index} 
+                                                key={index}
                                                 className={`text-center ${isHighPriority
                                                     ? "bg-blue-300 text-black hover:bg-blue-400 odd:bg-blue-300 "
                                                     : "odd:bg-white hover:bg-gray-100"
@@ -152,7 +172,7 @@ const OvermorrowTable = () => {
                                 </tbody>
                             </table>
 
-                            {/* Pagination - Show only when meetings exist */} 
+                            {/* Pagination - Show only when meetings exist */}
                             {meetings.length > meetingsPerPage && (
                                 <div className="flex justify-center mt-4 space-x-3">
                                     <button

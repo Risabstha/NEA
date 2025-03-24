@@ -5,8 +5,15 @@ import { ADToBS } from "bikram-sambat-js";
 const TommorrowTable = () => {
   const [meetings, setMeetings] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [showNoMeetings, setShowNoMeetings] = useState(false);
   const meetingsPerPage = 10;
 
+  const getKathmanduDate = () => {
+    const now = new Date();
+    const offset = 5.75 * 60; // Kathmandu is UTC+5:45 (5.75 hours)
+    const kathmanduTime = new Date(now.getTime() + offset * 60 * 1000);
+    return kathmanduTime.toISOString().split("T")[0]; // Format: YYYY-MM-DD
+  };
   const formatTime = (timeStr) => {
     if (!timeStr) return "";
     const [hours, minutes] = timeStr.split(":");
@@ -50,7 +57,7 @@ const TommorrowTable = () => {
         data = data.filter((meeting) => meeting.date && meeting.time); // Remove invalid entries
 
         // Convert AD date to BS for filtering
-        const todayAD = new Date();
+        const todayAD = new Date(getKathmanduDate());  //here
         todayAD.setDate(todayAD.getDate() + 1); // Add 1 day
         const tommorrowAD = todayAD.toISOString().split("T")[0]; // Convert to YYYY-MM-DD
         const tommorrowBS = convertADDateToBS(tommorrowAD); // Convert to BS
@@ -70,14 +77,20 @@ const TommorrowTable = () => {
         });
 
         data.sort((a, b) => {
-    
+
           // Convert time to minutes for sorting
           const [hourA, minuteA] = a.time.split(":").map(Number);
           const [hourB, minuteB] = b.time.split(":").map(Number);
 
           return hourA * 60 + minuteA - (hourB * 60 + minuteB); // Sort by time (ascending)
-      });
+        });
         setMeetings(data);
+        // Set showNoMeetings based on whether there are meetings
+        if (data.length === 0) {
+          setTimeout(() => setShowNoMeetings(true), 200); // Delay for smooth transition
+        } else {
+          setShowNoMeetings(false);
+        }
       } catch (error) {
         console.error("Error fetching meetings:", error);
         setMeetings([]); // Prevent blank page
@@ -104,12 +117,18 @@ const TommorrowTable = () => {
       <div className="bg-gray-200 p-[1vw] md:pb-[0.5vh] md:p-[1vw] md:mt-[4vh] pt-[6vh]">
         <div className="overflow-x-auto">
           {/* Show "No Meetings" when there are no meetings */}
-          {meetings.length === 0 ? (
+          {showNoMeetings ? (
 
-              <div className="text-center text-xl font-bold   text-gray-600 p-4">
-                            No Meetings 📅
-                          </div>
-           
+            <div className="text-center text-2xl font-semibold text-gray-600 p-4">
+              <img
+                src="/calender.png"
+                alt="No Meetings"
+                className="mx-auto mb-4"
+                style={{ width: "80px", height: "80px" }}
+              />
+              No Meetings Scheduled
+            </div>
+
           ) : (
             <>
               <table className="w-full border-collapse border text-xl border-gray-400">
