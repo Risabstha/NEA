@@ -18,8 +18,12 @@ const Meeting_Table = () => {
 
   const formatDate = (date) => {
     const d = new Date(date);
-    return d.toLocaleString('en-US', { timeZone: 'Asia/Kathmandu' }).split(',')[0];
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, "0"); // Ensure 2-digit format
+    const day = String(d.getDate()).padStart(2, "0"); // Ensure 2-digit format
+    return `${year}-${month}-${day}`;
   };
+  
 
   const convertADDateToBS = (adDate) => {
     try {
@@ -116,7 +120,7 @@ const Meeting_Table = () => {
           ) : (
             <>
               <table className="w-full border-collapse border  border-gray-400">
-                <thead className="text-xl ">
+                <thead className="text-2xl ">
                   <tr className="bg-gray-200">
                     <th className="border w-[4vw] border-gray-400 px-4 py-2">SN</th>
                     <th className="border w-[13vw] border-gray-400 px-4 py-2">Date</th>
@@ -126,7 +130,7 @@ const Meeting_Table = () => {
                     <th className="border w-[35vw] border-gray-400 px-4 py-2">Description</th>
                   </tr>
                 </thead>
-                <tbody className="text-2xl">
+                <tbody className="text-3xl">
                   {meetings.map((meeting, index) => {
                     const isHighPriority = meeting.priority === "high";
                     const isNextMeeting = index === nextMeetingIndex;
@@ -139,7 +143,7 @@ const Meeting_Table = () => {
                               ? "bg-blue-300 text-black hover:bg-blue-400 odd:bg-blue-300"
                               : "odd:bg-white hover:bg-gray-100"
                           }
-                          ${isNextMeeting ? "border-5 border-red-500 font-semibold text-2xl"  : "border border-gray-400"}
+                          ${isNextMeeting ? "border-5 border-red-500 font-semibold text-3xl"  : "border border-gray-400"}
                         `}
                         
                       >

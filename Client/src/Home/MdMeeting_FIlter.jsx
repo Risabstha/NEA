@@ -14,27 +14,30 @@ const MdMeeting_Filter = () => {
 
     return (
         <>
-            <div className="rounded-b-3xl h-[15vh]" style={{ backgroundColor: "#C0C0C0" }}>
-                {/* LOGO section */}
-                <div className='flex justify-center h-[7vh] p-[1.5vh] md:pt-[3vh] md:w-[98vw] md:h-[15vh] md:pb-[2vh]'>
-                    <img className='' src="./NEALOGO.png" alt="NEA LOGO" />
+            <div className=''>
+                <div className="rounded-b-3xl h-[15vh]" style={{ backgroundColor: "#C0C0C0" }}>
+                    {/* LOGO section */}
+                    <div className='flex justify-center h-[7vh] p-[1.5vh] md:pt-[3vh] md:w-[98vw] md:h-[15vh] md:pb-[2vh]'>
+                        <img className='' src="./NEALOGO.png" alt="NEA LOGO" />
+                    </div>
+                    {/* h-[12vh] -> defines the height so p-[1.5vh] can be used to reize the image*/}
                 </div>
-                {/* h-[12vh] -> defines the height so p-[1.5vh] can be used to reize the image*/}
-            </div>
-            
-            {/* Filtering meeting  */}
-            <div className="bg-gray-200 px-1 md:pt-[1vh] flex justify-center relative items-center">
-                <h2 className="text-3xl text-center font-sans text-blue-700 px-[1vh] md:pt-1 ">
-                   MD Meeting Schedule
-                </h2>
 
-                <button
-                    onClick={handleLogout}
-                    className="absolute right-5 text-black text-3xl p-2 hover:text-blue-600 "
-                >
-                    <MdLogout />
-                </button>
+                {/* Filtering meeting  */}
+                <div className="bg-gray-200 px-1 md:pt-[1vh] flex justify-center relative items-center">
+                    <h2 className="text-3xl text-center font-sans text-blue-700 px-[1vh] md:pt-1 ">
+                        MD Meeting Schedule
+                    </h2>
+
+                    <button
+                        onClick={handleLogout}
+                        className="absolute right-5 text-black text-3xl p-2 hover:text-blue-600 "
+                    >
+                        <MdLogout />
+                    </button>
+                </div>
             </div>
+
 
 
             {/* using aboslute position, so div will be positioned according to it's nearest relative ancestor or window -> used for Floating Effect */}
@@ -44,8 +47,8 @@ const MdMeeting_Filter = () => {
                             rounded-4xl
                             bg-gray-300 '> */}
 
-                {/*  Desktop View */}
-                {/* md: it applies css for display with pixel > apprx. 750 , ones with no specifiers are known as default that apply css only if all specified display sizes req. don't meet*/}
+            {/*  Desktop View */}
+            {/* md: it applies css for display with pixel > apprx. 750 , ones with no specifiers are known as default that apply css only if all specified display sizes req. don't meet*/}
 
 
             {/* </div> */}
