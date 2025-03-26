@@ -6,7 +6,7 @@ const TommorrowTable = () => {
   const [meetings, setMeetings] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [showNoMeetings, setShowNoMeetings] = useState(false);
-  const meetingsPerPage = 5;
+  const meetingsPerPage = 7;
 
   const getKathmanduDate = () => {
     const now = new Date();

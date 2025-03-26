@@ -7,7 +7,7 @@ const Yesterdaytable = () => {
     const [currentPage, setCurrentPage] = useState(1);
 
     const [showNoMeetings, setShowNoMeetings] = useState(false);
-    const meetingsPerPage = 5;
+    const meetingsPerPage = 7;
 
     // useEffect(
     //     ()=>
