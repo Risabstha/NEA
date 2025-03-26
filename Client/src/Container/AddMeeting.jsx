@@ -10,6 +10,7 @@ const AddMeeting = () => {
             <div className="add-container">
                 <Header />
                 <Add />
+                <p className="text-center p-[2vh] mt-[10vh]"> Powered by Nepal Electricity Authority &copy; {new Date().getFullYear()}</p>
             </div>
             
         </>
