@@ -29,7 +29,7 @@ const Header = () => {
                 {/* Nav bar section */}
                 <nav >
                     {/* using aboslute position, so div will be positioned according to it's nearest relative ancestor or window -> used for Floating Effect */}
-                    <div className=' absolute top-[16vh] left-[10vw] right-[10vw] md:w-[80vw] md:rounded-4xl bg-gradient-to-b from-gray-100 to-gray-400'>
+                    <div className=' absolute z-50 top-[16vh] left-[10vw] right-[10vw] md:w-[80vw] md:rounded-4xl bg-gradient-to-b from-gray-100 to-gray-400'>
                         {/*  Desktop View */}
                         {/* md: it applies css for display with pixel > apprx. 750 , ones with no specifiers are known as default that apply css only if all specified display sizes req. don't meet*/}
                         <div className="w-[80vw]  h-[7vh] hidden md:flex justify-between items-center">

@@ -34,7 +34,7 @@ const Add = () => {
 
             if (newOrder === "desc") {
                 return dateA - dateB; // Ascending order
-            
+
             } else {
                 return dateB - dateA; // Descending order
             }
@@ -72,7 +72,7 @@ const Add = () => {
             return null;
         }
     };
-    
+
     useEffect(() => {
         const fetchMeetings = async () => {
             try {
@@ -84,54 +84,54 @@ const Add = () => {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-    
+
                 if (!response.ok) throw new Error("Failed to fetch meetings");
-    
+
                 let data = await response.json();
-    
+
                 // Ensure valid meetings are sorted properly
                 data = data.filter(meeting => meeting.date && meeting.time); // Remove invalid entries
-    
+
                 // Get today's date and last week's date in AD
                 const todayAD = new Date();
                 const monthAD = new Date();
                 monthAD.setDate(todayAD.getDate() - 30); // Get the date 30 days ago
-    
+
                 // Convert both to BS
                 const monthBS = convertADDateToBS(monthAD.toISOString().split("T")[0]); // Convert AD -> BS
-        
+
                 // Filter meetings that fall within the last 7 days in BS
                 data = data.filter(meeting => {
                     return meeting.date >= monthBS; // Keep meetings within range
                 });
-    
+
                 // Sort meetings by date (descending) and time (ascending)
                 data.sort((a, b) => {
                     const dateA = new Date(a.date);
                     const dateB = new Date(b.date);
-    
+
                     if (dateB - dateA !== 0) {
                         return dateB - dateA; // Sort by date (descending)
                     }
-    
+
                     // Convert time to minutes for sorting
                     const [hourA, minuteA] = a.time.split(":").map(Number);
                     const [hourB, minuteB] = b.time.split(":").map(Number);
-    
+
                     return hourA * 60 + minuteA - (hourB * 60 + minuteB); // Sort by time (ascending)
                 });
-    
+
                 setMeetings(data);
-    
+
             } catch (error) {
                 console.error("Error fetching meetings:", error);
                 setMeetings([]); // Prevent blank page
             }
         };
-    
+
         fetchMeetings();
     }, []);
-    
+
     const handleEdit = (meeting) => {
         setNewMeeting({
             ...meeting,
@@ -147,7 +147,7 @@ const Add = () => {
             alert("Please fill in all required fields.");
             return;
         }
-    
+
         const payload = {
             date: newMeeting.date.toString(),
             type: newMeeting.type.trim(),
@@ -156,20 +156,20 @@ const Add = () => {
             time: newMeeting.time.toString(),
             priority: newMeeting.priority || "normal",
         };
-    
+
         const token = localStorage.getItem("token");
         if (!token) {
             alert("Token is missing or invalid. Please log in again.");
             return;
         }
-    
+
         const config = {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
             },
         };
-    
+
         try {
             let response;
             if (editingId) {
@@ -181,7 +181,7 @@ const Add = () => {
                         meeting._id === editingId ? response.data : meeting
                     )
                 );
-                
+
                 setEditingId(null);
             } else {
                 // Create new meeting
@@ -190,7 +190,7 @@ const Add = () => {
 
 
             }
-    
+
             setNewMeeting({
                 date: todayBS,
                 type: "",
@@ -205,30 +205,30 @@ const Add = () => {
         }
     };
 
-    
+
 
     const handleDelete = async (id) => {
         const isConfirmed = window.confirm("Are you sure you want to delete this meeting?");
         if (!isConfirmed) return; // Stop execution if user cancels
-    
+
         try {
             const token = localStorage.getItem("token");
             if (!token) {
                 alert("Token is missing or invalid. Please log in again.");
                 return;
             }
-    
+
             await axios.delete(`http://localhost:5001/api/meetings/${id}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
-    
+
             setMeetings((prevMeetings) => prevMeetings.filter((meeting) => meeting._id !== id));
             console.log("Meeting deleted successfully");
         } catch (error) {
             console.error("Error deleting meeting:", error.response?.data || error.message);
         }
     };
-    
+
     // Pagination logic
     const [currentPage, setCurrentPage] = useState(1);
     const meetingsPerPage = 5;
@@ -359,7 +359,7 @@ const Add = () => {
             )}
 
             {/* Show "No Meetings" when there are no meetings */}
-          {meetings.length === 0 ? (
+            {meetings.length === 0 ? (
                 <div className="text-center text-lg font-semibold text-gray-600 p-4">
                     No Meetings
                 </div>
@@ -376,19 +376,24 @@ const Add = () => {
                                 <th className="border w-[21vw] p-2">Meeting Type</th>
                                 <th className="border w-[22vw] p-2">Location</th>
                                 <th className="border w-[24vw] p-2">Description</th>
+                                <th className="border w-[5vw] p-2">Priority</th>
                                 <th className="border w-[10vw] p-2">Actions</th>
-                        </tr>
-                    </thead>
+                            </tr>
+                        </thead>
                         <tbody>
-                            {currentMeetings.map((meeting, index) => (
-                                <tr key={index} className="text-center hover:bg-gray-100 odd:bg-white">
+                            {currentMeetings.map((meeting, index) => {
+                                return(
+                                <tr key={index} 
+                                className={`text-center hover:bg-gray-100 odd:bg-white `}
+                                >
                                     <td className="border p-2 w-[3vw]">{(currentPage - 1) * meetingsPerPage + index + 1}</td>
                                     <td className="border p-2 w-[11vw]">{formatDate(meeting.date)}</td>
                                     <td className="border p-2 w-[9vw] ">{formatTime(meeting.time)}</td>
                                     <td className="border p-2 w-[16vw]" >{meeting.type}</td>
                                     <td className="border p-2 w-[16vw]" >{meeting.location}</td>
-                                    <td className="border p-2 w-[30vw]" >{meeting.description}</td>
-                                    <td className="border p-2 w-[14vw]" >
+                                    <td className="border p-2 w-[28vw]" >{meeting.description}</td>
+                                    <td className="border p-2 w-[5vw]" >{meeting.priority}</td>
+                                    <td className="border p-2 w-[12vw]" >
                                         <button
                                             onClick={() => handleEdit(meeting)}
                                             className="bg-yellow-500 text-white px-2 py-1 mr-1.5 rounded hover:bg-yellow-600"
@@ -403,7 +408,8 @@ const Add = () => {
                                         </button>
                                     </td>
                                 </tr>
-                            ))}
+                                );
+                            })}
                         </tbody>
                     </table>
                 </div>
@@ -411,30 +417,28 @@ const Add = () => {
             {/* Pagination - Show only when meetings exist */}
             {meetings.length > meetingsPerPage && (
                 <div className="flex justify-center mt-4 space-x-3">
-                  <button
-                    onClick={goToPrevPage}
-                    disabled={currentPage === 1}
-                    className={`px-2 py-1 bg-blue-600 text-white rounded-4xl ${
-                      currentPage === 1 ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"
-                    }`}
-                  >
-                    Prev
-                  </button>
-                  <span className="text-md font-sans">
-                    {currentPage} of {totalPages}
-                  </span>
-                  <button
-                    onClick={goToNextPage}
-                    disabled={currentPage === totalPages}
-                    className={`px-2 py-1 bg-blue-600 text-white rounded-4xl ${
-                      currentPage === totalPages ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"
-                    }`}
-                  >
-                    Next
-                  </button>
+                    <button
+                        onClick={goToPrevPage}
+                        disabled={currentPage === 1}
+                        className={`px-2 py-1 bg-blue-600 text-white rounded-4xl ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"
+                            }`}
+                    >
+                        Prev
+                    </button>
+                    <span className="text-md font-sans">
+                        {currentPage} of {totalPages}
+                    </span>
+                    <button
+                        onClick={goToNextPage}
+                        disabled={currentPage === totalPages}
+                        className={`px-2 py-1 bg-blue-600 text-white rounded-4xl ${currentPage === totalPages ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"
+                            }`}
+                    >
+                        Next
+                    </button>
                 </div>
-              )}
-            
+            )}
+
         </>
     );
 };

@@ -6,7 +6,7 @@ const TommorrowTable = () => {
   const [meetings, setMeetings] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [showNoMeetings, setShowNoMeetings] = useState(false);
-  const meetingsPerPage = 10;
+  const meetingsPerPage = 5;
 
   const getKathmanduDate = () => {
     const now = new Date();
@@ -131,46 +131,48 @@ const TommorrowTable = () => {
 
           ) : (
             <>
-              <table className="w-full border-collapse border text-xl border-gray-400">
-                <thead>
-                  <tr className="bg-gray-200">
-                    <th className="border w-[4vw] border-gray-400 px-4 py-2">SN</th>
-                    <th className="border w-[13vw] border-gray-400 px-4 py-2">Date</th>
-                    <th className="border w-[11vw] border-gray-400 px-4 py-2">Time</th>
-                    <th className="border w-[20vw] border-gray-400 px-4 py-2">Meeting Type</th>
-                    <th className="border w-[20vw] border-gray-400 px-4 py-2">Location</th>
-                    <th className="border w-[35vw] border-gray-400 px-4 py-2">Description</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {currentMeetings.map((meeting, index) => {
-                    const isHighPriority = meeting.priority === "high";
+              {meetings.length > 0 && (
+                <table className="w-full border-collapse border text-xl border-gray-400">
+                  <thead>
+                    <tr className="bg-gray-200">
+                      <th className="border w-[4vw] border-gray-400 px-4 py-2">SN</th>
+                      <th className="border w-[13vw] border-gray-400 px-4 py-2">Date</th>
+                      <th className="border w-[11vw] border-gray-400 px-4 py-2">Time</th>
+                      <th className="border w-[20vw] border-gray-400 px-4 py-2">Meeting Type</th>
+                      <th className="border w-[20vw] border-gray-400 px-4 py-2">Location</th>
+                      <th className="border w-[35vw] border-gray-400 px-4 py-2">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {currentMeetings.map((meeting, index) => {
+                      const isHighPriority = meeting.priority === "high";
 
-                    return (
-                      <tr
-                        key={index}
-                        className={`text-center ${isHighPriority
-                          ? "bg-blue-300 text-black hover:bg-blue-400 odd:bg-blue-300 "
-                          : "odd:bg-white hover:bg-gray-100"
-                          }`}
-                      >
-                        <td className="border w-[4vw] border-gray-400 px-4 py-2">
-                          {(currentPage - 1) * meetingsPerPage + index + 1}
-                        </td>
-                        <td className="border w-[13vw] border-gray-400 px-4 py-2">
-                          {formatDate(meeting.date)}
-                        </td>
-                        <td className="border w-[11vw] border-gray-400 px-4 py-2">
-                          {formatTime(meeting.time)}
-                        </td>
-                        <td className="border w-[20vw] border-gray-400 px-4 py-2">{meeting.type}</td>
-                        <td className="border w-[20vw] border-gray-400 px-4 py-2">{meeting.location}</td>
-                        <td className="border w-[35vw] border-gray-400 px-4 py-2">{meeting.description}</td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+                      return (
+                        <tr
+                          key={index}
+                          className={`text-center ${isHighPriority
+                            ? "bg-blue-300 text-black hover:bg-blue-400 odd:bg-blue-300 "
+                            : "odd:bg-white hover:bg-gray-100"
+                            }`}
+                        >
+                          <td className="border w-[4vw] border-gray-400 px-4 py-2">
+                            {(currentPage - 1) * meetingsPerPage + index + 1}
+                          </td>
+                          <td className="border w-[13vw] border-gray-400 px-4 py-2">
+                            {formatDate(meeting.date)}
+                          </td>
+                          <td className="border w-[11vw] border-gray-400 px-4 py-2">
+                            {formatTime(meeting.time)}
+                          </td>
+                          <td className="border w-[20vw] border-gray-400 px-4 py-2">{meeting.type}</td>
+                          <td className="border w-[20vw] border-gray-400 px-4 py-2">{meeting.location}</td>
+                          <td className="border w-[35vw] border-gray-400 px-4 py-2">{meeting.description}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              )}
 
               {/* Pagination - Show only when meetings exist */}
               {meetings.length > meetingsPerPage && (

@@ -1,14 +1,17 @@
 import React from "react";
 import Header from "../NavBar/Header";
 import Add from "../Add_Meeting/Add";
-// import Table from "./Add_Meeting/Table";
-const AddMeeting = ()=>
-{
+import Footer from "../Footer/Footer";
+
+const AddMeeting = () => {
     return (
         <>
-            <Header/>
-            <Add/>
-            {/* <Table/> */}
+            
+            <div className="add-container">
+                <Header />
+                <Add />
+            </div>
+            
         </>
     );
 }

@@ -4,7 +4,7 @@ import { ADToBS } from "bikram-sambat-js";
 const Meeting_Table = () => {
   const [meetings, setMeetings] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [showNoMeetings, setShowNoMeetings] = useState(false); 
+  const [showNoMeetings, setShowNoMeetings] = useState(false);
   const meetingsPerPage = 10;
 
   const formatTime = (timeStr) => {
@@ -23,7 +23,7 @@ const Meeting_Table = () => {
     const day = String(d.getDate()).padStart(2, "0"); // Ensure 2-digit format
     return `${year}-${month}-${day}`;
   };
-  
+
 
   const convertADDateToBS = (adDate) => {
     try {
@@ -61,13 +61,13 @@ const Meeting_Table = () => {
         data = data.filter((meeting) => meeting.date === todayBS);
 
         data.sort((a, b) => {
-    
+
           // Convert time to minutes for sorting
           const [hourA, minuteA] = a.time.split(":").map(Number);
           const [hourB, minuteB] = b.time.split(":").map(Number);
 
           return hourA * 60 + minuteA - (hourB * 60 + minuteB); // Sort by time (ascending)
-      });
+        });
         setMeetings(data);
 
         // Set showNoMeetings based on whether there are meetings
@@ -119,53 +119,53 @@ const Meeting_Table = () => {
             </div>
           ) : (
             <>
-              <table className="w-full border-collapse border  border-gray-400">
-                <thead className="text-2xl ">
-                  <tr className="bg-gray-200">
-                    <th className="border w-[4vw] border-gray-400 px-4 py-2">SN</th>
-                    <th className="border w-[13vw] border-gray-400 px-4 py-2">Date</th>
-                    <th className="border w-[11vw] border-gray-400 px-4 py-2">Time</th>
-                    <th className="border w-[20vw] border-gray-400 px-4 py-2">Meeting Type</th>
-                    <th className="border w-[20vw] border-gray-400 px-4 py-2">Location</th>
-                    <th className="border w-[35vw] border-gray-400 px-4 py-2">Description</th>
-                  </tr>
-                </thead>
-                <tbody className="text-3xl">
-                  {meetings.map((meeting, index) => {
-                    const isHighPriority = meeting.priority === "high";
-                    const isNextMeeting = index === nextMeetingIndex;
-                    return (
-                      <tr
-                        key={index}
-                        className={`text-center 
-                          ${
-                            isHighPriority
+              {meetings.length > 0 && (
+                <table className="w-full border-collapse border  border-gray-400">
+                  <thead className="text-2xl ">
+                    <tr className="bg-gray-200">
+                      <th className="border w-[4vw] border-gray-400 px-4 py-2">SN</th>
+                      <th className="border w-[13vw] border-gray-400 px-4 py-2">Date</th>
+                      <th className="border w-[11vw] border-gray-400 px-4 py-2">Time</th>
+                      <th className="border w-[20vw] border-gray-400 px-4 py-2">Meeting Type</th>
+                      <th className="border w-[20vw] border-gray-400 px-4 py-2">Location</th>
+                      <th className="border w-[35vw] border-gray-400 px-4 py-2">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-3xl">
+                    {meetings.map((meeting, index) => {
+                      const isHighPriority = meeting.priority === "high";
+                      const isNextMeeting = index === nextMeetingIndex;
+                      return (
+                        <tr
+                          key={index}
+                          className={`text-center 
+                          ${isHighPriority
                               ? "bg-blue-300 text-black hover:bg-blue-400 odd:bg-blue-300"
                               : "odd:bg-white hover:bg-gray-100"
-                          }
-                          ${isNextMeeting ? "border-5 border-red-500 font-semibold text-3xl"  : "border border-gray-400"}
+                            }
+                          ${isNextMeeting ? "border-5 border-red-500 font-semibold text-3xl" : "border border-gray-400"}
                         `}
-                        
-                      >
-                        <td className="border w-[4vw] border-gray-400 px-4 py-2">
-                          {(currentPage - 1) * meetingsPerPage + index + 1}
-                        </td>
-                        <td className="border w-[13vw] border-gray-400 px-4 py-2">
-                          {formatDate(meeting.date)}
-                        </td>
-                        <td className="border w-[11vw] border-gray-400 px-4 py-2">
-                          {formatTime(meeting.time)}
-                        </td>
-                        <td className="border w-[20vw] border-gray-400 px-4 py-2">{meeting.type}</td>
-                        <td className="border w-[20vw] border-gray-400 px-4 py-2">{meeting.location}</td>
-                        <td className="border w-[35vw] border-gray-400 px-4 py-2">{meeting.description}</td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
 
-              
+                        >
+                          <td className="border w-[4vw] border-gray-400 px-4 py-2">
+                            {(currentPage - 1) * meetingsPerPage + index + 1}
+                          </td>
+                          <td className="border w-[15vw] border-gray-400 px-4 py-2">
+                            {formatDate(meeting.date)}
+                          </td>
+                          <td className="border w-[13vw] border-gray-400 px-4 py-2">
+                            {formatTime(meeting.time)}
+                          </td>
+                          <td className="border w-[18vw] border-gray-400 px-4 py-2">{meeting.type}</td>
+                          <td className="border w-[18vw] border-gray-400 px-4 py-2">{meeting.location}</td>
+                          <td className="border w-[35vw] border-gray-400 px-4 py-2">{meeting.description}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              )}
+
             </>
           )}
         </div>
