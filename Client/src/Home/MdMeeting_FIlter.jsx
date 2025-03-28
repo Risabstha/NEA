@@ -1,11 +1,12 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { MdLogout } from "react-icons/md";
+import nealogo from "../assets/NEALOGO.png"
 
 const MdMeeting_Filter = () => {
-    const [isOpen, setIsOpen] = useState(false);
+    // const [isOpen, setIsOpen] = useState(false);
     const location = useLocation(); //  Get the current route
-    const handleIsOpen = () => setIsOpen(!isOpen);
+    // const handleIsOpen = () => setIsOpen(!isOpen);
     const navigate = useNavigate();
     const handleLogout = () => {
         localStorage.removeItem("token"); // Remove token
@@ -17,8 +18,8 @@ const MdMeeting_Filter = () => {
             <div className=''>
                 <div className="rounded-b-3xl h-[10vh]" style={{ backgroundColor: "#C0C0C0" }}>
                     {/* LOGO section */}
-                    <div className='flex justify-center h-[4vh] p-[1.5vh] md:pt-[1vh] md:w-[98vw] md:h-[10vh] md:pb-[1vh]'>
-                        <img className='' src="./NEALOGO.png" alt="NEA LOGO" />
+                    <div className='flex justify-center h-[10vh] p-[1.5vh] md:pt-[1vh] md:w-[98vw] md:h-[10vh] md:pb-[1vh]'>
+                        <img  src={nealogo} alt="NEA LOGO" />
                     </div>
                     {/* h-[12vh] -> defines the height so p-[1.5vh] can be used to reize the image*/}
                 </div>
@@ -56,32 +57,32 @@ const MdMeeting_Filter = () => {
                                                     flex justify-between items-center space-x-[1vw]">
                                     
                                         <Link 
-                                            to="/home/yesterday" 
+                                            to="/mdhome/yesterday" 
                                             className={`text-black p-[0.5vh] px-[1vw] hover:text-white hover:rounded-4xl hover:px-[1vw] hover:p-[0.5vh]  hover:bg-blue-700 
-                                            ${location.pathname === "/home/yesterday" ? "bg-blue-600 py-[0.5vh] px-[1vw] text-white rounded-4xl" : ""}`}      
+                                            ${location.pathname === "/mdhome/yesterday" ? "bg-blue-600 py-[0.5vh] px-[1vw] text-white rounded-4xl" : ""}`}      
                                         >{/* ternary operator */}
                                             Yesterday 
                                         </Link>
                                         
                                         {/* relative index  */}
                                         <Link 
-                                            to= "/home"     
+                                            to= "/mdhome"     
                                             className={`text-black  p-[0.5vh] px-[1vw] hover:text-white hover:rounded-4xl hover:px-[1vw] hover:p-[0.5vh] hover:bg-blue-700
-                                            ${location.pathname === "/home" ? "bg-blue-600 p-[0.5vh] px-[1vw] text-white rounded-4xl" : ""}`}      
+                                            ${location.pathname === "/mdhome" ? "bg-blue-600 p-[0.5vh] px-[1vw] text-white rounded-4xl" : ""}`}      
                                             >{/* ternary operator */}
                                             Today
                                         </Link>
                                         <Link 
-                                            to="/home/tomorrow" 
+                                            to="/mdhome/tomorrow" 
                                             className={`text-black  p-[0.5vh] px-[1vw] hover:text-white hover:rounded-4xl hover:px-[1vw] hover:p-[0.5vh] hover:bg-blue-700 
-                                            ${location.pathname === "/home/tomorrow" ? "bg-blue-600 p-[0.5vh] px-[1vw] text-white rounded-4xl" : ""}`}      
+                                            ${location.pathname === "/mdhome/tomorrow" ? "bg-blue-600 p-[0.5vh] px-[1vw] text-white rounded-4xl" : ""}`}      
                                             >{/* ternary operator */}
                                             Tomorrow
                                         </Link>
                                         <Link 
-                                            to="/home/overmorrow" 
+                                            to="/mdhome/overmorrow" 
                                             className={`text-black p-[0.5vh] px-[1vw]  hover:text-white hover:rounded-4xl hover:px-[1vw] hover:p-[0.5vh] hover:bg-blue-700  
-                                            ${location.pathname === "/home/overmorrow" ? "bg-blue-600 p-[0.5vh] px-[1vw] text-white rounded-4xl" : ""}`}      
+                                            ${location.pathname === "/mdhome/overmorrow" ? "bg-blue-600 p-[0.5vh] px-[1vw] text-white rounded-4xl" : ""}`}      
                                             >{/* ternary operator */}
                                             Overmorrow
                                         </Link>

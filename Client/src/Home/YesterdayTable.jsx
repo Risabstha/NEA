@@ -9,12 +9,7 @@ const Yesterdaytable = () => {
     const [showNoMeetings, setShowNoMeetings] = useState(false);
     const meetingsPerPage = 7;
 
-    // useEffect(
-    //     ()=>
-    //     {
-    //         return (setInterval(setinterval("No Meetings")),1000)
-    //     }
-    // )
+
     const getKathmanduDate = () => {
         const now = new Date();
         const offset = 5.75 * 60; // Kathmandu is UTC+5:45 (5.75 hours)
@@ -105,7 +100,7 @@ const Yesterdaytable = () => {
         };
 
         fetchMeetings();
-        const interval = setInterval(fetchMeetings, 60000); // Fetch every 60s
+        const interval = setInterval(fetchMeetings, 60000); // Fetch every 10min
 
         return () => clearInterval(interval); // Cleanup on unmount
     }, []);

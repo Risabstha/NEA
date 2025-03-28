@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import nealogo from "../assets/NEALOGO.png"
 
-const Header = () => {
+const AdminHeader = () => {
     const [isOpen, setIsOpen] = useState(false);
     const location = useLocation();
     const handleIsOpen = () => setIsOpen(!isOpen);
@@ -19,7 +19,7 @@ const Header = () => {
                 <div className="md:rounded-b-3xl" style={{ backgroundColor: "#C0C0C0" }}>
                     {/* LOGO section */}
                     <div className='flex justify-center h-[12vh] p-[1.5vh] md:pt-[3vh] md:w-[98vw] md:h-[20vh] md:pb-[7vh]'>
-                    <img src={nealogo} alt="NEA LOGO" />
+                        <img src={nealogo} alt="NEA LOGO" />
                     </div>
                 </div>
 
@@ -30,18 +30,18 @@ const Header = () => {
                         <div className="w-[80vw] h-[7vh] hidden md:flex justify-between items-center">
                             <div className="flex space-x-[4vw] h-[6vh]">
                                 <Link
-                                    to="/home"
+                                    to="/admin_dashboard"
                                     className={`flex items-center justify-center text-black px-[3vw] p-[0.5vh] ml-[6vw] h-full hover:text-white hover:rounded-4xl hover:px-[3vw] hover:p-[0.5vh] hover:bg-blue-700
-                                    ${location.pathname.includes("/home") ? "bg-blue-600 px-[3vw] p-[0.5vh] text-white rounded-4xl" : ""}`}
+                                    ${location.pathname.includes("/admin_dashboard") || location.pathname.includes("/admin_dashboard/") || location.pathname.includes("/admin_dashboard/GM") || location.pathname.includes("/admin_dashboard/Admin") ||location.pathname.includes("/admin_dashboard/PA") ? "bg-blue-600 px-[3vw] p-[0.5vh] text-white rounded-4xl" : ""}`}
                                 >
-                                    Home
+                                    Dashboard
                                 </Link>
                                 <Link
-                                    to="/add-meeting"
+                                    to="/adminregister"
                                     className={`flex items-center justify-center text-black px-[3vw] h-full hover:text-white hover:rounded-4xl hover:bg-blue-700
-                                    ${location.pathname === "/add-meeting" ? "bg-blue-600 text-white rounded-4xl" : ""}`}
+                                    ${location.pathname === "/adminregister" ? "bg-blue-600 text-white rounded-4xl" : ""}`}
                                 >
-                                    Add Meeting
+                                    Add User
                                 </Link>
                             </div>
                             <div className='flex h-[6vh]'>
@@ -56,14 +56,14 @@ const Header = () => {
                     </div>
 
                     {/* Mobile View Menu */}
-                    <div className='flex flex-wrap justify-center'>
-                        <div className="w-full md:hidden  flex items-center bg-gray-300">
+                    <div className='flex flex-wrap  justify-center'>
+                        <div className="w-full md:hidden flex  items-center bg-gray-300">
                             <Link
-                                to="/home"
+                                to="/admin_dashboard"
                                 className={`flex-1 flex items-center justify-center text-black p-2 hover:text-white hover:bg-blue-700
-                                ${location.pathname === "/home" ? "bg-blue-600 text-white" : ""}`}
+                                ${location.pathname === "/admin_dashboard" ? "bg-blue-600 text-white" : ""}`}
                             >
-                                Home
+                                Dashboard
                             </Link>
                             <button onClick={handleIsOpen} className="text-black p-2 hover:text-white hover:bg-blue-700 focus:outline-none">
                                 ☰
@@ -74,11 +74,11 @@ const Header = () => {
                         {isOpen && (
                             <div className="md:hidden bg-gray-300">
                                 <Link
-                                    to="/add-meeting"
-                                    className={`flex w-[100vw] items-center justify-center p-2 text-black hover:text-white hover:bg-blue-700
-                                    ${location.pathname === "/add-meeting" ? "bg-blue-600 text-white" : ""}`}
+                                    to="/adminregister"
+                                    className={`flex w-full items-center justify-center p-2 text-black hover:text-white hover:bg-blue-700
+                                    ${location.pathname === "/adminregister" ? "bg-blue-600 text-white" : ""}`}
                                 >
-                                    Add Meeting
+                                    Add User
                                 </Link>
 
                                 <Link
@@ -96,4 +96,4 @@ const Header = () => {
     );
 };
 
-export default Header;
+export default AdminHeader;

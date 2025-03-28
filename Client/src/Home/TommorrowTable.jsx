@@ -98,7 +98,7 @@ const TommorrowTable = () => {
     };
 
     fetchMeetings();
-    const interval = setInterval(fetchMeetings, 60000); // Fetch every 60s
+    const interval = setInterval(fetchMeetings, 60000); // Fetch every 10min
 
     return () => clearInterval(interval); // Cleanup on unmount
   }, []);

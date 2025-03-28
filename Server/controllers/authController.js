@@ -13,14 +13,24 @@ export const loginUser = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
 
+
+
     // Generate JWT Token
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "10h" });
+    // const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "10h" });
+     // Generate JWT Token (Include role in the payload)
+     const token = jwt.sign(
+      { userId: user._id, role: user.role }, // Add role here
+      process.env.JWT_SECRET,
+      { expiresIn: "10h" }
+    );
 
     res.json({
       message: "User Logged in Successfully",
       token,
+      role: user.role, // Send role to the frontend
     });
   } catch (error) {
+    console.error("Login Error:", error); // Log the actual error
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -28,10 +38,10 @@ export const loginUser = async (req, res) => {
 // Register User
 export const signupUser = async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { username, phoneNumber, password, role } = req.body;
 
     // Validate required fields
-    if (!username || !password) {
+    if (!username || !phoneNumber || !password || !role) {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
@@ -40,7 +50,7 @@ export const signupUser = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     // Create and save user (relying on unique index for username)
-    const user = new User({ username, password: hashedPassword });
+    const user = new User({ username, phoneNumber, password: hashedPassword, role });
     await user.save();
 
     res.status(201).json({ message: "User registered successfully" });

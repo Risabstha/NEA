@@ -42,3 +42,26 @@ export const verifyToken = (req, res, next) => {
   }
 };
 
+// export const verifyToken = (req, res, next) => {
+//   const token = req.header("Authorization")?.split(" ")[1]; // Extract token from "Bearer <token>"
+
+//   if (!token) {
+//     return res.status(401).json({ message: "Access Denied. No token provided." });
+//   }
+
+//   try {
+//     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+//     req.user = decoded; // Attach user info (userId & role) to request object
+//     next();
+//   } catch (error) {
+//     res.status(403).json({ message: "Invalid or expired token" });
+//   }
+// };
+
+// // Middleware to check for Admin role
+// export const verifyAdmin = (req, res, next) => {
+//   if (!req.user || req.user.role !== "Admin") {
+//     return res.status(403).json({ message: "Access Denied. Admins only." });
+//   }
+//   next();
+// };
