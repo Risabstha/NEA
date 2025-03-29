@@ -51,7 +51,12 @@ const Yesterdaytable = () => {
                     },
                 });
 
-                if (!response.ok) throw new Error("Failed to fetch meetings");
+                if (!response.ok){ if (response.status === 401){ {
+                    alert("Session expired. Please log in again.");
+                    // Redirect to login page
+                  }
+                  throw new Error("Failed to fetch users");
+                }}
 
                 let data = await response.json();
 

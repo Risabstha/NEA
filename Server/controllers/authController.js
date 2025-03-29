@@ -13,8 +13,6 @@ export const loginUser = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
 
-
-
     // Generate JWT Token
     // const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "10h" });
      // Generate JWT Token (Include role in the payload)
@@ -23,7 +21,6 @@ export const loginUser = async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: "10h" }
     );
-
     res.json({
       message: "User Logged in Successfully",
       token,
@@ -34,6 +31,7 @@ export const loginUser = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
 
 // Register User
 export const signupUser = async (req, res) => {

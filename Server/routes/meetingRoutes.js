@@ -6,7 +6,6 @@ const router = express.Router();
 router.get("/", protect, getMeetings);
 router.post("/", protect, createMeeting);
 router.put("/:id", protect, updateMeeting);
-// router.get('/data', getData);
 router.delete("/:id", protect, deleteMeeting);
 
 export default router;

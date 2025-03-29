@@ -12,11 +12,10 @@ const meetingSchema = new mongoose.Schema({
     enum: ['normal', 'high'],
     default: 'normal',
   },
-  
   createdAt: {
     type: Date,
     default: Date.now,
-    expires: 720 * 60 * 60 * 24,
+    expires: 360 * 60 * 60 * 24,
   }
 });
 
@@ -24,7 +23,6 @@ const meetingSchema = new mongoose.Schema({
 const Meeting = mongoose.model("Meeting", meetingSchema);
 
 export default Meeting;
-
 
 
 
