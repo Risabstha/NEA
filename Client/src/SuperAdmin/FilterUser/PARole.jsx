@@ -66,7 +66,7 @@ const EditUserModal = ({ user, onClose, onSave }) => {
 
 const AdminRole = () => {
     const [users, setUsers] = useState([]);
-    const [showNoMeetings, setShowNoMeetings] = useState(false);
+
     const [currentPage, setCurrentPage] = useState(1);
     const [editUser, setEditUser] = useState(null);
     const usersPerPage = 5;
@@ -85,12 +85,15 @@ const AdminRole = () => {
                 if (!response.ok) {
                     if (response.status === 401) {
                         alert("Session expired. Please log in again.");
+                        localStorage.removeItem("token"); // Clear token
+
+                        // Redirect to login page
+                        window.location.href = "/"; // Change the route as per your app's structure
                     }
                     throw new Error("Failed to fetch users");
                 }
                 const data = await response.json();
                 setUsers(data.filter((user) => user.role === "PA"));
-                setShowNoMeetings(data.length === 0);
             } catch (error) {
                 console.error("Error fetching users:", error);
                 setUsers([]);
@@ -157,7 +160,7 @@ const AdminRole = () => {
                 />
             )}
             <div className="overflow-x-auto">
-                {showNoMeetings ? (
+                {users.length === 0 ? (
                     <div className="text-center text-2xl font-semibold text-gray-600 p-2">
                         No Users Found
                     </div>

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { MdLogout } from "react-icons/md";
-import nealogo from "../assets/NEALOGO.png"
+import nealogo from "../../assets/NEALOGO.png"
 
 const MdMeeting_Filter = () => {
     // const [isOpen, setIsOpen] = useState(false);

@@ -84,9 +84,18 @@ const Add = () => {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-
-                if (!response.ok) throw new Error("Failed to fetch meetings");
-
+//  if (!response.ok) throw new Error("Failed to fetch meetings");
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        alert("Session expired. Please log in again.");
+                        localStorage.removeItem("token"); // Clear token
+                
+                        // Redirect to login page
+                        window.location.href = "/"; // Change the route as per your app's structure
+                    }
+                    throw new Error("Failed to fetch users");
+                }
+ 
                 let data = await response.json();
 
                 // Ensure valid meetings are sorted properly

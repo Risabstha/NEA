@@ -49,12 +49,16 @@ const TommorrowTable = () => {
           },
         });
 
-        if (!response.ok){ if (response.status === 401){ {
-          alert("Session expired. Please log in again.");
-          // Redirect to login page
-        }
-        throw new Error("Failed to fetch users");
-      }}
+        if (!response.ok) {
+          if (response.status === 401) {
+              alert("Session expired. Please log in again.");
+              localStorage.removeItem("token"); // Clear token
+
+              // Redirect to login page
+              window.location.href = "/"; // Change the route as per your app's structure
+          }
+          throw new Error("Failed to fetch users");
+      }
 
         let data = await response.json();
 

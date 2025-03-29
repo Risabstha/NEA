@@ -2,6 +2,13 @@ import axios from 'axios';
 
 const api = axios.create({ baseURL: 'http://localhost:5001/api/auth' });
 
+// export const handleSessionExpiration = () => {
+//     localStorage.removeItem("token");
+//     alert("Session expired. Please log in again.");
+//     window.location.href = "/";
+//     return;
+//   };
+
 export const loginUser = async (data) => {
     try {
       const response = await api.post('/login', data);
@@ -11,6 +18,7 @@ export const loginUser = async (data) => {
       throw error;
     }
   };
+  
 export const signupUser = (data) => api.post('/register', data);
 
 // Assuming meeting routes are within the /meetings route, 

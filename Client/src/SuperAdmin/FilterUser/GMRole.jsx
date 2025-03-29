@@ -66,7 +66,6 @@ const EditUserModal = ({ user, onClose, onSave }) => {
 
 const AdminRole = () => {
     const [users, setUsers] = useState([]);
-    const [showNoMeetings, setShowNoMeetings] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [editUser, setEditUser] = useState(null);
     const usersPerPage = 5;
@@ -85,12 +84,17 @@ const AdminRole = () => {
                 if (!response.ok) {
                     if (response.status === 401) {
                         alert("Session expired. Please log in again.");
+                        localStorage.removeItem("token"); // Clear token
+
+                        // Redirect to login page
+                        window.location.href = "/"; // Change the route as per your app's structure
                     }
                     throw new Error("Failed to fetch users");
                 }
+
                 const data = await response.json();
                 setUsers(data.filter((user) => user.role === "GM"));
-                setShowNoMeetings(data.length === 0);
+
             } catch (error) {
                 console.error("Error fetching users:", error);
                 setUsers([]);
@@ -157,7 +161,7 @@ const AdminRole = () => {
                 />
             )}
             <div className="overflow-x-auto">
-                {showNoMeetings ? (
+                {users.length === 0 ? (
                     <div className="text-center text-2xl font-semibold text-gray-600 p-2">
                         No Users Found
                     </div>
@@ -165,19 +169,19 @@ const AdminRole = () => {
                     <table className="w-full border-collapse border border-gray-400">
                         <thead className="text-xl bg-gray-300">
                             <tr>
-                                <th className="border border-gray-400 px-4 py-2">SN</th>
-                                <th className="border border-gray-400 px-4 py-2">Name</th>
-                                <th className="border border-gray-400 px-4 py-2">Phone Number</th>
-                                <th className="border border-gray-400 px-4 py-2">Action</th>
+                                <th className="border border-gray-400 w-[10vw] px-4 py-2">SN</th>
+                                <th className="border border-gray-400 w-[35vw] px-4 py-2">Name</th>
+                                <th className="border border-gray-400 w-[35vw] px-4 py-2">Phone Number</th>
+                                <th className="border border-gray-400 w-[20vw] px-4 py-2">Action</th>
                             </tr>
                         </thead>
                         <tbody className="text-xl">
                             {currentUsers.map((user, index) => (
                                 <tr key={user._id} className="text-center odd:bg-white even:bg-gray-100">
-                                    <td className="border border-gray-400 px-4 py-2">{indexOfFirstMeeting + index + 1}</td>
-                                    <td className="border border-gray-400 px-4 py-2">{user.username}</td>
-                                    <td className="border border-gray-400 px-4 py-2">{user.phoneNumber}</td>
-                                    <td className="border border-gray-400 p-2">
+                                    <td className="border border-gray-400 w-[10vw] px-4 py-2">{indexOfFirstMeeting + index + 1}</td>
+                                    <td className="border border-gray-400 w-[35vw] px-4 py-2">{user.username}</td>
+                                    <td className="border border-gray-400 w-[35vw] px-4 py-2">{user.phoneNumber}</td>
+                                    <td className="border border-gray-400 w-[20vw] p-2">
                                         <button
                                             onClick={() => handleEdit(user)}
                                             className="bg-yellow-500 text-white px-2 py-1 mr-1.5 rounded hover:bg-yellow-600"

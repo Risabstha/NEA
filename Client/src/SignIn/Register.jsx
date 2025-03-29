@@ -59,7 +59,20 @@ const Register = () => {
         setIsError(false);
         setFormData({ username: "", phoneNumber:"", password: "", confirmpassword: "", role: "" });
       }
-    } catch (error) {
+      //  if (!response.ok) throw new Error("Failed to fetch meetings");
+      if (!response.ok) {
+        if (response.status === 401) {
+            alert("Session expired. Please log in again.");
+            localStorage.removeItem("token"); // Clear token
+
+            // Redirect to login page
+            window.location.href = "/"; // Change the route as per your app's structure
+        }
+        throw new Error("Failed to fetch users");
+    }
+    
+    } 
+    catch (error) {
       setAlertMessage(error.response?.data?.message || "Signup failed, try again!");
       setIsError(true);
     }

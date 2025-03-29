@@ -3,12 +3,12 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from './SignIn/Login'
 import AddMeeting from './Container/AddMeeting';
 import Home from './Container/Home';
-import Meeting_Table from './Home/Meeting_Table';
+import Meeting_Table from './Home/PA/Meeting_Table';
 import Register from './SignIn/Register';
-import Yesterdaytable from './Home/YesterdayTable';
+import Yesterdaytable from './Home/PA/YesterdayTable';
 import ProtectedRoute from './Protected_Route/ProtectedRoute';
-import TommorrowTable from './Home/TommorrowTable';
-import OvermorrowTable from './Home/OvermorrowTable';
+import TommorrowTable from './Home/PA/TommorrowTable';
+import OvermorrowTable from './Home/PA/OvermorrowTable';
 import MdHome from './Container/MdHome';
 import AdminRegister from './SuperAdmin/AdminRegister';
 import AdminDashboard from './SuperAdmin/AdminDashboard';

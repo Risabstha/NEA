@@ -5,8 +5,13 @@ const Meeting_Table = () => {
   const [meetings, setMeetings] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [showNoMeetings, setShowNoMeetings] = useState(false);
-  const meetingsPerPage = 10;
 
+  const getKathmanduDate = () => {
+    const now = new Date();
+    const offset = 5.75 * 60; // Kathmandu is UTC+5:45 (5.75 hours)
+    const kathmanduTime = new Date(now.getTime() + offset * 60 * 1000);
+    return kathmanduTime.toISOString().split("T")[0]; // Format: YYYY-MM-DD
+};
   const formatTime = (timeStr) => {
     if (!timeStr) return "";
     const [hours, minutes] = timeStr.split(":");
@@ -46,18 +51,22 @@ const Meeting_Table = () => {
           },
         });
 
-        // if (!response.ok) throw new Error("Failed to fetch meetings");
-        if (!response.ok){ if (response.status === 401){ {
-          alert("Session expired. Please log in again.");
-          // Redirect to login page
-        }
-        throw new Error("Failed to fetch users");
-      }}
+        if (!response.ok) {
+          if (response.status === 401) {
+              alert("Session expired. Please log in again.");
+              localStorage.removeItem("token"); // Clear token
+
+              // Redirect to login page
+              window.location.href = "/"; // Change the route as per your app's structure
+          }
+          throw new Error("Failed to fetch users");
+      }
 
         let data = await response.json();
+
         data = data.filter((meeting) => meeting.date && meeting.time);
 
-        const todayAD = new Date().toISOString().split("T")[0];
+        const todayAD = new Date(getKathmanduDate());
         const todayBS = convertADDateToBS(todayAD);
 
         data.forEach((meeting) => {
@@ -127,7 +136,7 @@ const Meeting_Table = () => {
             <>
               {meetings.length > 0 && (
                 <table className="w-full border-collapse border  border-gray-400">
-                  <thead className="text-2xl ">
+                  <thead className=" text-xl md:text-2xl ">
                     <tr className="bg-gray-200">
                       <th className="border w-[4vw] border-gray-400 px-4 py-2">SN</th>
                       <th className="border w-[13vw] border-gray-400 px-4 py-2">Date</th>
@@ -137,7 +146,7 @@ const Meeting_Table = () => {
                       <th className="border w-[35vw] border-gray-400 px-4 py-2">Description</th>
                     </tr>
                   </thead>
-                  <tbody className="text-3xl">
+                  <tbody className="text-xl md:text-3xl">
                     {meetings.map((meeting, index) => {
                       const isHighPriority = meeting.priority === "high";
                       const isNextMeeting = index === nextMeetingIndex;
@@ -149,12 +158,12 @@ const Meeting_Table = () => {
                               ? "bg-blue-300 text-black hover:bg-blue-400 odd:bg-blue-300"
                               : "odd:bg-white hover:bg-gray-100"
                             }
-                          ${isNextMeeting ? "border-5 border-red-500 font-semibold text-3xl" : "border border-gray-400"}
+                          ${isNextMeeting ? "border-5 border-red-500 font-semibold text-xl md:text-3xl" : "border border-gray-400"}
                         `}
 
                         >
                           <td className="border w-[4vw] border-gray-400 px-4 py-2">
-                            {(currentPage - 1) * meetingsPerPage + index + 1}
+                            {(currentPage - 1) + index + 1}
                           </td>
                           <td className="border w-[15vw] border-gray-400 px-4 py-2">
                             {formatDate(meeting.date)}

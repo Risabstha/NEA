@@ -17,9 +17,9 @@ export const loginUser = async (req, res) => {
     // const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "10h" });
      // Generate JWT Token (Include role in the payload)
      const token = jwt.sign(
-      { userId: user._id, role: user.role }, // Add role here
+      { userId: user._id, role: user.role },
       process.env.JWT_SECRET,
-      { expiresIn: "10h" }
+      { expiresIn: "1h" }
     );
     res.json({
       message: "User Logged in Successfully",
