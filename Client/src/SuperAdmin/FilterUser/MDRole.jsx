@@ -102,7 +102,7 @@ const AdminRole = () => {
         };
 
         fetchUsers();
-        const interval = setInterval(fetchUsers, 60000);
+        const interval = setInterval(fetchUsers, 1200000);
         return () => clearInterval(interval);
     }, []);
 

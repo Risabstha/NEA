@@ -107,7 +107,7 @@ const OvermorrowTable = () => {
         };
 
         fetchMeetings();
-        const interval = setInterval(fetchMeetings, 60000); // Fetch every 10min
+        const interval = setInterval(fetchMeetings, 1200000); // Fetch every 10min
 
         return () => clearInterval(interval); // Cleanup on unmount
     }, []);

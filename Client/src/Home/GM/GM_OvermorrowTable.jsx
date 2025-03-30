@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { ADToBS } from "bikram-sambat-js";
 
-const Yesterdaytable = () => {
+const GM_OvermorrowTable = () => {
     const [meetings, setMeetings] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [showNoMeetings, setShowNoMeetings] = useState(false);
     const meetingsPerPage = 7;
-
 
     const getKathmanduDate = () => {
         const now = new Date();
@@ -14,6 +13,7 @@ const Yesterdaytable = () => {
         const kathmanduTime = new Date(now.getTime() + offset * 60 * 1000);
         return kathmanduTime.toISOString().split("T")[0]; // Format: YYYY-MM-DD
     };
+
     const formatTime = (timeStr) => {
         if (!timeStr) return "";
         const [hours, minutes] = timeStr.split(":");
@@ -53,7 +53,7 @@ const Yesterdaytable = () => {
                     if (response.status === 401) {
                         alert("Session expired. Please log in again.");
                         localStorage.removeItem("token"); // Clear token
-                
+
                         // Redirect to login page
                         window.location.href = "/"; // Change the route as per your app's structure
                     }
@@ -66,10 +66,10 @@ const Yesterdaytable = () => {
                 data = data.filter((meeting) => meeting.date && meeting.time); // Remove invalid entries
 
                 // Convert AD date to BS for filtering
-                const todayAD = new Date(getKathmanduDate());  //here
-                todayAD.setDate(todayAD.getDate() - 1); // Add 1 day
-                const yesterdayAD = todayAD.toISOString().split("T")[0]; // Convert to YYYY-MM-DD
-                const yesterdayBS = convertADDateToBS(yesterdayAD); // Convert to BS
+                const todayAD = new Date(getKathmanduDate());       //here
+                todayAD.setDate(todayAD.getDate() + 2); // Add 2 day
+                const overmorrowAD = todayAD.toISOString().split("T")[0]; // Convert to YYYY-MM-DD
+                const overmorrowBS = convertADDateToBS(overmorrowAD); // Convert to BS
 
                 // Convert meeting AD dates to BS and filter
                 data.forEach((meeting) => {
@@ -80,10 +80,16 @@ const Yesterdaytable = () => {
 
 
                 data = data.filter((meeting) => {
-                    const isMatch = (meeting.date) === (yesterdayBS);
+                    const isMatch = meeting.date === overmorrowBS;
                     // console.log(`Meeting Date: ${meeting.date}, Today BS: ${todayBS}, Match: ${isMatch}`);
                     return isMatch;
                 });
+
+                data = data.filter((meeting) => {
+                    const isInternal = (meeting.meeting_type) === ("internal");
+                    return isInternal;
+                });
+
 
                 data.sort((a, b) => {
 
@@ -138,9 +144,8 @@ const Yesterdaytable = () => {
                             No Meetings Scheduled
                         </div>
 
-
                     ) : (
-                        <>
+                        <div>
                             {meetings.length > 0 && (
                                 <table className="w-full border-collapse border text-xl border-gray-400">
                                     <thead>
@@ -207,12 +212,12 @@ const Yesterdaytable = () => {
                                     </button>
                                 </div>
                             )}
-                        </>
+                        </div>
                     )}
                 </div>
             </div>
         </>
     );
-};
+}
 
-export default Yesterdaytable;
+export default GM_OvermorrowTable

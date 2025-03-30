@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ADToBS } from "bikram-sambat-js";
 
-const Yesterdaytable = () => {
+const GM_TodayTable = () => {
     const [meetings, setMeetings] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [showNoMeetings, setShowNoMeetings] = useState(false);
@@ -53,7 +53,7 @@ const Yesterdaytable = () => {
                     if (response.status === 401) {
                         alert("Session expired. Please log in again.");
                         localStorage.removeItem("token"); // Clear token
-                
+
                         // Redirect to login page
                         window.location.href = "/"; // Change the route as per your app's structure
                     }
@@ -66,23 +66,23 @@ const Yesterdaytable = () => {
                 data = data.filter((meeting) => meeting.date && meeting.time); // Remove invalid entries
 
                 // Convert AD date to BS for filtering
-                const todayAD = new Date(getKathmanduDate());  //here
-                todayAD.setDate(todayAD.getDate() - 1); // Add 1 day
-                const yesterdayAD = todayAD.toISOString().split("T")[0]; // Convert to YYYY-MM-DD
-                const yesterdayBS = convertADDateToBS(yesterdayAD); // Convert to BS
+                const todayAD = new Date(getKathmanduDate());
+                const todayBS = convertADDateToBS(todayAD);
 
                 // Convert meeting AD dates to BS and filter
                 data.forEach((meeting) => {
-                    // meeting.date = (meeting.date); // Convert each meeting date to BS
-                    meeting.date = (meeting.date).split("T")[0];
-                    // console.log(meeting.date)
-                });
-
+                    meeting.date = meeting.date.split("T")[0];
+                  });
 
                 data = data.filter((meeting) => {
-                    const isMatch = (meeting.date) === (yesterdayBS);
+                    const isMatch = (meeting.date) === (todayBS);
                     // console.log(`Meeting Date: ${meeting.date}, Today BS: ${todayBS}, Match: ${isMatch}`);
                     return isMatch;
+                });
+
+                data = data.filter((meeting) => {
+                    const isInternal = (meeting.meeting_type) === ("internal");
+                    return isInternal;
                 });
 
                 data.sort((a, b) => {
@@ -215,4 +215,4 @@ const Yesterdaytable = () => {
     );
 };
 
-export default Yesterdaytable;
+export default GM_TodayTable;

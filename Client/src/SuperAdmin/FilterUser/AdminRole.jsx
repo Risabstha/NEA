@@ -101,46 +101,46 @@ const AdminRole = () => {
         };
 
         fetchUsers();
-        const interval = setInterval(fetchUsers, 60000);
+        const interval = setInterval(fetchUsers, 1200000);
         return () => clearInterval(interval);
     }, []);
 
-    const handleDelete = async (id) => {
-        const isConfirmed = window.confirm("Are you sure you want to delete the user?");
-        if (!isConfirmed) return;
+    // const handleDelete = async (id) => {
+    //     const isConfirmed = window.confirm("Are you sure you want to delete the user?");
+    //     if (!isConfirmed) return;
 
-        try {
-            const token = localStorage.getItem("token");
-            await axios.delete(`http://localhost:5001/api/user/${id}`, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            setUsers((prevUsers) => prevUsers.filter((user) => user._id !== id));
-        } catch (error) {
-            console.error("Error deleting user:", error);
-        }
-    };
+    //     try {
+    //         const token = localStorage.getItem("token");
+    //         await axios.delete(`http://localhost:5001/api/user/${id}`, {
+    //             headers: { Authorization: `Bearer ${token}` },
+    //         });
+    //         setUsers((prevUsers) => prevUsers.filter((user) => user._id !== id));
+    //     } catch (error) {
+    //         console.error("Error deleting user:", error);
+    //     }
+    // };
 
-    const handleEdit = (user) => {
-        setEditUser(user);
-    };
+    // const handleEdit = (user) => {
+    //     setEditUser(user);
+    // };
 
-    const handleSaveChanges = async (updatedUser) => {
-        try {
-            const token = localStorage.getItem("token");
-            await axios.put(`http://localhost:5001/api/user/${updatedUser._id}`, updatedUser, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
+    // const handleSaveChanges = async (updatedUser) => {
+    //     try {
+    //         const token = localStorage.getItem("token");
+    //         await axios.put(`http://localhost:5001/api/user/${updatedUser._id}`, updatedUser, {
+    //             headers: { Authorization: `Bearer ${token}` },
+    //         });
 
-            setUsers((prevUsers) =>
-                prevUsers.map((user) =>
-                    user._id === updatedUser._id ? updatedUser : user
-                )
-            );
-            setEditUser(null);
-        } catch (error) {
-            console.error("Error updating user:", error);
-        }
-    };
+    //         setUsers((prevUsers) =>
+    //             prevUsers.map((user) =>
+    //                 user._id === updatedUser._id ? updatedUser : user
+    //             )
+    //         );
+    //         setEditUser(null);
+    //     } catch (error) {
+    //         console.error("Error updating user:", error);
+    //     }
+    // };
 
     const totalPages = Math.ceil(users.length / usersPerPage);
     const indexOfLastMeeting = currentPage * usersPerPage;
@@ -171,7 +171,7 @@ const AdminRole = () => {
                                 <th className="border border-gray-400 px-4 py-2">SN</th>
                                 <th className="border border-gray-400 px-4 py-2">Name</th>
                                 <th className="border border-gray-400 px-4 py-2">Phone Number</th>
-                                <th className="border border-gray-400 px-4 py-2">Action</th>
+                                {/* <th className="border border-gray-400 px-4 py-2">Action</th> */}
                             </tr>
                         </thead>
                         <tbody className="text-xl">
@@ -180,7 +180,7 @@ const AdminRole = () => {
                                     <td className="border border-gray-400 px-4 py-2">{indexOfFirstMeeting + index + 1}</td>
                                     <td className="border border-gray-400 px-4 py-2">{user.username}</td>
                                     <td className="border border-gray-400 px-4 py-2">{user.phoneNumber}</td>
-                                    <td className="border border-gray-400 p-2">
+                                    {/* <td className="border border-gray-400 p-2">
                                         <button
                                             onClick={() => handleEdit(user)}
                                             className="bg-yellow-500 text-white px-2 py-1 mr-1.5 rounded hover:bg-yellow-600"
@@ -193,7 +193,7 @@ const AdminRole = () => {
                                         >
                                             Delete
                                         </button>
-                                    </td>
+                                    </td> */}
                                 </tr>
                             ))}
                         </tbody>

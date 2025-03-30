@@ -16,6 +16,11 @@ import AdminRole from './SuperAdmin/FilterUser/AdminRole';
 import GMRole from './SuperAdmin/FilterUser/GMRole';
 import PARole from './SuperAdmin/FilterUser/PARole';
 import MDRole from './SuperAdmin/FilterUser/MDrole';
+import GM_Dashboard from './Container/GM_Dashboard';
+import GM_YesterdayTable from './Home/GM/GM_YesterdayTable';
+import GM_TomorrowTable from './Home/GM/GM_TomorrowTable';
+import GM_OvermorrowTable from './Home/GM/GM_OvermorrowTable';
+import GM_TodayTable from './Home/GM/GM_TodayTable';
 
 function App() {
   return (
@@ -52,6 +57,13 @@ function App() {
                       <Route path="gm" element={<GMRole />} />
                       <Route path="admin" element={<AdminRole />} />
                       <Route path="pa" element={<PARole />} />
+                  </Route>
+
+                  <Route path="/gm_dashboard" element={<GM_Dashboard/>}>
+                      <Route index element={<GM_TodayTable />} />       
+                      <Route path="gmyesterday" element={<GM_YesterdayTable />} />
+                      <Route path="gmtomorrow" element={<GM_TomorrowTable />} />
+                      <Route path="gmovermorrow" element={<GM_OvermorrowTable />} />
                   </Route>
 
                   <Route path="/register" element={<Register/>}/>  

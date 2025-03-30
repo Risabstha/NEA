@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { NepaliDatePicker } from "nepali-datepicker-reactjs";
 import "nepali-datepicker-reactjs/dist/index.css";
-import { ADToBS, BSToAD } from "bikram-sambat-js";
+import { ADToBS } from "bikram-sambat-js";
 import axios from "axios";
+
 
 const Add = () => {
     // Function to convert 24-hour time to 12-hour AM/PM format
@@ -17,7 +18,7 @@ const Add = () => {
 
     // State for meetings
     const [meetings, setMeetings] = useState([]);
-    const [newMeeting, setNewMeeting] = useState({ date: "", type: "", location: "", description: "", time: "", priority: "normal" });
+    const [newMeeting, setNewMeeting] = useState({ date: "", type: "", location: "", description: "", time: "", priority: "normal", meeting_type: "internal" });
     const [editingId, setEditingId] = useState(null);
     const [isFormVisible, setIsFormVisible] = useState(true);
 
@@ -84,18 +85,18 @@ const Add = () => {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-//  if (!response.ok) throw new Error("Failed to fetch meetings");
-                if (!response.ok) {
-                    if (response.status === 401) {
-                        alert("Session expired. Please log in again.");
-                        localStorage.removeItem("token"); // Clear token
-                
-                        // Redirect to login page
-                        window.location.href = "/"; // Change the route as per your app's structure
-                    }
-                    throw new Error("Failed to fetch users");
-                }
- 
+                if (!response.ok) throw new Error("Failed to fetch meetings");
+                // if (!response.ok) {
+                //     if (response.status === 401) {
+                //         alert("Session expired. Please log in again.");
+                //         localStorage.removeItem("token"); // Clear token
+
+                //         // Redirect to login page
+                //         window.location.href = "/"; // Change the route as per your app's structure
+                //     }
+                //     throw new Error("Failed to fetch users");
+                // }
+
                 let data = await response.json();
 
                 // Ensure valid meetings are sorted properly
@@ -141,6 +142,37 @@ const Add = () => {
         fetchMeetings();
     }, []);
 
+    // useEffect(() => {
+    //     const checkSession = async () => {
+    //       try {
+    //         const token = localStorage.getItem("token");
+    //         if (!token) return;
+
+    //         // Verify token validity with backend
+    //         const response = await axios.get("/api/auth/verify", {
+    //           headers: { Authorization: `Bearer ${token}` }
+    //         });
+
+    //         // Calculate remaining token lifetime
+    //         const expiresIn = response.data.expiresIn; // Get from backend
+    //         const timeout = setTimeout(() => {
+    //           handleSessionExpiration();
+    //         }, expiresIn * 1000);
+
+    //         return () => clearTimeout(timeout);
+    //       } catch (error) {
+    //         if (error.response?.status === 401) {
+    //           handleSessionExpiration();
+    //         }
+    //       }
+    //     };
+
+    //     checkSession();
+    //     const interval = setInterval(checkSession, 300000); // Check every 5 minutes
+
+    //     return () => clearInterval(interval);
+    //   }, []);
+
     const handleEdit = (meeting) => {
         setNewMeeting({
             ...meeting,
@@ -164,6 +196,7 @@ const Add = () => {
             description: newMeeting.description.trim(),
             time: newMeeting.time.toString(),
             priority: newMeeting.priority || "normal",
+            meeting_type: newMeeting.meeting_type || "internal",
         };
 
         const token = localStorage.getItem("token");
@@ -207,6 +240,7 @@ const Add = () => {
                 description: "",
                 time: "",
                 priority: "normal",
+                meeting_type: "internal",
             });
             setIsFormVisible(false);
         } catch (error) {
@@ -314,9 +348,9 @@ const Add = () => {
                         className="border p-2 w-full mb-2"
                     />
 
-                    <div className="mb-2">
-                        <label className="mr-4">Priority:</label>
-                        <label className="mr-2">
+                    <div className="mb-2 border-1 p-2">
+                        <label className="mr-4 ">Priority:</label>
+                        <label className="mr-2  ">
                             <input
                                 type="radio"
                                 name="priority"
@@ -340,6 +374,31 @@ const Add = () => {
                         </label>
                     </div>
 
+                    <div className="mb-2 border-1 p-2  ">
+                        <label className="mr-4">Meeting Type:</label>
+                            <label className="mr-2 ">
+                                <input
+                                    type="radio"
+                                    name="meeting_type"
+                                    value="internal"
+                                    checked={newMeeting.meeting_type === "internal"}
+                                    onChange={handleChange}
+                                    className="mr-1"
+                                />
+                                Internal
+                            </label>
+                            <label>
+                                <input
+                                    type="radio"
+                                    name="meeting_type"
+                                    value="external"
+                                    checked={newMeeting.meeting_type === "external"}
+                                    onChange={handleChange}
+                                    className="mr-1 "
+                                />
+                                External
+                            </label>
+                    </div>
                     <button
                         onClick={handleAddOrEditMeeting}
                         disabled={!newMeeting.date || !newMeeting.type || !newMeeting.location || !newMeeting.description || !newMeeting.time}
@@ -386,37 +445,39 @@ const Add = () => {
                                 <th className="border w-[22vw] p-2">Location</th>
                                 <th className="border w-[24vw] p-2">Description</th>
                                 <th className="border w-[5vw] p-2">Priority</th>
+                                <th className="border w-[5vw] p-2">Meeting_Type</th>
                                 <th className="border w-[10vw] p-2">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {currentMeetings.map((meeting, index) => {
-                                return(
-                                <tr key={index} 
-                                className={`text-center hover:bg-gray-100 odd:bg-white `}
-                                >
-                                    <td className="border p-2 w-[3vw]">{(currentPage - 1) * meetingsPerPage + index + 1}</td>
-                                    <td className="border p-2 w-[11vw]">{formatDate(meeting.date)}</td>
-                                    <td className="border p-2 w-[9vw] ">{formatTime(meeting.time)}</td>
-                                    <td className="border p-2 w-[16vw]" >{meeting.type}</td>
-                                    <td className="border p-2 w-[16vw]" >{meeting.location}</td>
-                                    <td className="border p-2 w-[28vw]" >{meeting.description}</td>
-                                    <td className="border p-2 w-[5vw]" >{meeting.priority}</td>
-                                    <td className="border p-2 w-[12vw]" >
-                                        <button
-                                            onClick={() => handleEdit(meeting)}
-                                            className="bg-yellow-500 text-white px-2 py-1 mr-1.5 rounded hover:bg-yellow-600"
-                                        >
-                                            Edit
-                                        </button>
-                                        <button
-                                            onClick={() => handleDelete(meeting._id)}
-                                            className="bg-red-500 text-white px-2 py-1 ml-1.5 rounded hover:bg-red-600"
-                                        >
-                                            Delete
-                                        </button>
-                                    </td>
-                                </tr>
+                                return (
+                                    <tr key={index}
+                                        className={`text-center hover:bg-gray-100 odd:bg-white `}
+                                    >
+                                        <td className="border p-2 w-[3vw]">{(currentPage - 1) * meetingsPerPage + index + 1}</td>
+                                        <td className="border p-2 w-[11vw]">{formatDate(meeting.date)}</td>
+                                        <td className="border p-2 w-[9vw] ">{formatTime(meeting.time)}</td>
+                                        <td className="border p-2 w-[16vw]" >{meeting.type}</td>
+                                        <td className="border p-2 w-[16vw]" >{meeting.location}</td>
+                                        <td className="border p-2 w-[28vw]" >{meeting.description}</td>
+                                        <td className="border p-2 w-[5vw]" >{meeting.priority}</td>
+                                        <td className="border p-2 w-[5vw]">{meeting.meeting_type}</td>
+                                        <td className="border p-2 w-[12vw]" >
+                                            <button
+                                                onClick={() => handleEdit(meeting)}
+                                                className="bg-yellow-500 text-white px-2 py-1 mr-1.5 rounded hover:bg-yellow-600"
+                                            >
+                                                Edit
+                                            </button>
+                                            <button
+                                                onClick={() => handleDelete(meeting._id)}
+                                                className="bg-red-500 text-white px-2 py-1 ml-1.5 rounded hover:bg-red-600"
+                                            >
+                                                Delete
+                                            </button>
+                                        </td>
+                                    </tr>
                                 );
                             })}
                         </tbody>

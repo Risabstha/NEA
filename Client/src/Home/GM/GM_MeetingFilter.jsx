@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { MdLogout } from "react-icons/md";
 import nealogo from "../../assets/NEALOGO.png"
 
-const MdMeeting_Filter = () => {
+const GM_MeetingFilter = () => {
     // const [isOpen, setIsOpen] = useState(false);
     const location = useLocation(); //  Get the current route
     // const handleIsOpen = () => setIsOpen(!isOpen);
@@ -26,20 +26,18 @@ const MdMeeting_Filter = () => {
 
                 {/* Filtering meeting  */}
                 <div className="bg-gray-200 px-1 md:pt-[1vh] flex justify-center relative items-center">
-                    <h2 className="text-lg text-center font-sans text-blue-700 mb-[2vh] px-[1vh] md:pt-1 ">
-                        MD Meeting Schedule
+                    <h2 className="text-xl text-center font-sans text-blue-700 mb-[2vh] px-[1vh] md:pt-1 ">
+                        GM Meeting Schedule
                     </h2>
 
                     <button
                         onClick={handleLogout}
-                        className="absolute right-5 text-black text-xl p-2 hover:text-blue-600 "
+                        className="absolute right-5 text-black text-3xl p-2 hover:text-blue-600 "
                     >
                         <MdLogout />
                     </button>
                 </div>
             </div>
-
-
 
             {/* using aboslute position, so div will be positioned according to it's nearest relative ancestor or window -> used for Floating Effect */}
             <div className='top-[25vh] md:top-[34vh]  
@@ -57,32 +55,32 @@ const MdMeeting_Filter = () => {
                                                     flex justify-between items-center space-x-[1vw]">
                                     
                                         <Link 
-                                            to="/mdhome/yesterday" 
+                                            to="/gm_dashboard/gmyesterday" 
                                             className={`text-black p-[0.5vh] px-[1vw] hover:text-white hover:rounded-4xl hover:px-[1vw] hover:p-[0.5vh]  hover:bg-blue-700 
-                                            ${location.pathname === "/mdhome/yesterday" ? "bg-blue-600 py-[0.5vh] px-[1vw] text-white rounded-4xl" : ""}`}      
+                                            ${location.pathname === "/gm_dashboard/gmyesterday" ? "bg-blue-600 py-[0.5vh] px-[1vw] text-white rounded-4xl" : ""}`}      
                                         >{/* ternary operator */}
                                             Yesterday 
                                         </Link>
                                         
                                         {/* relative index  */}
                                         <Link 
-                                            to= "/mdhome"     
+                                            to= "/gm_dashboard"     
                                             className={`text-black  p-[0.5vh] px-[1vw] hover:text-white hover:rounded-4xl hover:px-[1vw] hover:p-[0.5vh] hover:bg-blue-700
-                                            ${location.pathname === "/mdhome" ? "bg-blue-600 p-[0.5vh] px-[1vw] text-white rounded-4xl" : ""}`}      
+                                            ${location.pathname === "/gm_dashboard" ? "bg-blue-600 p-[0.5vh] px-[1vw] text-white rounded-4xl" : ""}`}      
                                             >{/* ternary operator */}
                                             Today
                                         </Link>
                                         <Link 
-                                            to="/mdhome/tomorrow" 
+                                            to="/gm_dashboard/gmtomorrow" 
                                             className={`text-black  p-[0.5vh] px-[1vw] hover:text-white hover:rounded-4xl hover:px-[1vw] hover:p-[0.5vh] hover:bg-blue-700 
-                                            ${location.pathname === "/mdhome/tomorrow" ? "bg-blue-600 p-[0.5vh] px-[1vw] text-white rounded-4xl" : ""}`}      
+                                            ${location.pathname === "/gm_dashboard/gmtomorrow" ? "bg-blue-600 p-[0.5vh] px-[1vw] text-white rounded-4xl" : ""}`}      
                                             >{/* ternary operator */}
                                             Tomorrow
                                         </Link>
                                         <Link 
-                                            to="/mdhome/overmorrow" 
+                                            to="/gm_dashboard/gmovermorrow" 
                                             className={`text-black p-[0.5vh] px-[1vw]  hover:text-white hover:rounded-4xl hover:px-[1vw] hover:p-[0.5vh] hover:bg-blue-700  
-                                            ${location.pathname === "/mdhome/overmorrow" ? "bg-blue-600 p-[0.5vh] px-[1vw] text-white rounded-4xl" : ""}`}      
+                                            ${location.pathname === "/gm_dashboard/gmovermorrow" ? "bg-blue-600 p-[0.5vh] px-[1vw] text-white rounded-4xl" : ""}`}      
                                             >{/* ternary operator */}
                                             Overmorrow
                                         </Link>
@@ -95,6 +93,6 @@ const MdMeeting_Filter = () => {
 
 }
 
-export default MdMeeting_Filter;
+export default GM_MeetingFilter;
 
 

@@ -60,7 +60,7 @@ const Login = () => {
             navigate("/admin_dashboard");
           } 
           else {
-            navigate("/");
+            navigate("/gm_dashboard");
           }
         }, 2500);
       } else {
