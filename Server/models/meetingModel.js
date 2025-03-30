@@ -12,6 +12,11 @@ const meetingSchema = new mongoose.Schema({
     enum: ['normal', 'high'],
     default: 'normal',
   },
+  meeting_type: {
+    type: String,
+    enum: ['internal', 'external'],
+    default: 'internal',
+  },
   createdAt: {
     type: Date,
     default: Date.now,

@@ -17,7 +17,7 @@ export const getMeetings = async (req, res) => {
 
 export const createMeeting = async (req, res) => {
   try {
-    const { date, type, location, description, time, priority } = req.body;
+    const { date, type, location, description, time, priority, meeting_type } = req.body;
 
     if (!date || !type || !location || !description || !time) {
       return res.status(400).json({ message: "All fields are required" });
@@ -35,6 +35,7 @@ export const createMeeting = async (req, res) => {
       description,
       time,
       priority: priority || "normal",
+      meeting_type: meeting_type || "internal",
     });
 
     const savedMeeting = await newMeeting.save();
@@ -67,10 +68,10 @@ export const deleteMeeting = async (req, res) => {
 
 //  Update a meeting fine
 export const updateMeeting = async (req, res) => {
-    const { type, location, description, date, time, priority } = req.body;
+    const { type, location, description, date, time, priority, meeting_type } = req.body;
 
     // Check if required fields are present
-    if (!type || !location || !description || !date || !time || !priority) {
+    if (!type || !location || !description || !date || !time || !priority || !meeting_type) {
         return res.status(400).send({ message: 'Missing required fields' });
     }
 
