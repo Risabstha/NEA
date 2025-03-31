@@ -17,7 +17,7 @@ const MessageFilter = () => {
         <>                
                 {/* Filtering meeting  */}
                 <div className=" bg-gray-200 p-1 md:pt-[1vh]  md:mt-[1vh]">
-                <h2 className="text-xl text-center font-sans text-blue-700 p-[1vh] md:pt-[3vh] md:pb-[2vh]">SMS Meeting</h2>
+                <h2 className="text-xl text-center font-semibold text-blue-700 p-[1vh] md:pt-[3vh] md:pb-[2vh]">SMS</h2>
                 </div>
  
             {/* using aboslute position, so div will be positioned according to it's nearest relative ancestor or window -> used for Floating Effect */}

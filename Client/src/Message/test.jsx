@@ -1,15 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { ADToBS } from "bikram-sambat-js";
 import { jwtDecode } from 'jwt-decode';  // Changed from default import to named import
 import { AiOutlineMessage } from "react-icons/ai";
 import SMSModal from "./SMSModal";
 
-// Mock data - replace with actual API call
-const mockRecipients = [
-    { id: 1, name: "John Doe", phone: "+977-9843123456" },
-    { id: 2, name: "Jane Smith", phone: "+977-9801234567" },
-    // ... more recipients
-];
 const Message_Todaytable = () => {
     const [meetings, setMeetings] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -17,70 +11,6 @@ const Message_Todaytable = () => {
     const meetingsPerPage = 6;
     const [showSessionAlert, setShowSessionAlert] = useState(false);
     const [selectedMeetings, setSelectedMeetings] = useState(new Set()); //  Track selected meetings
-
-    // 22 to 84 sms model 
-    const [smsMessage, setSmsMessage] = useState(""); // For SMS text content
-    const [isSending, setIsSending] = useState(false); // SMS sending loading state
-    const [sendStatus, setSendStatus] = useState(null); // SMS status messages
-    const [showSMSModal, setShowSMSModal] = useState(false);
-    const [recipients, setRecipients] = useState([]);
-    const [selectedRecipients, setSelectedRecipients] = useState(new Set());
-
-    const handleSendSMSButtonClick = () => {
-        if (selectedMeetings.size === 0) {
-            alert("Please select at least one meeting");
-            return;
-        }
-        // Here you would typically fetch recipients from your API
-        // For now using mock data
-        setRecipients(mockRecipients);
-        setShowSMSModal(true);
-    };
-
-    const handleRecipientSelect = (recipientId) => {
-        setSelectedRecipients(prev => {
-            const newSelected = new Set(prev);
-            if (newSelected.has(recipientId)) {
-                newSelected.delete(recipientId);
-            } else {
-                newSelected.add(recipientId);
-            }
-            return newSelected;
-        });
-    };
-
-    const handleSendMessages = async () => {
-        setIsSending(true);
-        try {
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            setSendStatus("Messages sent successfully!");
-            setTimeout(() => {
-                setShowSMSModal(false);
-                setSendStatus(null); // Reset status when closing
-            }, 2000);
-        } catch (error) {
-            setSendStatus("Error sending messages");
-        } finally {
-            setIsSending(false);
-        }
-    };
-
-    // Function to check if a meeting is selected
-    const isSelected = (meetingIndex) => selectedMeetings.has(meetingIndex);
-
-    // Function to toggle checkbox selection
-    const handleCheckboxChange = (meetingId) => {
-        setSelectedMeetings((prevSelected) => {
-            const newSelected = new Set(prevSelected);
-            if (newSelected.has(meetingId)) {
-                newSelected.delete(meetingId);
-            } else {
-                newSelected.add(meetingId);
-            }
-            return newSelected;
-        });
-    };
-
 
     // Session expiration check
     useEffect(() => {
@@ -218,62 +148,38 @@ const Message_Todaytable = () => {
     const goToNextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages));
     const goToPrevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
 
+    // Function to check if a meeting is selected
+    const isSelected = (meetingIndex) => selectedMeetings.has(meetingIndex);
 
-    // Add this state at the top of your component
-    const [selectAll, setSelectAll] = useState(false);
-
-    // Add this handler function
-    const handleSelectAll = () => {
-        const newSelected = new Set(selectedMeetings);
-
-        currentMeetings.forEach((_, index) => {
-            const meetingId = (currentPage - 1) * meetingsPerPage + index + 1;
-            if (selectAll) {
+    // Function to toggle checkbox selection
+    const handleCheckboxChange = (meetingId) => {
+        setSelectedMeetings((prevSelected) => {
+            const newSelected = new Set(prevSelected);
+            if (newSelected.has(meetingId)) {
                 newSelected.delete(meetingId);
             } else {
                 newSelected.add(meetingId);
             }
+            return newSelected;
         });
-
-        setSelectedMeetings(newSelected);
-        setSelectAll(!selectAll);
     };
-
-
 
     return (
         <>
-
-            {/* sms from 225 t0 250 */}
-
             <div className="bg-gray-200 p-[1vw] md:pb-[0.5vh] md:px-[1vw] md:mt-[0] pt-[2vh] md:pt-[0]">
-                <div className="flex justify-end mr-[4vw] mb-[1.5vh]">
-                    <button
-                        onClick={handleSendSMSButtonClick}
-                        className="flex space-x-2 justify-center items-center border-none px-2 py-1 rounded-4xl w-[7rem]
-                                 bg-blue-300
-                                hover:bg-blue-600 cursor-pointer hover:text-white
+            <div className="flex justify-end mr-5 mb-[1.5vh]">
+                <button 
+                 onClick={handleSendSMSButtonClick}
+                 className="flex space-x-2 justify-center items-center border-none px-2 py-1 rounded-4xl w-[10rem]
+                                bg-blue-600 text-white 
+                                hover:bg-blue-700 cursor-pointer
                                 ">
-                        <AiOutlineMessage className="text-2xl" />
-                        <span className="text-xl">SMS</span>
-                    </button>
+                    <AiOutlineMessage  className="text-2xl"/>
+                    <span className="text-xl">Send SMS</span>
+                </button>
                 </div>
-                {/* Add the SMS Modal : passing props*/}
-                {showSMSModal && <SMSModal
-                    isOpen={showSMSModal}
-                    onClose={() => setShowSMSModal(false)}
-                    smsMessage={smsMessage}
-                    setSmsMessage={setSmsMessage}
-                    recipients={recipients}
-                    selectedRecipients={selectedRecipients}
-                    handleRecipientSelect={handleRecipientSelect}
-                    handleSendMessages={handleSendMessages}
-                    isSending={isSending}
-                    sendStatus={sendStatus}
-                />}
-
-
-
+                {/* Add the SMS Modal */}
+        {showSMSModal && <SMSModal />}
 
 
                 {/* Session Expiration Modal */}
@@ -317,20 +223,11 @@ const Message_Todaytable = () => {
                                 <table className="w-full border-collapse border text-xl border-gray-400">
                                     <thead>
                                         <tr className="bg-gray-200">
-                                            {/* <th className="border w-[4vw] border-gray-400 px-4 py-2">
-                                                <button onClick={selectAll}>
+                                            <th className="border w-[4vw] border-gray-400 px-4 py-2">
+                                                <button >
                                                     ✔
                                                 </button>
-                                            </th> */}
-                                            <th className="border w-[4vw] border-gray-400 px-4 py-2">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={selectAll}
-                                                    onChange={handleSelectAll}
-                                                    className="w-4 h-4 cursor-pointer "
-                                                    title="Select all on this page"
-                                                />
-                                            </th>
+                                                </th>
                                             <th className="border w-[4vw] border-gray-400 px-4 py-2">SN</th>
                                             <th className="border w-[13vw] border-gray-400 px-4 py-2">Date</th>
                                             <th className="border w-[11vw] border-gray-400 px-4 py-2">Time</th>
