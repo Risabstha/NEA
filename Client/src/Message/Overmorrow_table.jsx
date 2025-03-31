@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { ADToBS } from "bikram-sambat-js";
 import { jwtDecode } from 'jwt-decode';  // Changed from default import to named import
-import internal from '../../assets/internal.png'
-import external from '../../assets/external.png'
 
-const OvermorrowTable = () => {
+const Message_Overmorrowtable = () => {
     const [meetings, setMeetings] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [showNoMeetings, setShowNoMeetings] = useState(false);
@@ -87,7 +85,6 @@ const OvermorrowTable = () => {
 
                 if (!response.ok) throw new Error("Failed to fetch meetings");
 
-
                 let data = await response.json();
 
                 // Filter and convert dates
@@ -113,6 +110,12 @@ const OvermorrowTable = () => {
                     return isMatch;
                 });
 
+                data = data.filter((meeting) => {
+                    const isInternal = (meeting.meeting_type) === ("internal");
+                    return isInternal;
+                });
+
+
                 data.sort((a, b) => {
 
                     // Convert time to minutes for sorting
@@ -135,7 +138,7 @@ const OvermorrowTable = () => {
         };
 
         fetchMeetings();
-        const interval = setInterval(fetchMeetings, 1200000); // Fetch every 10min
+        const interval = setInterval(fetchMeetings, 1200000); // Fetch every 20min
 
         return () => clearInterval(interval); // Cleanup on unmount
     }, []);
@@ -151,27 +154,27 @@ const OvermorrowTable = () => {
 
     return (
         <>
-            <div className="bg-gray-200 p-[1vw] md:pb-[0.5vh] md:p-[1vw] md:mt-[4vh] pt-[3vh]">
+            <div className="bg-gray-200 p-[1vw] md:pb-[0.5vh] md:p-[1vw] md:mt-[1vh] pt-[2vh]">
                 {/* Session Expiration Modal */}
-                {showSessionAlert && (
-                    <div className="fixed inset-0 bg-gray-500/50 bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
-                        <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full mx-4">
-                            <div className="text-center">
-                                <h3 className="text-lg font-medium mb-4">⏳ Session Expired</h3>
-                                <p className="mb-4">Your session has expired. Please log in again.</p>
-                                <button
-                                    onClick={() => {
-                                        localStorage.removeItem("token");
-                                        window.location.href = "/";
-                                    }}
-                                    className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
-                                >
-                                    Go to Login
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                )}
+      {showSessionAlert && (
+        <div className="fixed inset-0 bg-gray-500/50 bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full mx-4">
+            <div className="text-center">
+              <h3 className="text-lg font-medium mb-4">⏳ Session Expired</h3>
+              <p className="mb-4">Your session has expired. Please log in again.</p>
+              <button
+                onClick={() => {
+                  localStorage.removeItem("token");
+                  window.location.href = "/";
+                }}
+                className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+              >
+                Go to Login
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
                 <div className="overflow-x-auto">
                     {/* Show "No Meetings" when there are no meetings */}
                     {showNoMeetings ? (
@@ -221,17 +224,7 @@ const OvermorrowTable = () => {
                                                     <td className="border w-[11vw] border-gray-400 px-4 py-2">
                                                         {formatTime(meeting.time)}
                                                     </td>
-                                                    <td className="border w-[20vw] border-gray-400 px-4 py-2  text-center">
-                                                        <div className="flex items-center justify-center gap-4">        {/* flex and border shouldn't be on same div/element */}
-                                                            {meeting.meeting_type === "internal" && (
-                                                                <img className="w-[30px] h-[30px]" src={internal} alt="Internal" />
-                                                            )}
-                                                            {meeting.meeting_type === "external" && (
-                                                                <img className="w-[30px] h-[30px]" src={external} alt="External" />
-                                                            )}
-                                                            <span>{meeting.type}</span>
-                                                        </div>
-                                                    </td>
+                                                    <td className="border w-[20vw] border-gray-400 px-4 py-2">{meeting.type}</td>
                                                     <td className="border w-[20vw] border-gray-400 px-4 py-2">{meeting.location}</td>
                                                     <td className="border w-[35vw] border-gray-400 px-4 py-2">{meeting.description}</td>
                                                 </tr>
@@ -270,6 +263,6 @@ const OvermorrowTable = () => {
             </div>
         </>
     );
-};
+}
 
-export default OvermorrowTable;
+export default Message_Overmorrowtable

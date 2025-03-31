@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { ADToBS } from "bikram-sambat-js";
 import { jwtDecode } from 'jwt-decode';  // Changed from default import to named import
+import internal from '../../assets/internal.png'
+import external from '../../assets/external.png'
 
-const GM_TomorrowTable = () => {
+const MD_TommorrowTable = () => {
   const [meetings, setMeetings] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [showNoMeetings, setShowNoMeetings] = useState(false);
   const meetingsPerPage = 7;
- const [showSessionAlert, setShowSessionAlert] = useState(false);
+  const [showSessionAlert, setShowSessionAlert] = useState(false);
 
   // Session expiration check
   useEffect(() => {
@@ -40,6 +42,7 @@ const GM_TomorrowTable = () => {
     localStorage.removeItem("token");
     setShowSessionAlert(true);
   };
+
   const getKathmanduDate = () => {
     const now = new Date();
     const offset = 5.75 * 60; // Kathmandu is UTC+5:45 (5.75 hours)
@@ -63,12 +66,14 @@ const GM_TomorrowTable = () => {
   const convertADDateToBS = (adDate) => {
     try {
       const bsDate = ADToBS(adDate); // Convert AD to BS
-      return bsDate;
+      // const bsDate = new NepaliDate(adDate).format('YYYY-MM-DD');
+      return bsDate
     } catch (error) {
       console.error("Error converting AD to BS:", error);
       return null;
     }
   };
+  
   useEffect(() => {
     const fetchMeetings = async () => {
       try {
@@ -83,6 +88,7 @@ const GM_TomorrowTable = () => {
 
         if (!response.ok) throw new Error("Failed to fetch meetings");
 
+
         let data = await response.json();
 
         // Filter and convert dates
@@ -90,9 +96,13 @@ const GM_TomorrowTable = () => {
 
         // Convert AD date to BS for filtering
         const todayAD = new Date(getKathmanduDate());  //here
+        console.log("1  " + todayAD)
         todayAD.setDate(todayAD.getDate() + 1); // Add 1 day
+        console.log("2  " + todayAD)
         const tommorrowAD = todayAD.toISOString().split("T")[0]; // Convert to YYYY-MM-DD
+        console.log("4  "+ tommorrowAD)
         const tommorrowBS = convertADDateToBS(tommorrowAD); // Convert to BS
+        console.log("3  " + tommorrowBS)
 
         // Convert meeting AD dates to BS and filter
         data.forEach((meeting) => {
@@ -107,12 +117,6 @@ const GM_TomorrowTable = () => {
           // console.log(`Meeting Date: ${meeting.date}, Today BS: ${todayBS}, Match: ${isMatch}`);
           return isMatch;
         });
-
-        data = data.filter((meeting)=>{
-            const isInternal = (meeting.meeting_type) === ("internal");
-            return isInternal;
-         });
-
 
         data.sort((a, b) => {
 
@@ -136,7 +140,7 @@ const GM_TomorrowTable = () => {
     };
 
     fetchMeetings();
-    const interval = setInterval(fetchMeetings, 1200000); // Fetch every 20min
+    const interval = setInterval(fetchMeetings, 1200000); // Fetch every 10min
 
     return () => clearInterval(interval); // Cleanup on unmount
   }, []);
@@ -222,7 +226,17 @@ const GM_TomorrowTable = () => {
                           <td className="border w-[11vw] border-gray-400 px-4 py-2">
                             {formatTime(meeting.time)}
                           </td>
-                          <td className="border w-[20vw] border-gray-400 px-4 py-2">{meeting.type}</td>
+                          <td className="border w-[20vw] border-gray-400 px-4 py-2  text-center">
+                                                                                  <div className="flex items-center justify-center gap-2">        {/* flex and border shouldn't be on same div/element */}
+                                                                                      {meeting.meeting_type === "internal" && (
+                                                                                          <img className="w-[30px] h-[30px]" src={internal} alt="Internal" />
+                                                                                      )}
+                                                                                      {meeting.meeting_type === "external" && (
+                                                                                          <img className="w-[30px] h-[30px]" src={external} alt="External" />
+                                                                                      )}
+                                                                                      <span>{meeting.type}</span>
+                                                                                  </div>
+                                                                              </td>
                           <td className="border w-[20vw] border-gray-400 px-4 py-2">{meeting.location}</td>
                           <td className="border w-[35vw] border-gray-400 px-4 py-2">{meeting.description}</td>
                         </tr>
@@ -264,4 +278,4 @@ const GM_TomorrowTable = () => {
   );
 };
 
-export default GM_TomorrowTable;
+export default MD_TommorrowTable;

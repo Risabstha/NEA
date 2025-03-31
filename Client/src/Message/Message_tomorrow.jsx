@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import { ADToBS } from "bikram-sambat-js";
 import { jwtDecode } from 'jwt-decode';  // Changed from default import to named import
 
-const GM_TomorrowTable = () => {
+const Message_Tomorrowtable = () => {
   const [meetings, setMeetings] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [showNoMeetings, setShowNoMeetings] = useState(false);
-  const meetingsPerPage = 7;
+  const meetingsPerPage = 6;
  const [showSessionAlert, setShowSessionAlert] = useState(false);
 
   // Session expiration check
@@ -152,7 +152,7 @@ const GM_TomorrowTable = () => {
 
   return (
     <>
-      <div className="bg-gray-200 p-[1vw] md:pb-[0.5vh] md:p-[1vw] md:mt-[4vh] pt-[3vh]">
+      <div className="bg-gray-200 p-[1vw] md:pb-[0.5vh] md:p-[1vw] md:mt-[1vh] pt-[2vh]">
         {/* Session Expiration Modal */}
       {showSessionAlert && (
         <div className="fixed inset-0 bg-gray-500/50 bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
@@ -264,4 +264,4 @@ const GM_TomorrowTable = () => {
   );
 };
 
-export default GM_TomorrowTable;
+export default Message_Tomorrowtable;

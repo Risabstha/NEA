@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { jwtDecode } from 'jwt-decode';  // Changed from default import to named import
 
 const EditUserModal = ({ user, onClose, onSave }) => {
     const [editedUser, setEditedUser] = useState({ ...user });
 
+   
     const handleChange = (e) => {
         const { name, value } = e.target;
 
@@ -68,7 +70,39 @@ const AdminRole = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [editUser, setEditUser] = useState(null);
     const usersPerPage = 5;
+    const [showSessionAlert, setShowSessionAlert] = useState(false);
 
+    // Session expiration check
+    useEffect(() => {
+      const checkTokenExpiration = () => {
+        const token = localStorage.getItem("token");
+        if (!token) return;
+  
+        try {
+          const decodedToken = jwtDecode(token);
+          const currentTime = Date.now() / 1000;
+          
+          if (decodedToken.exp < currentTime) {
+            handleSessionExpiration();
+          }
+        } catch (error) {
+          console.error("Token decoding error:", error);
+        }
+      };
+  
+      // Initial check
+      checkTokenExpiration();
+      
+      // Check every 60 seconds
+      const interval = setInterval(checkTokenExpiration, 60000);
+      
+      return () => clearInterval(interval);
+    }, []);
+  
+    const handleSessionExpiration = () => {
+      localStorage.removeItem("token");
+      setShowSessionAlert(true);
+    };
     useEffect(() => {
         const fetchUsers = async () => {
             try {
@@ -80,21 +114,14 @@ const AdminRole = () => {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-                if (!response.ok) {
-                    if (response.status === 401) {
-                        alert("Session expired. Please log in again.");
-                        localStorage.removeItem("token"); // Clear token
+                if (!response.ok) throw new Error("Failed to fetch meetings");
 
-                        // Redirect to login page
-                        window.location.href = "/"; // Change the route as per your app's structure
-                    }
-                    throw new Error("Failed to fetch users");
-                }
 
                 const data = await response.json();
                 setUsers(data.filter((user) => user.role === "Admin"));
 
-            } catch (error) {
+            } 
+            catch (error) {
                 console.error("Error fetching users:", error);
                 setUsers([]);
             }
@@ -152,6 +179,26 @@ const AdminRole = () => {
 
     return (
         <div className="bg-gray-200 p-4 mt-4">
+            {/* Session Expiration Modal */}
+      {showSessionAlert && (
+        <div className="fixed inset-0 bg-gray-500/50 bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full mx-4">
+            <div className="text-center">
+              <h3 className="text-lg font-medium mb-4">⏳ Session Expired</h3>
+              <p className="mb-4">Your session has expired. Please log in again.</p>
+              <button
+                onClick={() => {
+                  localStorage.removeItem("token");
+                  window.location.href = "/";
+                }}
+                className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+              >
+                Go to Login
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
             {editUser && (
                 <EditUserModal
                     user={editUser}

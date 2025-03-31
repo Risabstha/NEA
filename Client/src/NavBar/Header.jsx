@@ -19,7 +19,7 @@ const Header = () => {
                 <div className="md:rounded-b-3xl" style={{ backgroundColor: "#C0C0C0" }}>
                     {/* LOGO section */}
                     <div className='flex justify-center h-[12vh] p-[1.5vh] md:pt-[3vh] md:w-[98vw] md:h-[20vh] md:pb-[7vh]'>
-                    <img src={nealogo} alt="NEA LOGO" />
+                        <img src={nealogo} alt="NEA LOGO" />
                     </div>
                 </div>
 
@@ -42,6 +42,13 @@ const Header = () => {
                                     ${location.pathname === "/add-meeting" ? "bg-blue-600 text-white rounded-4xl" : ""}`}
                                 >
                                     Add Meeting
+                                </Link>
+                                <Link
+                                    to="/smsMeeting"
+                                    className={`flex items-center justify-center text-black px-[3vw] h-full hover:text-white hover:rounded-4xl hover:bg-blue-700
+                                    ${location.pathname === "/smsMeeting" || location.pathname === "/smsMeeting/smsTomorrow" || location.pathname === "/smsMeeting/smsOvermorrow" ? "bg-blue-600 text-white rounded-4xl" : ""}`}
+                                >
+                                    SMS Meeting
                                 </Link>
                             </div>
                             <div className='flex h-[6vh]'>
@@ -80,13 +87,20 @@ const Header = () => {
                                 >
                                     Add Meeting
                                 </Link>
-
+                                <Link
+                                    to="/smsMeeting"
+                                    className={`flex w-[100vw] items-center justify-center p-2 text-black hover:text-white hover:bg-blue-700
+                                    ${location.pathname === "/smsMeeting" || location.pathname === "/smsMeeting/smsTomorrow" || location.pathname === "/smsMeeting/smsOvermorrow" ? "bg-blue-600 text-white" : ""}`}
+                                >
+                                    SMS Meeting
+                                </Link>
                                 <Link
                                     to="/"
                                     className="flex w-[100vw] items-center justify-center p-2 text-black hover:bg-blue-700 hover:text-white"
                                 >
                                     Logout
                                 </Link>
+
                             </div>
                         )}
                     </div>

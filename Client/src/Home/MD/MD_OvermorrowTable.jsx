@@ -4,11 +4,11 @@ import { jwtDecode } from 'jwt-decode';  // Changed from default import to named
 import internal from '../../assets/internal.png'
 import external from '../../assets/external.png'
 
-const OvermorrowTable = () => {
+const MD_OvermorrowTable = () => {
     const [meetings, setMeetings] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [showNoMeetings, setShowNoMeetings] = useState(false);
-    const meetingsPerPage = 6;
+    const meetingsPerPage = 7;
     const [showSessionAlert, setShowSessionAlert] = useState(false);
 
     // Session expiration check
@@ -222,7 +222,7 @@ const OvermorrowTable = () => {
                                                         {formatTime(meeting.time)}
                                                     </td>
                                                     <td className="border w-[20vw] border-gray-400 px-4 py-2  text-center">
-                                                        <div className="flex items-center justify-center gap-4">        {/* flex and border shouldn't be on same div/element */}
+                                                        <div className="flex items-center justify-center gap-2">        {/* flex and border shouldn't be on same div/element */}
                                                             {meeting.meeting_type === "internal" && (
                                                                 <img className="w-[30px] h-[30px]" src={internal} alt="Internal" />
                                                             )}
@@ -272,4 +272,4 @@ const OvermorrowTable = () => {
     );
 };
 
-export default OvermorrowTable;
+export default MD_OvermorrowTable;

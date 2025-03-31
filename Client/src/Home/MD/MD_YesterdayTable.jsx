@@ -4,11 +4,11 @@ import { jwtDecode } from 'jwt-decode';  // Changed from default import to named
 import internal from '../../assets/internal.png'
 import external from '../../assets/external.png'
 
-const OvermorrowTable = () => {
+const MD_Yesterdaytable = () => {
     const [meetings, setMeetings] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [showNoMeetings, setShowNoMeetings] = useState(false);
-    const meetingsPerPage = 6;
+    const meetingsPerPage = 7;
     const [showSessionAlert, setShowSessionAlert] = useState(false);
 
     // Session expiration check
@@ -43,13 +43,13 @@ const OvermorrowTable = () => {
         setShowSessionAlert(true);
     };
 
+
     const getKathmanduDate = () => {
         const now = new Date();
         const offset = 5.75 * 60; // Kathmandu is UTC+5:45 (5.75 hours)
         const kathmanduTime = new Date(now.getTime() + offset * 60 * 1000);
         return kathmanduTime.toISOString().split("T")[0]; // Format: YYYY-MM-DD
     };
-
     const formatTime = (timeStr) => {
         if (!timeStr) return "";
         const [hours, minutes] = timeStr.split(":");
@@ -94,10 +94,10 @@ const OvermorrowTable = () => {
                 data = data.filter((meeting) => meeting.date && meeting.time); // Remove invalid entries
 
                 // Convert AD date to BS for filtering
-                const todayAD = new Date(getKathmanduDate());       //here
-                todayAD.setDate(todayAD.getDate() + 2); // Add 2 day
-                const overmorrowAD = todayAD.toISOString().split("T")[0]; // Convert to YYYY-MM-DD
-                const overmorrowBS = convertADDateToBS(overmorrowAD); // Convert to BS
+                const todayAD = new Date(getKathmanduDate());  //here
+                todayAD.setDate(todayAD.getDate() - 1); // Add 1 day
+                const yesterdayAD = todayAD.toISOString().split("T")[0]; // Convert to YYYY-MM-DD
+                const yesterdayBS = convertADDateToBS(yesterdayAD); // Convert to BS
 
                 // Convert meeting AD dates to BS and filter
                 data.forEach((meeting) => {
@@ -108,7 +108,7 @@ const OvermorrowTable = () => {
 
 
                 data = data.filter((meeting) => {
-                    const isMatch = meeting.date === overmorrowBS;
+                    const isMatch = (meeting.date) === (yesterdayBS);
                     // console.log(`Meeting Date: ${meeting.date}, Today BS: ${todayBS}, Match: ${isMatch}`);
                     return isMatch;
                 });
@@ -186,10 +186,11 @@ const OvermorrowTable = () => {
                             No Meetings Scheduled
                         </div>
 
+
                     ) : (
-                        <div>
+                        <>
                             {meetings.length > 0 && (
-                                <table className="w-full border-collapse border text-xl border-gray-400">
+                                <table className="w-full border-collapse border text-xl border-gray-400 ">
                                     <thead>
                                         <tr className="bg-gray-200">
                                             <th className="border w-[4vw] border-gray-400 px-4 py-2">SN</th>
@@ -222,7 +223,7 @@ const OvermorrowTable = () => {
                                                         {formatTime(meeting.time)}
                                                     </td>
                                                     <td className="border w-[20vw] border-gray-400 px-4 py-2  text-center">
-                                                        <div className="flex items-center justify-center gap-4">        {/* flex and border shouldn't be on same div/element */}
+                                                        <div className="flex items-center justify-center px-1 gap-2">        {/* flex and border shouldn't be on same div/element */}
                                                             {meeting.meeting_type === "internal" && (
                                                                 <img className="w-[30px] h-[30px]" src={internal} alt="Internal" />
                                                             )}
@@ -232,6 +233,7 @@ const OvermorrowTable = () => {
                                                             <span>{meeting.type}</span>
                                                         </div>
                                                     </td>
+
                                                     <td className="border w-[20vw] border-gray-400 px-4 py-2">{meeting.location}</td>
                                                     <td className="border w-[35vw] border-gray-400 px-4 py-2">{meeting.description}</td>
                                                 </tr>
@@ -264,7 +266,7 @@ const OvermorrowTable = () => {
                                     </button>
                                 </div>
                             )}
-                        </div>
+                        </>
                     )}
                 </div>
             </div>
@@ -272,4 +274,4 @@ const OvermorrowTable = () => {
     );
 };
 
-export default OvermorrowTable;
+export default MD_Yesterdaytable;

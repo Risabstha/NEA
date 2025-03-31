@@ -3,6 +3,7 @@ import { NepaliDatePicker } from "nepali-datepicker-reactjs";
 import "nepali-datepicker-reactjs/dist/index.css";
 import { ADToBS } from "bikram-sambat-js";
 import axios from "axios";
+import { jwtDecode } from 'jwt-decode';  // Changed from default import to named import
 
 
 const Add = () => {
@@ -21,8 +22,40 @@ const Add = () => {
     const [newMeeting, setNewMeeting] = useState({ date: "", type: "", location: "", description: "", time: "", priority: "normal", meeting_type: "internal" });
     const [editingId, setEditingId] = useState(null);
     const [isFormVisible, setIsFormVisible] = useState(true);
-
     const [sortOrder, setSortOrder] = useState("asc"); // State for sorting order
+    const [showSessionAlert, setShowSessionAlert] = useState(false);
+
+    // Session expiration check
+    useEffect(() => {
+        const checkTokenExpiration = () => {
+            const token = localStorage.getItem("token");
+            if (!token) return;
+
+            try {
+                const decodedToken = jwtDecode(token);
+                const currentTime = Date.now() / 1000;
+
+                if (decodedToken.exp < currentTime) {
+                    handleSessionExpiration();
+                }
+            } catch (error) {
+                console.error("Token decoding error:", error);
+            }
+        };
+
+        // Initial check
+        checkTokenExpiration();
+
+        // Check every 60 seconds
+        const interval = setInterval(checkTokenExpiration, 60000);
+
+        return () => clearInterval(interval);
+    }, []);
+
+    const handleSessionExpiration = () => {
+        localStorage.removeItem("token");
+        setShowSessionAlert(true);
+    };
 
     // Function to handle sorting by date
     const handleSortByDate = () => {
@@ -86,16 +119,6 @@ const Add = () => {
                     },
                 });
                 if (!response.ok) throw new Error("Failed to fetch meetings");
-                // if (!response.ok) {
-                //     if (response.status === 401) {
-                //         alert("Session expired. Please log in again.");
-                //         localStorage.removeItem("token"); // Clear token
-
-                //         // Redirect to login page
-                //         window.location.href = "/"; // Change the route as per your app's structure
-                //     }
-                //     throw new Error("Failed to fetch users");
-                // }
 
                 let data = await response.json();
 
@@ -140,38 +163,11 @@ const Add = () => {
         };
 
         fetchMeetings();
+        const interval = setInterval(fetchMeetings, 1200000); // Fetch every 20min
+
+        return () => clearInterval(interval); // Cleanup on unmount
     }, []);
 
-    // useEffect(() => {
-    //     const checkSession = async () => {
-    //       try {
-    //         const token = localStorage.getItem("token");
-    //         if (!token) return;
-
-    //         // Verify token validity with backend
-    //         const response = await axios.get("/api/auth/verify", {
-    //           headers: { Authorization: `Bearer ${token}` }
-    //         });
-
-    //         // Calculate remaining token lifetime
-    //         const expiresIn = response.data.expiresIn; // Get from backend
-    //         const timeout = setTimeout(() => {
-    //           handleSessionExpiration();
-    //         }, expiresIn * 1000);
-
-    //         return () => clearTimeout(timeout);
-    //       } catch (error) {
-    //         if (error.response?.status === 401) {
-    //           handleSessionExpiration();
-    //         }
-    //       }
-    //     };
-
-    //     checkSession();
-    //     const interval = setInterval(checkSession, 300000); // Check every 5 minutes
-
-    //     return () => clearInterval(interval);
-    //   }, []);
 
     const handleEdit = (meeting) => {
         setNewMeeting({
@@ -290,6 +286,26 @@ const Add = () => {
 
     return (
         <>
+            {/* Session Expiration Modal */}
+            {showSessionAlert && (
+                <div className="fixed inset-0 bg-gray-500/50 bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
+                    <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full mx-4">
+                        <div className="text-center">
+                            <h3 className="text-lg font-medium mb-4">⏳ Session Expired</h3>
+                            <p className="mb-4">Your session has expired. Please log in again.</p>
+                            <button
+                                onClick={() => {
+                                    localStorage.removeItem("token");
+                                    window.location.href = "/";
+                                }}
+                                className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                            >
+                                Go to Login
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
             {isFormVisible && (
                 <div className="left-[9vw] md:left-[24vw] lg:left-[29vw] xl:left-[34vw]
                                 right-[9vw] md:right-[24vw] lg:right-[29vw] xl:right-[34vw]
@@ -349,7 +365,7 @@ const Add = () => {
                     />
 
                     <div className="mb-2 border-1 p-2">
-                        <label className="mr-4 ">Priority:</label>
+                        <label className="mr-4 ">Priority :</label>
                         <label className="mr-2  ">
                             <input
                                 type="radio"
@@ -375,29 +391,29 @@ const Add = () => {
                     </div>
 
                     <div className="mb-2 border-1 p-2  ">
-                        <label className="mr-4">Meeting Type:</label>
-                            <label className="mr-2 ">
-                                <input
-                                    type="radio"
-                                    name="meeting_type"
-                                    value="internal"
-                                    checked={newMeeting.meeting_type === "internal"}
-                                    onChange={handleChange}
-                                    className="mr-1"
-                                />
-                                Internal
-                            </label>
-                            <label>
-                                <input
-                                    type="radio"
-                                    name="meeting_type"
-                                    value="external"
-                                    checked={newMeeting.meeting_type === "external"}
-                                    onChange={handleChange}
-                                    className="mr-1 "
-                                />
-                                External
-                            </label>
+                        <label className="mr-4">Meeting :</label>
+                        <label className="mr-2 ">
+                            <input
+                                type="radio"
+                                name="meeting_type"
+                                value="internal"
+                                checked={newMeeting.meeting_type === "internal"}
+                                onChange={handleChange}
+                                className="mr-1"
+                            />
+                            Internal
+                        </label>
+                        <label>
+                            <input
+                                type="radio"
+                                name="meeting_type"
+                                value="external"
+                                checked={newMeeting.meeting_type === "external"}
+                                onChange={handleChange}
+                                className="mr-1 "
+                            />
+                            External
+                        </label>
                     </div>
                     <button
                         onClick={handleAddOrEditMeeting}

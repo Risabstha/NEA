@@ -1,11 +1,47 @@
 import React, { useState, useEffect } from "react";
 import { ADToBS } from "bikram-sambat-js";
+import { jwtDecode } from 'jwt-decode';  // Changed from default import to named import
+import internal from '../../assets/internal.png'
+import external from '../../assets/external.png'
 
 const Yesterdaytable = () => {
     const [meetings, setMeetings] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [showNoMeetings, setShowNoMeetings] = useState(false);
-    const meetingsPerPage = 7;
+    const meetingsPerPage = 6;
+    const [showSessionAlert, setShowSessionAlert] = useState(false);
+
+    // Session expiration check
+    useEffect(() => {
+        const checkTokenExpiration = () => {
+            const token = localStorage.getItem("token");
+            if (!token) return;
+
+            try {
+                const decodedToken = jwtDecode(token);
+                const currentTime = Date.now() / 1000;
+
+                if (decodedToken.exp < currentTime) {
+                    handleSessionExpiration();
+                }
+            } catch (error) {
+                console.error("Token decoding error:", error);
+            }
+        };
+
+        // Initial check
+        checkTokenExpiration();
+
+        // Check every 60 seconds
+        const interval = setInterval(checkTokenExpiration, 60000);
+
+        return () => clearInterval(interval);
+    }, []);
+
+    const handleSessionExpiration = () => {
+        localStorage.removeItem("token");
+        setShowSessionAlert(true);
+    };
 
 
     const getKathmanduDate = () => {
@@ -49,16 +85,8 @@ const Yesterdaytable = () => {
                     },
                 });
 
-                if (!response.ok) {
-                    if (response.status === 401) {
-                        alert("Session expired. Please log in again.");
-                        localStorage.removeItem("token"); // Clear token
-                
-                        // Redirect to login page
-                        window.location.href = "/"; // Change the route as per your app's structure
-                    }
-                    throw new Error("Failed to fetch users");
-                }
+                if (!response.ok) throw new Error("Failed to fetch meetings");
+
 
                 let data = await response.json();
 
@@ -123,7 +151,27 @@ const Yesterdaytable = () => {
 
     return (
         <>
-            <div className="bg-gray-200 p-[1vw] md:pb-[0.5vh] md:p-[1vw] md:mt-[4vh] pt-[6vh]">
+            <div className="bg-gray-200 p-[1vw] md:pb-[0.5vh] md:p-[1vw] md:mt-[4vh] pt-[3vh]">
+                {/* Session Expiration Modal */}
+                {showSessionAlert && (
+                    <div className="fixed inset-0 bg-gray-500/50 bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
+                        <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full mx-4">
+                            <div className="text-center">
+                                <h3 className="text-lg font-medium mb-4">⏳ Session Expired</h3>
+                                <p className="mb-4">Your session has expired. Please log in again.</p>
+                                <button
+                                    onClick={() => {
+                                        localStorage.removeItem("token");
+                                        window.location.href = "/";
+                                    }}
+                                    className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                                >
+                                    Go to Login
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
                 <div className="overflow-x-auto">
                     {/* Show "No Meetings" when there are no meetings */}
                     {showNoMeetings ? (
@@ -142,7 +190,7 @@ const Yesterdaytable = () => {
                     ) : (
                         <>
                             {meetings.length > 0 && (
-                                <table className="w-full border-collapse border text-xl border-gray-400">
+                                <table className="w-full border-collapse border text-xl border-gray-400 ">
                                     <thead>
                                         <tr className="bg-gray-200">
                                             <th className="border w-[4vw] border-gray-400 px-4 py-2">SN</th>
@@ -174,7 +222,18 @@ const Yesterdaytable = () => {
                                                     <td className="border w-[11vw] border-gray-400 px-4 py-2">
                                                         {formatTime(meeting.time)}
                                                     </td>
-                                                    <td className="border w-[20vw] border-gray-400 px-4 py-2">{meeting.type}</td>
+                                                    <td className="border w-[20vw] border-gray-400 px-4 py-2  text-center">
+                                                        <div className="flex items-center justify-center px-1 gap-4">        {/* flex and border shouldn't be on same div/element */}
+                                                            {meeting.meeting_type === "internal" && (
+                                                                <img className="w-[30px] h-[30px]" src={internal} alt="Internal" />
+                                                            )}
+                                                            {meeting.meeting_type === "external" && (
+                                                                <img className="w-[30px] h-[30px]" src={external} alt="External" />
+                                                            )}
+                                                            <span>{meeting.type}</span>
+                                                        </div>
+                                                    </td>
+
                                                     <td className="border w-[20vw] border-gray-400 px-4 py-2">{meeting.location}</td>
                                                     <td className="border w-[35vw] border-gray-400 px-4 py-2">{meeting.description}</td>
                                                 </tr>

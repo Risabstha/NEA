@@ -51,28 +51,44 @@ export const signupUser = async (req, res) => {
     const user = new User({ username, phoneNumber, password: hashedPassword, role });
     await user.save();
 
-    res.status(201).json({ message: "User registered successfully" });
+    res.status(201).json({
+      success: true,
+      message: "User registered successfully",
+      user: {
+        username: user.username,
+        role: user.role,
+        phoneNumber: user.phoneNumber
+      }
+    });
   } catch (error) {
-    console.error("Error in signupUser:", error.message);
-
-    // Handle duplicate username error
+    // Modified error responses
     if (error.code === 11000) {
-      return res.status(400).json({ message: "Username already exists" });
+      return res.status(409).json({
+        success: false,
+        message: "Username already exists",
+        error: "DUPLICATE_USERNAME"
+      });
     }
 
-    // Handle validation errors (e.g., schema constraints)
     if (error.name === 'ValidationError') {
-      return res.status(400).json({ message: error.message });
+      return res.status(400).json({
+        success: false,
+        message: error.message,
+        error: "VALIDATION_ERROR"
+      });
     }
 
-    // Generic server error response
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: "SERVER_ERROR"
+    });
   }
 };
 
 
 
-
+ 
 
 
 

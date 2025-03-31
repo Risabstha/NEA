@@ -50,15 +50,15 @@ const Login = () => {
         setTimeout(() => {
           setLoading(false); // Hide loading GIF after 2 sec
           // navigate("/home"); // Redirect to home
-           // Redirect based on role
-           if (data.role === "MD") {
+          // Redirect based on role
+          if (data.role === "MD") {
             navigate("/mdhome");
           } else if (data.role === "PA") {
             navigate("/home");
           }
-          else if (data.role === "Admin"){
+          else if (data.role === "Admin") {
             navigate("/admin_dashboard");
-          } 
+          }
           else {
             navigate("/gm_dashboard");
           }
@@ -70,6 +70,10 @@ const Login = () => {
       console.error("Login error:", error);
       setErrorMessage("An error occurred, please try again.");
     }
+  };
+  
+  const handleCopyPaste = (event) => {
+    event.preventDefault();
   };
 
   return (
@@ -110,6 +114,9 @@ const Login = () => {
               <input
                 type="password"
                 name="password"
+                onCopy={handleCopyPaste}
+                onPaste={handleCopyPaste}
+                onCut={handleCopyPaste}
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Password"

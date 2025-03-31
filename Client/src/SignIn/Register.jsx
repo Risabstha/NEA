@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { signupUser } from "../api/apiHelper";
 import { FaUserAlt, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import { FaUsersCog } from "react-icons/fa";
 import { FaPhoneVolume } from "react-icons/fa6";
+import { jwtDecode } from 'jwt-decode';  // Changed from default import to named import
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -16,83 +17,136 @@ const Register = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [isError, setIsError] = useState(false);
+  const [showSessionAlert, setShowSessionAlert] = useState(false);
+
+  // Session expiration check
+  useEffect(() => {
+    const checkTokenExpiration = () => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      try {
+        const decodedToken = jwtDecode(token);
+        const currentTime = Date.now() / 1000;
+
+        if (decodedToken.exp < currentTime) {
+          handleSessionExpiration();
+        }
+      } catch (error) {
+        console.error("Token decoding error:", error);
+      }
+    };
+
+    // Initial check
+    checkTokenExpiration();
+
+    // Check every 60 seconds
+    const interval = setInterval(checkTokenExpiration, 60000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleSessionExpiration = () => {
+    localStorage.removeItem("token");
+    setShowSessionAlert(true);
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
     if (name === "phoneNumber") {
-      const numericValue = value.replace(/\D/g, ""); // Remove non-numeric characters
-      if (numericValue.length > 10) return; // Prevent more than 10 digits
-  
+      const numericValue = value.replace(/\D/g, "");
+      if (numericValue.length > 10) return;
       setFormData({ ...formData, [name]: numericValue });
     } else {
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  }
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.username || !formData.phoneNumber || !formData.password || !formData.confirmpassword || !formData.role) {
+    if (!formData.username || !formData.phoneNumber || !formData.password ||
+      !formData.confirmpassword || !formData.role) {
       setAlertMessage("All fields are required.");
       setIsError(true);
       return;
     }
+
     if (formData.password !== formData.confirmpassword) {
       setAlertMessage("Passwords do not match!");
       setIsError(true);
       return;
     }
-    if (formData.phoneNumber.length != 10 )
-    {
-      setAlertMessage("Phone number is Incorrect")
+
+    if (formData.phoneNumber.length !== 10) {
+      setAlertMessage("Phone number is Incorrect");
       setIsError(true);
       return;
     }
 
     try {
       const response = await signupUser(formData);
-      if (response.status === 201) {
+      if (response.data.success) {
         setAlertMessage("User registered successfully!");
         setIsError(false);
-        setFormData({ username: "", phoneNumber:"", password: "", confirmpassword: "", role: "" });
+        setFormData({
+          username: "",
+          phoneNumber: "",
+          password: "",
+          confirmpassword: "",
+          role: ""
+        });
       }
-      //  if (!response.ok) throw new Error("Failed to fetch meetings");
-      if (!response.ok) {
-        if (response.status === 401) {
-            alert("Session expired. Please log in again.");
-            localStorage.removeItem("token"); // Clear token
-
-            // Redirect to login page
-            window.location.href = "/"; // Change the route as per your app's structure
-        }
-        throw new Error("Failed to fetch users");
-    }
-    
-    } 
-    catch (error) {
-      setAlertMessage(error.response?.data?.message || "Signup failed, try again!");
-      setIsError(true);
+    } catch (error) {
+      if (error.response?.status === 401) {
+        handleSessionExpiration();
+      } else {
+        setAlertMessage(error.response?.data?.message || "Signup failed, try again!");
+        setIsError(true);
+      }
     }
   };
 
+  const handleCopyPaste = (event) => {
+    event.preventDefault();
+  };
+
   return (
-      <div className="flex items-center justify-center mt-[8vh] ">
-      <div className="relative w-auto h-auto max-w-md px-10 py-6  bg-gray-300 rounded-2xl  ">
-        {/* Show Alert Message */}
+    <div className="flex items-center justify-center mt-[8vh]">
+      {/* Session Expiration Modal */}
+      {showSessionAlert && (
+        <div className="fixed inset-0 bg-gray-500/50 bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full mx-4">
+            <div className="text-center">
+              <h3 className="text-lg font-medium mb-4">⏳ Session Expired</h3>
+              <p className="mb-4">Your session has expired. Please log in again.</p>
+              <button
+                onClick={() => {
+                  localStorage.removeItem("token");
+                  window.location.href = "/";
+                }}
+                className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+              >
+                Go to Login
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="relative w-auto h-auto max-w-md px-10 py-6 bg-gray-300 rounded-2xl">
         {alertMessage && (
-          <div
-            className={`mt-4 text-center text-lg py-2 rounded-4xl ${isError ? "bg-red-500 text-gray-200" : "bg-green-500 text-gray-200"}`}
-          >
+          <div className={`mt-4 text-center text-lg py-2 rounded-4xl ${isError ? "bg-red-500 text-gray-200" : "bg-green-500 text-gray-200"
+            }`}>
             {alertMessage}
           </div>
         )}
 
-
-        <form className="mt-6 " onSubmit={handleSubmit}>
-
+        <form className="mt-6" onSubmit={handleSubmit}>
+          {/* Existing form fields remain the same */}
           {/* Username Field */}
           <div className="mb-4 flex space-x-2">
             <div className="text-2xl m-2">
@@ -112,7 +166,7 @@ const Register = () => {
           {/* Phone number field */}
           <div className="mb-4 flex space-x-2">
             <div className="text-2xl m-2">
-            <FaPhoneVolume />
+              <FaPhoneVolume />
             </div>
             <input
               type="text"
@@ -135,6 +189,9 @@ const Register = () => {
               name="password"
               value={formData.password}
               onChange={handleInputChange}
+              onCopy={handleCopyPaste}
+              onPaste={handleCopyPaste}
+              onCut={handleCopyPaste}
               placeholder="Password"
               className="w-full px-4 py-2 bg-gray-100 bg-opacity-50 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -157,6 +214,9 @@ const Register = () => {
               name="confirmpassword"
               value={formData.confirmpassword}
               onChange={handleInputChange}
+              onCopy={handleCopyPaste}
+              onPaste={handleCopyPaste}
+              onCut={handleCopyPaste}
               placeholder="Confirm Password"
               className="w-full px-4 py-2 bg-gray-100 bg-opacity-50 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -231,8 +291,6 @@ const Register = () => {
               Add
             </button>
           </div>
-
-
         </form>
       </div>
     </div>

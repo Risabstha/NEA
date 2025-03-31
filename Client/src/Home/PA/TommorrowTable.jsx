@@ -1,12 +1,47 @@
 import React, { useState, useEffect } from "react";
 import { ADToBS } from "bikram-sambat-js";
-// import { NepaliDate } from 'nepali-calendar';
+import { jwtDecode } from 'jwt-decode';  // Changed from default import to named import
+import internal from '../../assets/internal.png'
+import external from '../../assets/external.png'
 
 const TommorrowTable = () => {
   const [meetings, setMeetings] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [showNoMeetings, setShowNoMeetings] = useState(false);
-  const meetingsPerPage = 7;
+  const meetingsPerPage = 6;
+  const [showSessionAlert, setShowSessionAlert] = useState(false);
+
+  // Session expiration check
+  useEffect(() => {
+    const checkTokenExpiration = () => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      try {
+        const decodedToken = jwtDecode(token);
+        const currentTime = Date.now() / 1000;
+
+        if (decodedToken.exp < currentTime) {
+          handleSessionExpiration();
+        }
+      } catch (error) {
+        console.error("Token decoding error:", error);
+      }
+    };
+
+    // Initial check
+    checkTokenExpiration();
+
+    // Check every 60 seconds
+    const interval = setInterval(checkTokenExpiration, 60000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleSessionExpiration = () => {
+    localStorage.removeItem("token");
+    setShowSessionAlert(true);
+  };
 
   const getKathmanduDate = () => {
     const now = new Date();
@@ -31,12 +66,14 @@ const TommorrowTable = () => {
   const convertADDateToBS = (adDate) => {
     try {
       const bsDate = ADToBS(adDate); // Convert AD to BS
-      return bsDate;
+      // const bsDate = new NepaliDate(adDate).format('YYYY-MM-DD');
+      return bsDate
     } catch (error) {
       console.error("Error converting AD to BS:", error);
       return null;
     }
   };
+
   useEffect(() => {
     const fetchMeetings = async () => {
       try {
@@ -49,16 +86,8 @@ const TommorrowTable = () => {
           },
         });
 
-        if (!response.ok) {
-          if (response.status === 401) {
-              alert("Session expired. Please log in again.");
-              localStorage.removeItem("token"); // Clear token
+        if (!response.ok) throw new Error("Failed to fetch meetings");
 
-              // Redirect to login page
-              window.location.href = "/"; // Change the route as per your app's structure
-          }
-          throw new Error("Failed to fetch users");
-      }
 
         let data = await response.json();
 
@@ -67,9 +96,13 @@ const TommorrowTable = () => {
 
         // Convert AD date to BS for filtering
         const todayAD = new Date(getKathmanduDate());  //here
+        console.log("1  " + todayAD)
         todayAD.setDate(todayAD.getDate() + 1); // Add 1 day
+        console.log("2  " + todayAD)
         const tommorrowAD = todayAD.toISOString().split("T")[0]; // Convert to YYYY-MM-DD
+        console.log("4  " + tommorrowAD)
         const tommorrowBS = convertADDateToBS(tommorrowAD); // Convert to BS
+        console.log("3  " + tommorrowBS)
 
         // Convert meeting AD dates to BS and filter
         data.forEach((meeting) => {
@@ -123,7 +156,27 @@ const TommorrowTable = () => {
 
   return (
     <>
-      <div className="bg-gray-200 p-[1vw] md:pb-[0.5vh] md:p-[1vw] md:mt-[4vh] pt-[6vh]">
+      <div className="bg-gray-200 p-[1vw] md:pb-[0.5vh] md:p-[1vw] md:mt-[4vh] pt-[3vh]">
+        {/* Session Expiration Modal */}
+        {showSessionAlert && (
+          <div className="fixed inset-0 bg-gray-500/50 bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full mx-4">
+              <div className="text-center">
+                <h3 className="text-lg font-medium mb-4">⏳ Session Expired</h3>
+                <p className="mb-4">Your session has expired. Please log in again.</p>
+                <button
+                  onClick={() => {
+                    localStorage.removeItem("token");
+                    window.location.href = "/";
+                  }}
+                  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                >
+                  Go to Login
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
         <div className="overflow-x-auto">
           {/* Show "No Meetings" when there are no meetings */}
           {showNoMeetings ? (
@@ -173,7 +226,17 @@ const TommorrowTable = () => {
                           <td className="border w-[11vw] border-gray-400 px-4 py-2">
                             {formatTime(meeting.time)}
                           </td>
-                          <td className="border w-[20vw] border-gray-400 px-4 py-2">{meeting.type}</td>
+                          <td className="border w-[20vw] border-gray-400 px-4 py-2  text-center">
+                            <div className="flex items-center justify-center gap-4">        {/* flex and border shouldn't be on same div/element */}
+                              {meeting.meeting_type === "internal" && (
+                                <img className="w-[30px] h-[30px]" src={internal} alt="Internal" />
+                              )}
+                              {meeting.meeting_type === "external" && (
+                                <img className="w-[30px] h-[30px]" src={external} alt="External" />
+                              )}
+                              <span>{meeting.type}</span>
+                            </div>
+                          </td>
                           <td className="border w-[20vw] border-gray-400 px-4 py-2">{meeting.location}</td>
                           <td className="border w-[35vw] border-gray-400 px-4 py-2">{meeting.description}</td>
                         </tr>

@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { ADToBS } from "bikram-sambat-js";
 import { jwtDecode } from 'jwt-decode';  // Changed from default import to named import
-import internal from '../../assets/internal.png'
-import external from '../../assets/external.png'
+import { AiOutlineMessage } from "react-icons/ai";
 
-const OvermorrowTable = () => {
+
+const Message_Todaytable = () => {
     const [meetings, setMeetings] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [showNoMeetings, setShowNoMeetings] = useState(false);
     const meetingsPerPage = 6;
     const [showSessionAlert, setShowSessionAlert] = useState(false);
+    const [selectedMeetings, setSelectedMeetings] = useState(new Set()); //  Track selected meetings
 
     // Session expiration check
     useEffect(() => {
@@ -49,7 +50,6 @@ const OvermorrowTable = () => {
         const kathmanduTime = new Date(now.getTime() + offset * 60 * 1000);
         return kathmanduTime.toISOString().split("T")[0]; // Format: YYYY-MM-DD
     };
-
     const formatTime = (timeStr) => {
         if (!timeStr) return "";
         const [hours, minutes] = timeStr.split(":");
@@ -87,30 +87,29 @@ const OvermorrowTable = () => {
 
                 if (!response.ok) throw new Error("Failed to fetch meetings");
 
-
                 let data = await response.json();
 
                 // Filter and convert dates
                 data = data.filter((meeting) => meeting.date && meeting.time); // Remove invalid entries
 
                 // Convert AD date to BS for filtering
-                const todayAD = new Date(getKathmanduDate());       //here
-                todayAD.setDate(todayAD.getDate() + 2); // Add 2 day
-                const overmorrowAD = todayAD.toISOString().split("T")[0]; // Convert to YYYY-MM-DD
-                const overmorrowBS = convertADDateToBS(overmorrowAD); // Convert to BS
+                const todayAD = new Date(getKathmanduDate());
+                const todayBS = convertADDateToBS(todayAD);
 
                 // Convert meeting AD dates to BS and filter
                 data.forEach((meeting) => {
-                    // meeting.date = (meeting.date); // Convert each meeting date to BS
-                    meeting.date = (meeting.date).split("T")[0];
-                    // console.log(meeting.date)
+                    meeting.date = meeting.date.split("T")[0];
                 });
 
-
                 data = data.filter((meeting) => {
-                    const isMatch = meeting.date === overmorrowBS;
+                    const isMatch = (meeting.date) === (todayBS);
                     // console.log(`Meeting Date: ${meeting.date}, Today BS: ${todayBS}, Match: ${isMatch}`);
                     return isMatch;
+                });
+
+                data = data.filter((meeting) => {
+                    const isInternal = (meeting.meeting_type) === ("internal");
+                    return isInternal;
                 });
 
                 data.sort((a, b) => {
@@ -135,7 +134,7 @@ const OvermorrowTable = () => {
         };
 
         fetchMeetings();
-        const interval = setInterval(fetchMeetings, 1200000); // Fetch every 10min
+        const interval = setInterval(fetchMeetings, 1200000); // Fetch every 20min
 
         return () => clearInterval(interval); // Cleanup on unmount
     }, []);
@@ -149,9 +148,36 @@ const OvermorrowTable = () => {
     const goToNextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages));
     const goToPrevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
 
+    // Function to check if a meeting is selected
+    const isSelected = (meetingIndex) => selectedMeetings.has(meetingIndex);
+
+    // Function to toggle checkbox selection
+    const handleCheckboxChange = (meetingId) => {
+        setSelectedMeetings((prevSelected) => {
+            const newSelected = new Set(prevSelected);
+            if (newSelected.has(meetingId)) {
+                newSelected.delete(meetingId);
+            } else {
+                newSelected.add(meetingId);
+            }
+            return newSelected;
+        });
+    };
+
     return (
         <>
-            <div className="bg-gray-200 p-[1vw] md:pb-[0.5vh] md:p-[1vw] md:mt-[4vh] pt-[3vh]">
+            <div className="bg-gray-200 p-[1vw] md:pb-[0.5vh] md:px-[1vw] md:mt-[0] pt-[2vh] md:pt-[0]">
+            <div className="flex justify-end mr-5 mb-[1.5vh]">
+                <div className="flex space-x-2 justify-center items-center border-none px-2 py-1 rounded-4xl w-[10rem]
+                                bg-blue-600 text-white 
+                                hover:bg-blue-700 cursor-pointer
+                                ">
+                    <AiOutlineMessage  className="text-2xl"/>
+                    <span className="text-xl">Send SMS</span>
+                </div>
+                </div>
+
+
                 {/* Session Expiration Modal */}
                 {showSessionAlert && (
                     <div className="fixed inset-0 bg-gray-500/50 bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
@@ -186,12 +212,14 @@ const OvermorrowTable = () => {
                             No Meetings Scheduled
                         </div>
 
+
                     ) : (
-                        <div>
+                        <>
                             {meetings.length > 0 && (
                                 <table className="w-full border-collapse border text-xl border-gray-400">
                                     <thead>
                                         <tr className="bg-gray-200">
+                                            <th className="border w-[4vw] border-gray-400 px-4 py-2">✔</th>
                                             <th className="border w-[4vw] border-gray-400 px-4 py-2">SN</th>
                                             <th className="border w-[13vw] border-gray-400 px-4 py-2">Date</th>
                                             <th className="border w-[11vw] border-gray-400 px-4 py-2">Time</th>
@@ -213,6 +241,14 @@ const OvermorrowTable = () => {
                                                         }`}
                                                 >
                                                     <td className="border w-[4vw] border-gray-400 px-4 py-2">
+                                                        <input type="checkbox"
+                                                            name="select"
+                                                            value="select"
+                                                            checked={isSelected((currentPage - 1) * meetingsPerPage + index + 1)} //  Maintain selection state
+                                                            onChange={() => handleCheckboxChange((currentPage - 1) * meetingsPerPage + index + 1)} //  Toggle selection
+                                                            className="w-5 h-5 cursor-pointer" />
+                                                    </td>
+                                                    <td className="border w-[4vw] border-gray-400 px-4 py-2">
                                                         {(currentPage - 1) * meetingsPerPage + index + 1}
                                                     </td>
                                                     <td className="border w-[13vw] border-gray-400 px-4 py-2">
@@ -221,17 +257,7 @@ const OvermorrowTable = () => {
                                                     <td className="border w-[11vw] border-gray-400 px-4 py-2">
                                                         {formatTime(meeting.time)}
                                                     </td>
-                                                    <td className="border w-[20vw] border-gray-400 px-4 py-2  text-center">
-                                                        <div className="flex items-center justify-center gap-4">        {/* flex and border shouldn't be on same div/element */}
-                                                            {meeting.meeting_type === "internal" && (
-                                                                <img className="w-[30px] h-[30px]" src={internal} alt="Internal" />
-                                                            )}
-                                                            {meeting.meeting_type === "external" && (
-                                                                <img className="w-[30px] h-[30px]" src={external} alt="External" />
-                                                            )}
-                                                            <span>{meeting.type}</span>
-                                                        </div>
-                                                    </td>
+                                                    <td className="border w-[20vw] border-gray-400 px-4 py-2">{meeting.type}</td>
                                                     <td className="border w-[20vw] border-gray-400 px-4 py-2">{meeting.location}</td>
                                                     <td className="border w-[35vw] border-gray-400 px-4 py-2">{meeting.description}</td>
                                                 </tr>
@@ -264,7 +290,7 @@ const OvermorrowTable = () => {
                                     </button>
                                 </div>
                             )}
-                        </div>
+                        </>
                     )}
                 </div>
             </div>
@@ -272,4 +298,4 @@ const OvermorrowTable = () => {
     );
 };
 
-export default OvermorrowTable;
+export default Message_Todaytable;
