@@ -40,6 +40,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Login />} />
+          <Route path="/register" element={<Register />} />   {/** needst to be removed */}
 
           <Route element={<ProtectedRoute />}>
 

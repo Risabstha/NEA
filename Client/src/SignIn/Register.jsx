@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom"; // needs to be removed
 import { signupUser } from "../api/apiHelper";
 import { FaUserAlt, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import { FaUsersCog } from "react-icons/fa";
@@ -290,6 +291,12 @@ const Register = () => {
             >
               Add
             </button>
+          </div>
+          <div className="mt-4 text-sm text-gray-700 text-center">
+            Already have an account?
+            <Link to="/" className="pl-2 text-sm text-gray-900 hover:text-blue-600">
+              Sign in
+            </Link>
           </div>
         </form>
       </div>
