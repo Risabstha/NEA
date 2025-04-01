@@ -60,8 +60,8 @@ function App() {
             <Route path="/mdhome" element={<MdHome />}>
               <Route index element={<MD_Meeting_Table />} />
               <Route path="yesterday" element={<MD_Yesterdaytable />} />
-              <Route path="tomorrow" element={<MD_OvermorrowTable />} />
-              <Route path="overmorrow" element={<MD_TommorrowTable />} />
+              <Route path="overmorrow" element={<MD_OvermorrowTable />} />
+              <Route path="tomorrow" element={<MD_TommorrowTable />} />
             </Route>
 
             <Route path="/add-meeting" element={<AddMeeting />} />

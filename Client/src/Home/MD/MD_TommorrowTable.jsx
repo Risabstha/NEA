@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ADToBS } from "bikram-sambat-js";
+import NepaliDate from 'nepali-date-converter'
 import { jwtDecode } from 'jwt-decode';  // Changed from default import to named import
 import internal from '../../assets/internal.png'
 import external from '../../assets/external.png'
@@ -20,7 +20,7 @@ const MD_TommorrowTable = () => {
       try {
         const decodedToken = jwtDecode(token);
         const currentTime = Date.now() / 1000;
-        
+
         if (decodedToken.exp < currentTime) {
           handleSessionExpiration();
         }
@@ -31,10 +31,10 @@ const MD_TommorrowTable = () => {
 
     // Initial check
     checkTokenExpiration();
-    
+
     // Check every 60 seconds
     const interval = setInterval(checkTokenExpiration, 60000);
-    
+
     return () => clearInterval(interval);
   }, []);
 
@@ -65,15 +65,15 @@ const MD_TommorrowTable = () => {
 
   const convertADDateToBS = (adDate) => {
     try {
-      const bsDate = ADToBS(adDate); // Convert AD to BS
-      // const bsDate = new NepaliDate(adDate).format('YYYY-MM-DD');
-      return bsDate
+      // Convert AD to BS
+      const bsDate = new NepaliDate(new Date(adDate)); // Requires a JS Date object
+      return bsDate.format('YYYY-MM-DD'); // Format as BS date string
     } catch (error) {
       console.error("Error converting AD to BS:", error);
       return null;
     }
   };
-  
+
   useEffect(() => {
     const fetchMeetings = async () => {
       try {
@@ -100,7 +100,7 @@ const MD_TommorrowTable = () => {
         todayAD.setDate(todayAD.getDate() + 1); // Add 1 day
         console.log("2  " + todayAD)
         const tommorrowAD = todayAD.toISOString().split("T")[0]; // Convert to YYYY-MM-DD
-        console.log("4  "+ tommorrowAD)
+        console.log("4  " + tommorrowAD)
         const tommorrowBS = convertADDateToBS(tommorrowAD); // Convert to BS
         console.log("3  " + tommorrowBS)
 
@@ -158,25 +158,25 @@ const MD_TommorrowTable = () => {
     <>
       <div className="bg-gray-200 p-[1vw] md:pb-[0.5vh] md:p-[1vw] md:mt-[4vh] pt-[3vh]">
         {/* Session Expiration Modal */}
-      {showSessionAlert && (
-        <div className="fixed inset-0 bg-gray-500/50 bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full mx-4">
-            <div className="text-center">
-              <h3 className="text-lg font-medium mb-4">⏳ Session Expired</h3>
-              <p className="mb-4">Your session has expired. Please log in again.</p>
-              <button
-                onClick={() => {
-                  localStorage.removeItem("token");
-                  window.location.href = "/";
-                }}
-                className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
-              >
-                Go to Login
-              </button>
+        {showSessionAlert && (
+          <div className="fixed inset-0 bg-gray-500/50 bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full mx-4">
+              <div className="text-center">
+                <h3 className="text-lg font-medium mb-4">⏳ Session Expired</h3>
+                <p className="mb-4">Your session has expired. Please log in again.</p>
+                <button
+                  onClick={() => {
+                    localStorage.removeItem("token");
+                    window.location.href = "/";
+                  }}
+                  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                >
+                  Go to Login
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
         <div className="overflow-x-auto">
           {/* Show "No Meetings" when there are no meetings */}
           {showNoMeetings ? (
@@ -227,16 +227,16 @@ const MD_TommorrowTable = () => {
                             {formatTime(meeting.time)}
                           </td>
                           <td className="border w-[20vw] border-gray-400 px-4 py-2  text-center">
-                                                                                  <div className="flex items-center justify-center gap-2">        {/* flex and border shouldn't be on same div/element */}
-                                                                                      {meeting.meeting_type === "internal" && (
-                                                                                          <img className="w-[30px] h-[30px]" src={internal} alt="Internal" />
-                                                                                      )}
-                                                                                      {meeting.meeting_type === "external" && (
-                                                                                          <img className="w-[30px] h-[30px]" src={external} alt="External" />
-                                                                                      )}
-                                                                                      <span>{meeting.type}</span>
-                                                                                  </div>
-                                                                              </td>
+                            <div className="flex items-center justify-center gap-2">        {/* flex and border shouldn't be on same div/element */}
+                              {meeting.meeting_type === "internal" && (
+                                <img className="w-[32px] h-[32px]" src={internal} alt="Internal" />
+                              )}
+                              {meeting.meeting_type === "external" && (
+                                <img className="w-[26px] h-[26px]" src={external} alt="External" />
+                              )}
+                              <span>{meeting.type}</span>
+                            </div>
+                          </td>
                           <td className="border w-[20vw] border-gray-400 px-4 py-2">{meeting.location}</td>
                           <td className="border w-[35vw] border-gray-400 px-4 py-2">{meeting.description}</td>
                         </tr>

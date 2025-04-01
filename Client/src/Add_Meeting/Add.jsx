@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { NepaliDatePicker } from "nepali-datepicker-reactjs";
 import "nepali-datepicker-reactjs/dist/index.css";
-import { ADToBS } from "bikram-sambat-js";
+// import { ADToBS } from "bikram-sambat-js";
+import NepaliDate from 'nepali-date-converter'
 import axios from "axios";
 import { jwtDecode } from 'jwt-decode';  // Changed from default import to named import
 
@@ -88,7 +89,9 @@ const Add = () => {
     }, []); // Runs only once on mount
 
 
-    const todayBS = ADToBS(new Date()); // Convert AD to BS
+    // const todayBS = ADToBS(new Date()); // Convert AD to BS
+    const todayBS = (new NepaliDate(new Date())).format('YYYY-MM-DD'); // Requires a JS Date object
+        //   return bsDate.format('YYYY-MM-DD'); // Format as BS date string
     const handleDateChange = (date) => {
         if (date < todayBS) {
             alert("Past Date cannot be selected!!");
@@ -100,7 +103,9 @@ const Add = () => {
 
     const convertADDateToBS = (adDate) => {
         try {
-            return ADToBS(adDate); // Convert AD to BS
+            // return ADToBS(adDate); // Convert AD to BS
+             const bsDate = new NepaliDate(new Date(adDate));
+             return bsDate.format('YYYY-MM-DD');
         } catch (error) {
             console.error("Error converting AD to BS:", error);
             return null;
@@ -112,7 +117,7 @@ const Add = () => {
             try {
                 const token = localStorage.getItem("token");
                 const response = await fetch("http://localhost:5001/api/meetings", {
-                    method: "GET",
+                    method: "GET", 
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${token}`,

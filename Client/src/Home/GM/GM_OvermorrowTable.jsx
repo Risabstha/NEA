@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ADToBS } from "bikram-sambat-js";
+import NepaliDate from 'nepali-date-converter'
 import { jwtDecode } from 'jwt-decode';  // Changed from default import to named import
 
 const GM_OvermorrowTable = () => {
@@ -62,15 +62,16 @@ const GM_OvermorrowTable = () => {
         return d.toISOString().split("T")[0]; // Convert to YYYY-MM-DD format
     };
 
-    const convertADDateToBS = (adDate) => {
-        try {
-            const bsDate = ADToBS(adDate); // Convert AD to BS
-            return bsDate;
-        } catch (error) {
-            console.error("Error converting AD to BS:", error);
-            return null;
-        }
-    };
+const convertADDateToBS = (adDate) => {
+    try {
+      // Convert AD to BS
+      const bsDate = new NepaliDate(new Date(adDate)); // Requires a JS Date object
+      return bsDate.format('YYYY-MM-DD'); // Format as BS date string
+    } catch (error) {
+      console.error("Error converting AD to BS:", error);
+      return null;
+    }
+  };
     useEffect(() => {
         const fetchMeetings = async () => {
             try {

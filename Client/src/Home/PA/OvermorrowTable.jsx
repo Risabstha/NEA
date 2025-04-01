@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ADToBS } from "bikram-sambat-js";
+import NepaliDate from 'nepali-date-converter'
 import { jwtDecode } from 'jwt-decode';  // Changed from default import to named import
 import internal from '../../assets/internal.png'
 import external from '../../assets/external.png'
@@ -66,8 +66,9 @@ const OvermorrowTable = () => {
 
     const convertADDateToBS = (adDate) => {
         try {
-            const bsDate = ADToBS(adDate); // Convert AD to BS
-            return bsDate;
+            // Convert AD to BS
+            const bsDate = new NepaliDate(new Date(adDate)); // Requires a JS Date object
+            return bsDate.format('YYYY-MM-DD'); // Format as BS date string
         } catch (error) {
             console.error("Error converting AD to BS:", error);
             return null;
@@ -224,10 +225,10 @@ const OvermorrowTable = () => {
                                                     <td className="border w-[20vw] border-gray-400 px-4 py-2  text-center">
                                                         <div className="flex items-center justify-center gap-4">        {/* flex and border shouldn't be on same div/element */}
                                                             {meeting.meeting_type === "internal" && (
-                                                                <img className="w-[30px] h-[30px]" src={internal} alt="Internal" />
+                                                                <img className="w-[32px] h-[32px]" src={internal} alt="Internal" />
                                                             )}
                                                             {meeting.meeting_type === "external" && (
-                                                                <img className="w-[30px] h-[30px]" src={external} alt="External" />
+                                                                <img className="w-[26px] h-[26px]" src={external} alt="External" />
                                                             )}
                                                             <span>{meeting.type}</span>
                                                         </div>
