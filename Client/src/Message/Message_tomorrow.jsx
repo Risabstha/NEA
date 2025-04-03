@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ADToBS } from "bikram-sambat-js";
+import NepaliDate from 'nepali-date-converter'
 import { jwtDecode } from 'jwt-decode';  // Changed from default import to named import
 
 const Message_Tomorrowtable = () => {
@@ -7,7 +7,7 @@ const Message_Tomorrowtable = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [showNoMeetings, setShowNoMeetings] = useState(false);
   const meetingsPerPage = 6;
- const [showSessionAlert, setShowSessionAlert] = useState(false);
+  const [showSessionAlert, setShowSessionAlert] = useState(false);
 
   // Session expiration check
   useEffect(() => {
@@ -18,7 +18,7 @@ const Message_Tomorrowtable = () => {
       try {
         const decodedToken = jwtDecode(token);
         const currentTime = Date.now() / 1000;
-        
+
         if (decodedToken.exp < currentTime) {
           handleSessionExpiration();
         }
@@ -29,10 +29,10 @@ const Message_Tomorrowtable = () => {
 
     // Initial check
     checkTokenExpiration();
-    
+
     // Check every 60 seconds
     const interval = setInterval(checkTokenExpiration, 60000);
-    
+
     return () => clearInterval(interval);
   }, []);
 
@@ -62,8 +62,8 @@ const Message_Tomorrowtable = () => {
 
   const convertADDateToBS = (adDate) => {
     try {
-      const bsDate = ADToBS(adDate); // Convert AD to BS
-      return bsDate;
+      const bsDate = new NepaliDate(new Date(adDate)); // Requires a JS Date object
+      return bsDate.format('YYYY-MM-DD'); // Format as BS date string
     } catch (error) {
       console.error("Error converting AD to BS:", error);
       return null;
@@ -108,10 +108,10 @@ const Message_Tomorrowtable = () => {
           return isMatch;
         });
 
-        data = data.filter((meeting)=>{
-            const isInternal = (meeting.meeting_type) === ("internal");
-            return isInternal;
-         });
+        data = data.filter((meeting) => {
+          const isInternal = (meeting.meeting_type) === ("internal");
+          return isInternal;
+        });
 
 
         data.sort((a, b) => {
@@ -154,25 +154,25 @@ const Message_Tomorrowtable = () => {
     <>
       <div className="bg-gray-200 p-[1vw] md:pb-[0.5vh] md:p-[1vw] md:mt-[1vh] pt-[2vh]">
         {/* Session Expiration Modal */}
-      {showSessionAlert && (
-        <div className="fixed inset-0 bg-gray-500/50 bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full mx-4">
-            <div className="text-center">
-              <h3 className="text-lg font-medium mb-4">⏳ Session Expired</h3>
-              <p className="mb-4">Your session has expired. Please log in again.</p>
-              <button
-                onClick={() => {
-                  localStorage.removeItem("token");
-                  window.location.href = "/";
-                }}
-                className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
-              >
-                Go to Login
-              </button>
+        {showSessionAlert && (
+          <div className="fixed inset-0 bg-gray-500/50 bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full mx-4">
+              <div className="text-center">
+                <h3 className="text-lg font-medium mb-4">⏳ Session Expired</h3>
+                <p className="mb-4">Your session has expired. Please log in again.</p>
+                <button
+                  onClick={() => {
+                    localStorage.removeItem("token");
+                    window.location.href = "/";
+                  }}
+                  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                >
+                  Go to Login
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
         <div className="overflow-x-auto">
           {/* Show "No Meetings" when there are no meetings */}
           {showNoMeetings ? (
@@ -194,11 +194,11 @@ const Message_Tomorrowtable = () => {
                   <thead>
                     <tr className="bg-gray-200">
                       <th className="border w-[4vw] border-gray-400 px-4 py-2">SN</th>
-                      <th className="border w-[13vw] border-gray-400 px-4 py-2">Date</th>
-                      <th className="border w-[11vw] border-gray-400 px-4 py-2">Time</th>
-                      <th className="border w-[20vw] border-gray-400 px-4 py-2">Meeting Type</th>
-                      <th className="border w-[20vw] border-gray-400 px-4 py-2">Location</th>
-                      <th className="border w-[35vw] border-gray-400 px-4 py-2">Description</th>
+                      <th className="border w-[13vw] text-left  border-gray-400 px-4 py-2">Date</th>
+                      <th className="border w-[11vw] text-left  border-gray-400 px-4 py-2">Time</th>
+                      <th className="border w-[20vw] text-left  border-gray-400 px-4 py-2">Meeting Type</th>
+                      <th className="border w-[20vw] text-left  border-gray-400 px-4 py-2">Location</th>
+                      <th className="border w-[35vw] text-left  border-gray-400 px-4 py-2">Description</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -216,15 +216,15 @@ const Message_Tomorrowtable = () => {
                           <td className="border w-[4vw] border-gray-400 px-4 py-2">
                             {(currentPage - 1) * meetingsPerPage + index + 1}
                           </td>
-                          <td className="border w-[13vw] border-gray-400 px-4 py-2">
+                          <td className="border w-[13vw] text-left border-gray-400 px-4 py-2">
                             {formatDate(meeting.date)}
                           </td>
-                          <td className="border w-[11vw] border-gray-400 px-4 py-2">
+                          <td className="border w-[11vw] text-left border-gray-400 px-4 py-2">
                             {formatTime(meeting.time)}
                           </td>
-                          <td className="border w-[20vw] border-gray-400 px-4 py-2">{meeting.type}</td>
-                          <td className="border w-[20vw] border-gray-400 px-4 py-2">{meeting.location}</td>
-                          <td className="border w-[35vw] border-gray-400 px-4 py-2">{meeting.description}</td>
+                          <td className="border w-[20vw] text-left border-gray-400 px-4 py-2">{meeting.type}</td>
+                          <td className="border w-[20vw] text-left border-gray-400 px-4 py-2">{meeting.location}</td>
+                          <td className="border w-[35vw] text-left border-gray-400 px-4 py-2">{meeting.description}</td>
                         </tr>
                       );
                     })}

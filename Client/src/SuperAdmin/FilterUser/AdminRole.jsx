@@ -216,8 +216,8 @@ const AdminRole = () => {
                         <thead className="text-xl bg-gray-300">
                             <tr>
                                 <th className="border border-gray-400 px-4 py-2">SN</th>
-                                <th className="border border-gray-400 px-4 py-2">Name</th>
-                                <th className="border border-gray-400 px-4 py-2">Phone Number</th>
+                                <th className="border text-left border-gray-400 px-4 py-2">Name</th>
+                                <th className="border text-left border-gray-400 px-4 py-2">Phone Number</th>
                                 {/* <th className="border border-gray-400 px-4 py-2">Action</th> */}
                             </tr>
                         </thead>
@@ -225,8 +225,8 @@ const AdminRole = () => {
                             {currentUsers.map((user, index) => (
                                 <tr key={user._id} className="text-center odd:bg-white even:bg-gray-100">
                                     <td className="border border-gray-400 px-4 py-2">{indexOfFirstMeeting + index + 1}</td>
-                                    <td className="border border-gray-400 px-4 py-2">{user.username}</td>
-                                    <td className="border border-gray-400 px-4 py-2">{user.phoneNumber}</td>
+                                    <td className="border text-left border-gray-400 px-4 py-2">{user.username}</td>
+                                    <td className="border text-left border-gray-400 px-4 py-2">{user.phoneNumber}</td>
                                     {/* <td className="border border-gray-400 p-2">
                                         <button
                                             onClick={() => handleEdit(user)}

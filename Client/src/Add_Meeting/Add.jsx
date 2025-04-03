@@ -8,6 +8,7 @@ import { jwtDecode } from 'jwt-decode';  // Changed from default import to named
 
 
 const Add = () => {
+
     // Function to convert 24-hour time to 12-hour AM/PM format
     const formatTime = (timeStr) => {
         if (!timeStr) return "";
@@ -184,7 +185,7 @@ const Add = () => {
     };
 
     const handleAddOrEditMeeting = async () => {
-        console.log(newMeeting);
+        // console.log(newMeeting);
         if (!newMeeting.date || !newMeeting.type || !newMeeting.location || !newMeeting.description || !newMeeting.time) {
             alert("Please fill in all required fields.");
             return;
@@ -225,13 +226,12 @@ const Add = () => {
                     )
                 );
 
+                
                 setEditingId(null);
             } else {
                 // Create new meeting
                 response = await axios.post("http://localhost:5001/api/meetings", payload, config);
                 setMeetings((prevMeetings) => [response.data, ...prevMeetings]); // New meeting on top
-
-
             }
 
             setNewMeeting({
@@ -246,6 +246,9 @@ const Add = () => {
             setIsFormVisible(false);
         } catch (error) {
             console.error("Error saving meeting:", error.response?.data || error.message);
+            if (error.response?.status === 400) {
+                alert("You already have a meeting scheduled at this time on this day.");
+            } 
         }
     };
 
@@ -331,7 +334,11 @@ const Add = () => {
                         onChange={handleDateChange}
                         inputClassName="border p-2 w-full mb-2"
                         placeholder="Select Nepali Date"
-                        options={{ calenderLocale: "ne", valueLocale: "en", }} // Ensures localization
+                        options={{
+                            calenderLocale: "ne",
+                            valueLocale: "en",
+                            timeZone: "Asia/Kathmandu" //  Explicitly set time zone
+                          }}
                     />
 
                     <input
@@ -490,7 +497,7 @@ const Add = () => {
                                                 className="bg-yellow-500 text-white px-2 py-1 mr-1.5 rounded hover:bg-yellow-600"
                                             >
                                                 Edit
-                                            </button>
+                                            </button> 
                                             <button
                                                 onClick={() => handleDelete(meeting._id)}
                                                 className="bg-red-500 text-white px-2 py-1 ml-1.5 rounded hover:bg-red-600"

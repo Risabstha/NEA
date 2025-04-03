@@ -194,11 +194,11 @@ const MD_OvermorrowTable = () => {
                                     <thead>
                                         <tr className="bg-gray-200">
                                             <th className="border w-[4vw] border-gray-400 px-4 py-2">SN</th>
-                                            <th className="border w-[13vw] border-gray-400 px-4 py-2">Date</th>
-                                            <th className="border w-[11vw] border-gray-400 px-4 py-2">Time</th>
-                                            <th className="border w-[20vw] border-gray-400 px-4 py-2">Meeting Type</th>
-                                            <th className="border w-[20vw] border-gray-400 px-4 py-2">Location</th>
-                                            <th className="border w-[35vw] border-gray-400 px-4 py-2">Description</th>
+                                            <th className="border w-[13vw] text-left border-gray-400 px-4 py-2">Date</th>
+                                            <th className="border w-[11vw] text-left border-gray-400 px-4 py-2">Time</th>
+                                            <th className="border w-[20vw] text-left border-gray-400 px-4 py-2">Meeting Type</th>
+                                            <th className="border w-[20vw] text-left border-gray-400 px-4 py-2">Location</th>
+                                            <th className="border w-[35vw] text-left border-gray-400 px-4 py-2">Description</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -216,16 +216,16 @@ const MD_OvermorrowTable = () => {
                                                     <td className="border w-[4vw] border-gray-400 px-4 py-2">
                                                         {(currentPage - 1) * meetingsPerPage + index + 1}
                                                     </td>
-                                                    <td className="border w-[13vw] border-gray-400 px-4 py-2">
+                                                    <td className="border w-[13vw] text-left border-gray-400 px-4 py-2">
                                                         {formatDate(meeting.date)}
                                                     </td>
-                                                    <td className="border w-[11vw] border-gray-400 px-4 py-2">
+                                                    <td className="border w-[11vw] text-left border-gray-400 px-4 py-2">
                                                         {formatTime(meeting.time)}
                                                     </td>
                                                     <td className="border w-[20vw] border-gray-400 px-4 py-2  text-center">
-                                                        <div className="flex items-center justify-center gap-2">        {/* flex and border shouldn't be on same div/element */}
+                                                        <div className="flex items-center justify-items-start text-left gap-2">        {/* flex and border shouldn't be on same div/element */}
                                                             {meeting.meeting_type === "internal" && (
-                                                                <img className="w-[32px] h-[32px]" src={internal} alt="Internal" />
+                                                                <img className="w-[26px] h-[26px]" src={internal} alt="Internal" />
                                                             )}
                                                             {meeting.meeting_type === "external" && (
                                                                 <img className="w-[26px] h-[26px]" src={external} alt="External" />
@@ -233,8 +233,8 @@ const MD_OvermorrowTable = () => {
                                                             <span>{meeting.type}</span>
                                                         </div>
                                                     </td>
-                                                    <td className="border w-[20vw] border-gray-400 px-4 py-2">{meeting.location}</td>
-                                                    <td className="border w-[35vw] border-gray-400 px-4 py-2">{meeting.description}</td>
+                                                    <td className="border w-[20vw] text-left border-gray-400 px-4 py-2">{meeting.location}</td>
+                                                    <td className="border w-[35vw] text-left border-gray-400 px-4 py-2">{meeting.description}</td>
                                                 </tr>
                                             );
                                         })}
