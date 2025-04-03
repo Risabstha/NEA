@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 const meetingSchema = new mongoose.Schema({
   location: { type: String, required: true },
   date: { type: Date, required: true },
-  time: { type: String, required: true },
+  time: { type: String, required: true, unique: true },
   description: { type: String },    //review
   type: { type: String },
   priority: {
