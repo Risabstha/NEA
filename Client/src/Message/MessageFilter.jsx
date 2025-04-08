@@ -17,14 +17,14 @@ const MessageFilter = () => {
         <>                
                 {/* Filtering meeting  */}
                 <div className=" bg-gray-200 p-1 md:pt-[1vh]  md:mt-[1vh]">
-                <h2 className="text-xl text-center font-sans text-blue-700 p-[1vh] md:pt-[3vh] md:pb-[2vh]">SMS Meeting</h2>
+                <h2 className="text-xl text-center font-semibold text-blue-700 p-[1vh] md:pt-[3vh] md:pb-[2vh]">SMS</h2>
                 </div>
  
             {/* using aboslute position, so div will be positioned according to it's nearest relative ancestor or window -> used for Floating Effect */}
             <div className='top-[25vh] md:top-[34vh]  
                                         ml-[5vw] md:ml-[23vw] lg:ml-[25vw] xl:ml-[30vw]
                                         w-[90vw] md:w-[54vw] lg:w-[50vw] xl:w-[40vw]
-                                        rounded-4xl
+                                        rounded-4xl mb-[5vh]
                                         bg-gray-300 '>
                                     
                                     {/*  Desktop View */}

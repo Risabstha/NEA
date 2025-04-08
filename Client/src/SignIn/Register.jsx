@@ -9,7 +9,7 @@ import { jwtDecode } from 'jwt-decode';  // Changed from default import to named
 const Register = () => {
   const [formData, setFormData] = useState({
     username: "",
-    phoneNumber: "",
+    phoneNumber: "",    // phoneNumber: "+977",
     password: "",
     confirmpassword: "",
     role: "",
@@ -56,10 +56,11 @@ const Register = () => {
     const { name, value } = e.target;
 
     if (name === "phoneNumber") {
-      const numericValue = value.replace(/\D/g, "");
+      const numericValue = value.replace(/[^\d+]/g, '');
       if (numericValue.length > 10) return;
       setFormData({ ...formData, [name]: numericValue });
-    } else {
+    }
+    else {
       setFormData((prev) => ({
         ...prev,
         [name]: value,
@@ -83,7 +84,15 @@ const Register = () => {
     }
 
     if (formData.phoneNumber.length !== 10) {
-      setAlertMessage("Phone number is Incorrect");
+      setAlertMessage("Incorrect phone number.");
+      setIsError(true);
+      return;
+    }
+
+    // Password validation (uppercase, special character, min 6 chars)
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[\W_]).{6,}$/;
+    if (!passwordRegex.test(formData.password)) {
+      setAlertMessage("Password must have at least one uppercase letter, one special character, and be at least 6 characters long.");
       setIsError(true);
       return;
     }
@@ -171,6 +180,7 @@ const Register = () => {
             </div>
             <input
               type="text"
+              
               name="phoneNumber"
               value={formData.phoneNumber}
               onChange={handleInputChange}
@@ -292,12 +302,12 @@ const Register = () => {
               Add
             </button>
           </div>
-          <div className="mt-4 text-sm text-gray-700 text-center">
+          {/* <div className="mt-4 text-sm text-gray-700 text-center">
             Already have an account?
             <Link to="/" className="pl-2 text-sm text-gray-900 hover:text-blue-600">
               Sign in
             </Link>
-          </div>
+          </div> */}
         </form>
       </div>
     </div>

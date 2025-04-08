@@ -25,7 +25,7 @@ import MD_Meeting_Table from './Home/MD/MD_Meeting_Table';
 import MD_TommorrowTable from './Home/MD/MD_TommorrowTable';
 import MD_Yesterdaytable from './Home/MD/MD_YesterdayTable';
 import MD_OvermorrowTable from './Home/MD/MD_OvermorrowTable';
-import Message_Todaytable from './Message/Message_Today';
+import Message_Todaytable from './Message/Message_today';
 import Message_Tomorrowtable from './Message/Message_tomorrow';
 import Message_Overmorrowtable from './Message/Overmorrow_table';
 import Message from './Message/Message';
@@ -60,8 +60,8 @@ function App() {
             <Route path="/mdhome" element={<MdHome />}>
               <Route index element={<MD_Meeting_Table />} />
               <Route path="yesterday" element={<MD_Yesterdaytable />} />
-              <Route path="tomorrow" element={<MD_OvermorrowTable />} />
-              <Route path="overmorrow" element={<MD_TommorrowTable />} />
+              <Route path="overmorrow" element={<MD_OvermorrowTable />} />
+              <Route path="tomorrow" element={<MD_TommorrowTable />} />
             </Route>
 
             <Route path="/add-meeting" element={<AddMeeting />} />

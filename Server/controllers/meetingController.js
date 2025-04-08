@@ -17,7 +17,7 @@ export const getMeetings = async (req, res) => {
 
 export const createMeeting = async (req, res) => {
   try {
-    const { date, type, location, description, time, priority, meeting_type } = req.body;
+    let { date, type, location, description, time, priority, meeting_type } = req.body;
 
     if (!date || !type || !location || !description || !time) {
       return res.status(400).json({ message: "All fields are required" });
@@ -27,9 +27,34 @@ export const createMeeting = async (req, res) => {
       return res.status(401).json({ message: "User not authenticated" });
     }
 
+    const parsedDate = new Date(date);
+    if (isNaN(parsedDate.getTime())) {
+      return res.status(400).json({ error: "Invalid date format" });
+    }
+
+    // ✅ Normalize and Validate Time (HH:mm)
+    time = time.trim();
+    if (!/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(time)) {
+      return res.status(400).json({ error: "Invalid time format (use HH:mm)" });
+    }
+
+    // ✅ Check if a meeting exists for the same user, date, and time
+    const existingMeeting = await Meeting.findOne({
+      user: req.user.id,
+      date: parsedDate,
+      time: time,
+    });
+
+    if (existingMeeting) {
+      return res.status(400).json({
+        message: "You already have a meeting scheduled at this time on this day.",
+      });
+    }
+    
+
     const newMeeting = new Meeting({
       user: req.user.id,
-      date: new Date(date), // ✅ Convert to Date object before saving
+      date: parsedDate, // ✅ Convert to Date object before saving
       type,
       location,
       description,
@@ -51,16 +76,16 @@ export const deleteMeeting = async (req, res) => {
   const meetingId = req.params.id;
 
   try {
-      const meeting = await Meeting.findById(meetingId);
-      if (!meeting) {
-          return res.status(404).json({ message: "Meeting not found" });
-      }
+    const meeting = await Meeting.findById(meetingId);
+    if (!meeting) {
+      return res.status(404).json({ message: "Meeting not found" });
+    }
 
-      await meeting.deleteOne(); // Use deleteOne() instead of remove() (deprecated)
-      res.status(200).json({ message: "Meeting deleted successfully" });
+    await meeting.deleteOne(); // Use deleteOne() instead of remove() (deprecated)
+    res.status(200).json({ message: "Meeting deleted successfully" });
   } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: "Server error, unable to delete meeting" });
+    console.error(err);
+    res.status(500).json({ message: "Server error, unable to delete meeting" });
   }
 };
 
@@ -68,21 +93,21 @@ export const deleteMeeting = async (req, res) => {
 
 //  Update a meeting fine
 export const updateMeeting = async (req, res) => {
-    const { type, location, description, date, time, priority, meeting_type } = req.body;
+  const { type, location, description, date, time, priority, meeting_type } = req.body;
 
-    // Check if required fields are present
-    if (!type || !location || !description || !date || !time || !priority || !meeting_type) {
-        return res.status(400).send({ message: 'Missing required fields' });
-    }
+  // Check if required fields are present
+  if (!type || !location || !description || !date || !time || !priority || !meeting_type) {
+    return res.status(400).send({ message: 'Missing required fields' });
+  }
 
-    try {
-        // Your logic to update the meeting
-        const meeting = await Meeting.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        res.send(meeting);
-    } catch (error) {
-        console.error('Error updating meeting:', error);
-        res.status(500).send({ message: 'Server error', error: error.message });
-    }
+  try {
+    // Your logic to update the meeting
+    const meeting = await Meeting.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.send(meeting);
+  } catch (error) {
+    console.error('Error updating meeting:', error);
+    res.status(500).send({ message: 'Server error', error: error.message });
+  }
 };
 
 // Function to get the start and end of a given date

@@ -1,5 +1,5 @@
  import React, { useState, useEffect } from "react";
- import { ADToBS } from "bikram-sambat-js";
+ import NepaliDate from 'nepali-date-converter'
  import { jwtDecode } from 'jwt-decode';  // Changed from default import to named import
  
  const GM_YesterdayTable = () => {
@@ -61,15 +61,16 @@
          return d.toISOString().split("T")[0]; // Convert to YYYY-MM-DD format
      };
  
-     const convertADDateToBS = (adDate) => {
-         try {
-             const bsDate = ADToBS(adDate); // Convert AD to BS
-             return bsDate;
-         } catch (error) {
-             console.error("Error converting AD to BS:", error);
-             return null;
-         }
-     };
+const convertADDateToBS = (adDate) => {
+    try {
+      // Convert AD to BS
+      const bsDate = new NepaliDate(new Date(adDate)); // Requires a JS Date object
+      return bsDate.format('YYYY-MM-DD'); // Format as BS date string
+    } catch (error) {
+      console.error("Error converting AD to BS:", error);
+      return null;
+    }
+  };
      useEffect(() => {
          const fetchMeetings = async () => {
              try {
@@ -195,11 +196,11 @@
                                      <thead>
                                          <tr className="bg-gray-200">
                                              <th className="border w-[4vw] border-gray-400 px-4 py-2">SN</th>
-                                             <th className="border w-[13vw] border-gray-400 px-4 py-2">Date</th>
-                                             <th className="border w-[11vw] border-gray-400 px-4 py-2">Time</th>
-                                             <th className="border w-[20vw] border-gray-400 px-4 py-2">Meeting Type</th>
-                                             <th className="border w-[20vw] border-gray-400 px-4 py-2">Location</th>
-                                             <th className="border w-[35vw] border-gray-400 px-4 py-2">Description</th>
+                                             <th className="border w-[13vw] text-left border-gray-400 px-4 py-2">Date</th>
+                                             <th className="border w-[11vw] text-left border-gray-400 px-4 py-2">Time</th>
+                                             <th className="border w-[20vw] text-left border-gray-400 px-4 py-2">Meeting Type</th>
+                                             <th className="border w-[20vw] text-left border-gray-400 px-4 py-2">Location</th>
+                                             <th className="border w-[35vw] text-left border-gray-400 px-4 py-2">Description</th>
                                          </tr>
                                      </thead>
                                      <tbody>
@@ -217,15 +218,15 @@
                                                      <td className="border w-[4vw] border-gray-400 px-4 py-2">
                                                          {(currentPage - 1) * meetingsPerPage + index + 1}
                                                      </td>
-                                                     <td className="border w-[13vw] border-gray-400 px-4 py-2">
+                                                     <td className="border w-[13vw] text-left border-gray-400 px-4 py-2">
                                                          {formatDate(meeting.date)}
                                                      </td>
-                                                     <td className="border w-[11vw] border-gray-400 px-4 py-2">
+                                                     <td className="border w-[11vw] text-left border-gray-400 px-4 py-2">
                                                          {formatTime(meeting.time)}
                                                      </td>
-                                                     <td className="border w-[20vw] border-gray-400 px-4 py-2">{meeting.type}</td>
-                                                     <td className="border w-[20vw] border-gray-400 px-4 py-2">{meeting.location}</td>
-                                                     <td className="border w-[35vw] border-gray-400 px-4 py-2">{meeting.description}</td>
+                                                     <td className="border w-[20vw] text-left border-gray-400 px-4 py-2">{meeting.type}</td>
+                                                     <td className="border w-[20vw] text-left border-gray-400 px-4 py-2">{meeting.location}</td>
+                                                     <td className="border w-[35vw] text-left border-gray-400 px-4 py-2">{meeting.description}</td>
                                                  </tr>
                                              );
                                          })}

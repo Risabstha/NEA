@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { ADToBS } from "bikram-sambat-js";
 import { jwtDecode } from 'jwt-decode';  // Changed from default import to named import
 import internal from '../../assets/internal.png'
 import external from '../../assets/external.png'
+import NepaliDate from 'nepali-date-converter'
 
 const Meeting_Table = () => {
   const [meetings, setMeetings] = useState([]);
@@ -67,15 +67,27 @@ const Meeting_Table = () => {
   };
 
 
+  // const convertADDateToBS = (adDate) => {
+  //   try {
+  //     return ADToBS(adDate);
+  //   } catch (error) {
+  //     console.error("Error converting AD to BS:", error);
+  //     return null;
+  //   }
+  // };
+
   const convertADDateToBS = (adDate) => {
     try {
-      return ADToBS(adDate);
+      // Convert AD to BS
+      const bsDate = new NepaliDate(new Date(adDate)); // Requires a JS Date object
+      return bsDate.format('YYYY-MM-DD'); // Format as BS date string
     } catch (error) {
       console.error("Error converting AD to BS:", error);
       return null;
     }
   };
 
+  // Example: convertADDateToBS('2023-10-15') → '2080-06-28'
   useEffect(() => {
     const fetchMeetings = async () => {
       try {
@@ -134,136 +146,136 @@ const Meeting_Table = () => {
 
 
 
-    //pagination logic
-    const indexOfLastMeeting = currentPage * meetingsPerPage;
-    const indexOfFirstMeeting = indexOfLastMeeting - meetingsPerPage;
-    const currentMeetings = meetings.slice(indexOfFirstMeeting, indexOfLastMeeting);
+  //pagination logic
+  const indexOfLastMeeting = currentPage * meetingsPerPage;
+  const indexOfFirstMeeting = indexOfLastMeeting - meetingsPerPage;
+  const currentMeetings = meetings.slice(indexOfFirstMeeting, indexOfLastMeeting);
 
-    const totalPages = Math.ceil(meetings.length / meetingsPerPage);
-    const goToNextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages));
-    const goToPrevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
+  const totalPages = Math.ceil(meetings.length / meetingsPerPage);
+  const goToNextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  const goToPrevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
 
- return (
-         <>
-             <div className="bg-gray-200 p-[1vw] md:pb-[0.5vh] md:p-[1vw] md:mt-[4vh] pt-[3vh]">
-                 {/* Session Expiration Modal */}
-                 {showSessionAlert && (
-                     <div className="fixed inset-0 bg-gray-500/50 bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
-                         <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full mx-4">
-                             <div className="text-center">
-                                 <h3 className="text-lg font-medium mb-4">⏳ Session Expired</h3>
-                                 <p className="mb-4">Your session has expired. Please log in again.</p>
-                                 <button
-                                     onClick={() => {
-                                         localStorage.removeItem("token");
-                                         window.location.href = "/";
-                                     }}
-                                     className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
-                                 >
-                                     Go to Login
-                                 </button>
-                             </div>
-                         </div>
-                     </div>
-                 )}
-                 <div className="overflow-x-auto">
-                     {/* Show "No Meetings" when there are no meetings */}
-                     {showNoMeetings ? (
- 
-                         <div className="text-center text-2xl font-semibold text-gray-600 p-4">
-                             <img
-                                 src="/calender.png"
-                                 alt="No Meetings"
-                                 className="mx-auto mb-4"
-                                 style={{ width: "80px", height: "80px" }}
-                             />
-                             No Meetings Scheduled
-                         </div>
- 
-                     ) : (
-                         <div>
-                             {meetings.length > 0 && (
-                                 <table className="w-full border-collapse border text-xl border-gray-400">
-                                     <thead>
-                                         <tr className="bg-gray-200">
-                                             <th className="border w-[4vw] border-gray-400 px-4 py-2">SN</th>
-                                             <th className="border w-[13vw] border-gray-400 px-4 py-2">Date</th>
-                                             <th className="border w-[11vw] border-gray-400 px-4 py-2">Time</th>
-                                             <th className="border w-[20vw] border-gray-400 px-4 py-2">Meeting Type</th>
-                                             <th className="border w-[20vw] border-gray-400 px-4 py-2">Location</th>
-                                             <th className="border w-[35vw] border-gray-400 px-4 py-2">Description</th>
-                                         </tr>
-                                     </thead>
-                                     <tbody>
-                                         {currentMeetings.map((meeting, index) => {
-                                             const isHighPriority = meeting.priority === "high";
- 
-                                             return (
-                                                 <tr
-                                                     key={index}
-                                                     className={`text-center ${isHighPriority
-                                                         ? "bg-blue-300 text-black hover:bg-blue-400 odd:bg-blue-300 "
-                                                         : "odd:bg-white hover:bg-gray-100"
-                                                         }`}
-                                                 >
-                                                     <td className="border w-[4vw] border-gray-400 px-4 py-2">
-                                                         {(currentPage - 1) * meetingsPerPage + index + 1}
-                                                     </td>
-                                                     <td className="border w-[13vw] border-gray-400 px-4 py-2">
-                                                         {formatDate(meeting.date)}
-                                                     </td>
-                                                     <td className="border w-[11vw] border-gray-400 px-4 py-2">
-                                                         {formatTime(meeting.time)}
-                                                     </td>
-                                                     <td className="border w-[20vw] border-gray-400 px-4 py-2  text-center">
-                                                         <div className="flex items-center justify-center gap-4">        {/* flex and border shouldn't be on same div/element */}
-                                                             {meeting.meeting_type === "internal" && (
-                                                                 <img className="w-[30px] h-[30px]" src={internal} alt="Internal" />
-                                                             )}
-                                                             {meeting.meeting_type === "external" && (
-                                                                 <img className="w-[30px] h-[30px]" src={external} alt="External" />
-                                                             )}
-                                                             <span>{meeting.type}</span>
-                                                         </div>
-                                                     </td>
-                                                     <td className="border w-[20vw] border-gray-400 px-4 py-2">{meeting.location}</td>
-                                                     <td className="border w-[35vw] border-gray-400 px-4 py-2">{meeting.description}</td>
-                                                 </tr>
-                                             );
-                                         })}
-                                     </tbody>
-                                 </table>
-                             )}
-                             {/* Pagination - Show only when meetings exist */}
-                             {meetings.length > meetingsPerPage && (
-                                 <div className="flex justify-center mt-4 space-x-3">
-                                     <button
-                                         onClick={goToPrevPage}
-                                         disabled={currentPage === 1}
-                                         className={`px-2 py-1 bg-blue-600 text-white rounded-4xl ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"
-                                             }`}
-                                     >
-                                         Prev
-                                     </button>
-                                     <span className="text-md font-sans">
-                                         {currentPage} of {totalPages}
-                                     </span>
-                                     <button
-                                         onClick={goToNextPage}
-                                         disabled={currentPage === totalPages}
-                                         className={`px-2 py-1 bg-blue-600 text-white rounded-4xl ${currentPage === totalPages ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"
-                                             }`}
-                                     >
-                                         Next
-                                     </button>
-                                 </div>
-                             )}
-                         </div>
-                     )}
-                 </div>
-             </div>
-         </>
-     );
- };
+  return (
+    <>
+      <div className="bg-gray-200 p-[1vw] md:pb-[0.5vh] md:p-[1vw] md:mt-[4vh] pt-[3vh]">
+        {/* Session Expiration Modal */}
+        {showSessionAlert && (
+          <div className="fixed inset-0 bg-gray-500/50 bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full mx-4">
+              <div className="text-center">
+                <h3 className="text-lg font-medium mb-4">⏳ Session Expired</h3>
+                <p className="mb-4">Your session has expired. Please log in again.</p>
+                <button
+                  onClick={() => {
+                    localStorage.removeItem("token");
+                    window.location.href = "/";
+                  }}
+                  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                >
+                  Go to Login
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+        <div className="overflow-x-auto">
+          {/* Show "No Meetings" when there are no meetings */}
+          {showNoMeetings ? (
+
+            <div className="text-center text-2xl font-semibold text-gray-600 p-4">
+              <img
+                src="/calender.png"
+                alt="No Meetings"
+                className="mx-auto mb-4"
+                style={{ width: "80px", height: "80px" }}
+              />
+              No Meetings Scheduled
+            </div>
+
+          ) : (
+            <div>
+              {meetings.length > 0 && (
+                <table className="w-full border-collapse border text-xl  border-gray-400">
+                  <thead>
+                    <tr className="bg-gray-200">
+                      <th className="border w-[4vw]  border-gray-400 px-4 py-2">SN</th>
+                      <th className="border w-[13vw] text-left border-gray-400 px-4 py-2">Date</th>
+                      <th className="border w-[11vw] text-left border-gray-400 px-4 py-2">Time</th>
+                      <th className="border w-[20vw] text-left border-gray-400 px-4 py-2">Meeting Type</th>
+                      <th className="border w-[20vw] text-left border-gray-400 px-4 py-2">Location</th>
+                      <th className="border w-[35vw] text-left border-gray-400 px-4 py-2">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {currentMeetings.map((meeting, index) => {
+                      const isHighPriority = meeting.priority === "high";
+
+                      return (
+                        <tr
+                          key={index}
+                          className={`text-center  ${isHighPriority
+                            ? "bg-blue-300 text-black hover:bg-blue-400 odd:bg-blue-300 "
+                            : "odd:bg-white hover:bg-gray-100"
+                            }`}
+                        >
+                          <td className="border w-[4vw] border-gray-400 px-4 py-2">
+                            {(currentPage - 1) * meetingsPerPage + index + 1}
+                          </td>
+                          <td className="border w-[13vw] text-left  border-gray-400  px-4 py-2">
+                            {formatDate(meeting.date)}
+                          </td>
+                          <td className="border w-[11vw] text-left border-gray-400 px-4 py-2">
+                            {formatTime(meeting.time)}
+                          </td>
+                          <td className="border w-[20vw] border-gray-400 px-4 py-2 ">
+                            <div className="flex items-center justify-items-start gap-4">        {/* flex and border shouldn't be on same div/element */}
+                              {meeting.meeting_type === "internal" && (
+                                <img className="w-[26px] h-[26px]" src={internal} alt="Internal" />
+                              )}
+                              {meeting.meeting_type === "external" && (
+                                <img className="w-[26px] h-[26px]" src={external} alt="External" />
+                              )}
+                              <span>{meeting.type}</span>
+                            </div>
+                          </td>
+                          <td className="border w-[20vw] text-left border-gray-400 px-4 py-2">{meeting.location}</td>
+                          <td className="border w-[35vw] text-left border-gray-400 px-4 py-2">{meeting.description}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              )}
+              {/* Pagination - Show only when meetings exist */}
+              {meetings.length > meetingsPerPage && (
+                <div className="flex justify-center mt-4 space-x-3">
+                  <button
+                    onClick={goToPrevPage}
+                    disabled={currentPage === 1}
+                    className={`px-2 py-1 bg-blue-600 text-white rounded-4xl ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"
+                      }`}
+                  >
+                    Prev
+                  </button>
+                  <span className="text-md font-sans">
+                    {currentPage} of {totalPages}
+                  </span>
+                  <button
+                    onClick={goToNextPage}
+                    disabled={currentPage === totalPages}
+                    className={`px-2 py-1 bg-blue-600 text-white rounded-4xl ${currentPage === totalPages ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"
+                      }`}
+                  >
+                    Next
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </>
+  );
+};
 
 export default Meeting_Table;

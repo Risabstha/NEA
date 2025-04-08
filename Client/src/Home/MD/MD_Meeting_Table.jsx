@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ADToBS } from "bikram-sambat-js";
+import NepaliDate from 'nepali-date-converter'
 import { jwtDecode } from 'jwt-decode';  // Changed from default import to named import
 import internal from '../../assets/internal.png'
 import external from '../../assets/external.png'
@@ -68,7 +68,9 @@ const MD_Meeting_Table = () => {
 
   const convertADDateToBS = (adDate) => {
     try {
-      return ADToBS(adDate);
+      // Convert AD to BS
+      const bsDate = new NepaliDate(new Date(adDate)); // Requires a JS Date object
+      return bsDate.format('YYYY-MM-DD'); // Format as BS date string
     } catch (error) {
       console.error("Error converting AD to BS:", error);
       return null;
@@ -185,12 +187,12 @@ const MD_Meeting_Table = () => {
                 <table className="w-full border-collapse border  border-gray-400">
                   <thead className=" text-xl md:text-2xl ">
                     <tr className="bg-gray-200">
-                      <th className="border w-[4vw] border-gray-400 px-4 py-2">SN</th>
-                      <th className="border w-[13vw] border-gray-400 px-4 py-2">Date</th>
-                      <th className="border w-[11vw] border-gray-400 px-4 py-2">Time</th>
-                      <th className="border w-[20vw] border-gray-400 px-4 py-2">Meeting Type</th>
-                      <th className="border w-[20vw] border-gray-400 px-4 py-2">Location</th>
-                      <th className="border w-[35vw] border-gray-400 px-4 py-2">Description</th>
+                      <th className="border w-[4vw]  border-gray-400 px-4 py-2">SN</th>
+                      <th className="border w-[13vw] text-left border-gray-400 px-4 py-2">Date</th>
+                      <th className="border w-[11vw] text-left border-gray-400 px-4 py-2">Time</th>
+                      <th className="border w-[20vw] text-left border-gray-400 px-4 py-2">Meeting Type</th>
+                      <th className="border w-[20vw] text-left border-gray-400 px-4 py-2">Location</th>
+                      <th className="border w-[35vw] text-left border-gray-400 px-4 py-2">Description</th>
                     </tr>
                   </thead>
                   <tbody className="text-xl md:text-3xl">
@@ -212,25 +214,25 @@ const MD_Meeting_Table = () => {
                           <td className="border w-[4vw] border-gray-400 px-4 py-2">
                             {(currentPage - 1) + index + 1}
                           </td>
-                          <td className="border w-[15vw] border-gray-400 px-4 py-2">
+                          <td className="border w-[15vw] text-left border-gray-400 px-4 py-2">
                             {formatDate(meeting.date)}
                           </td>
-                          <td className="border w-[13vw] border-gray-400 px-4 py-2">
+                          <td className="border w-[13vw] text-left border-gray-400 px-4 py-2">
                             {formatTime(meeting.time)}
                           </td>
                           <td className="border w-[20vw] border-gray-400 px-4 py-2  text-center">
-                            <div className="flex items-center justify-center gap-2">        {/* flex and border shouldn't be on same div/element */}
+                            <div className="flex items-center justify-items-start text-left gap-2">        {/* flex and border shouldn't be on same div/element */}
                               {meeting.meeting_type === "internal" && (
-                                <img className="w-[30px] h-[30px]" src={internal} alt="Internal" />
+                                <img className="w-[26px] h-[26px]" src={internal} alt="Internal" />
                               )}
                               {meeting.meeting_type === "external" && (
-                                <img className="w-[30px] h-[30px]" src={external} alt="External" />
+                                <img className="w-[26px] h-[26px]" src={external} alt="External" />
                               )}
                               <span>{meeting.type}</span>
                             </div>
                           </td>
-                          <td className="border w-[18vw] border-gray-400 px-4 py-2">{meeting.location}</td>
-                          <td className="border w-[35vw] border-gray-400 px-4 py-2">{meeting.description}</td>
+                          <td className="border w-[18vw] text-left border-gray-400 px-4 py-2">{meeting.location}</td>
+                          <td className="border w-[35vw] text-left border-gray-400 px-4 py-2">{meeting.description}</td>
                         </tr>
                       );
                     })}

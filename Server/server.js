@@ -7,8 +7,12 @@ import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import meetingRoutes from "./routes/meetingRoutes.js";
 import { errorHandler } from "./middleware/errorMiddleware.js";
+
 import userRoutes from "./routes/userRoutes.js";
 import rateLimit from "express-rate-limit";
+
+import smsRoutes from "./routes/smsRoutes.js";
+
 
 connectDB();
 
@@ -40,9 +44,11 @@ const authLimiter = rateLimit({
 app.use("/api/auth/login", authLimiter);
 app.use("/api/auth/signup", authLimiter);
 
+
 app.use("/api/auth", authRoutes);
 app.use("/api/meetings", meetingRoutes);
 app.use("/api/user", userRoutes);
+app.use("/api/sms", smsRoutes);
 
 app.use(errorHandler);
 

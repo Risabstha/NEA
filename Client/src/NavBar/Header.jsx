@@ -48,7 +48,7 @@ const Header = () => {
                                     className={`flex items-center justify-center text-black px-[3vw] h-full hover:text-white hover:rounded-4xl hover:bg-blue-700
                                     ${location.pathname === "/smsMeeting" || location.pathname === "/smsMeeting/smsTomorrow" || location.pathname === "/smsMeeting/smsOvermorrow" ? "bg-blue-600 text-white rounded-4xl" : ""}`}
                                 >
-                                    SMS Meeting
+                                    SMS
                                 </Link>
                             </div>
                             <div className='flex h-[6vh]'>

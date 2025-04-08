@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { ADToBS } from "bikram-sambat-js";
+import NepaliDate from 'nepali-date-converter'
 import { jwtDecode } from 'jwt-decode';  // Changed from default import to named import
-import { AiOutlineMessage } from "react-icons/ai";
+import { MdSend } from "react-icons/md";
+import SMSModal from "./SMSModal";
 
 
 const Message_Todaytable = () => {
@@ -10,8 +11,87 @@ const Message_Todaytable = () => {
     const [showNoMeetings, setShowNoMeetings] = useState(false);
     const meetingsPerPage = 6;
     const [showSessionAlert, setShowSessionAlert] = useState(false);
-    const [selectedMeetings, setSelectedMeetings] = useState(new Set()); //  Track selected meetings
+    const [selectedMeetingDetails, setSelectedMeetingDetails] = useState(null); //  Track selected meetings
 
+    // 22 to 84 sms model 
+    // const [smsMessage, setSmsMessage] = useState(""); // For SMS text content
+    const [isSending, setIsSending] = useState(false); // SMS sending loading state
+    const [sendStatus, setSendStatus] = useState(null); // SMS status messages
+    const [showSMSModal, setShowSMSModal] = useState(false);
+    const [recipients, setRecipients] = useState([]);
+    const [selectedRecipients, setSelectedRecipients] = useState(new Set());
+    const [users, setUsers] = useState([1]);             // for fetched GM data 
+
+    const handleSendSMSButtonClick = (meeting) => {
+        setSelectedMeetingDetails(meeting); // Store the clicked meeting's details
+        setRecipients(users); // Load recipients
+        setShowSMSModal(true); // Show modal
+        // console.log(meeting.date, meeting.time, meeting.description, meeting.location, meeting.type);   // check purpose
+        
+    };
+    // console.log("setSelectedMeeting:",selectedMeetingDetails)
+
+
+    const fetchUsers = async () => {
+            try {
+                const token = localStorage.getItem("token");
+                const response = await fetch("http://localhost:5001/api/user", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                if (!response.ok) throw new Error("Failed to fetch users");
+                    
+                let user = await response.json();
+                    
+                user = user.filter((users) => {
+                    const isGM = (users.role) === ("GM");
+                    return isGM;
+                });
+                // console.log(user); // Debugging
+                return user;
+            } catch (error) {
+                console.error("Error fetching users:", error);
+                return [];
+            }
+        };
+
+        useEffect(() => {
+            fetchUsers().then(setUsers);
+            
+        }, []);
+        // console.log(users)   
+// console.log(selectedRecipients)
+    const handleRecipientSelect = (recipientId) => {
+        setSelectedRecipients(prev => {
+            const newSelected = new Set(prev);
+            if (newSelected.has(recipientId)) {
+                newSelected.delete(recipientId);
+            } else {
+                newSelected.add(recipientId);
+                // console.log(newSelected)     // ✔
+            }
+            return newSelected;
+        });
+    };
+
+    const handleSendMessages = async () => {
+        setIsSending(true);
+        try {
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            setSendStatus("Messages sent successfully!");
+            setTimeout(() => {
+                setShowSMSModal(false);
+                setSendStatus(null); // Reset status when closing
+            }, 2000);
+        } catch (error) {
+            setSendStatus("Error sending messages");
+        } finally {
+            setIsSending(false);
+        }
+    };
     // Session expiration check
     useEffect(() => {
         const checkTokenExpiration = () => {
@@ -43,7 +123,7 @@ const Message_Todaytable = () => {
         localStorage.removeItem("token");
         setShowSessionAlert(true);
     };
-
+ 
     const getKathmanduDate = () => {
         const now = new Date();
         const offset = 5.75 * 60; // Kathmandu is UTC+5:45 (5.75 hours)
@@ -66,8 +146,8 @@ const Message_Todaytable = () => {
 
     const convertADDateToBS = (adDate) => {
         try {
-            const bsDate = ADToBS(adDate); // Convert AD to BS
-            return bsDate;
+            const bsDate = new NepaliDate(new Date(adDate)); // Requires a JS Date object
+            return bsDate.format('YYYY-MM-DD'); // Format as BS date string
         } catch (error) {
             console.error("Error converting AD to BS:", error);
             return null;
@@ -148,34 +228,53 @@ const Message_Todaytable = () => {
     const goToNextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages));
     const goToPrevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
 
-    // Function to check if a meeting is selected
-    const isSelected = (meetingIndex) => selectedMeetings.has(meetingIndex);
 
-    // Function to toggle checkbox selection
-    const handleCheckboxChange = (meetingId) => {
-        setSelectedMeetings((prevSelected) => {
-            const newSelected = new Set(prevSelected);
-            if (newSelected.has(meetingId)) {
+    // Add this state at the top of your component
+    const [selectAll, setSelectAll] = useState(false);
+
+    // Add this handler function
+    const handleSelectAll = () => {
+        const newSelected = new Set(selectedMeetings);
+
+        currentMeetings.forEach((_, index) => {
+            const meetingId = (currentPage - 1) * meetingsPerPage + index + 1;
+            if (selectAll) {
                 newSelected.delete(meetingId);
             } else {
                 newSelected.add(meetingId);
             }
-            return newSelected;
         });
+
+        setSelectedMeetings(newSelected);
+        setSelectAll(!selectAll);
     };
+
+
 
     return (
         <>
+
+            {/* sms from 225 t0 250 */}
+
             <div className="bg-gray-200 p-[1vw] md:pb-[0.5vh] md:px-[1vw] md:mt-[0] pt-[2vh] md:pt-[0]">
-            <div className="flex justify-end mr-5 mb-[1.5vh]">
-                <div className="flex space-x-2 justify-center items-center border-none px-2 py-1 rounded-4xl w-[10rem]
-                                bg-blue-600 text-white 
-                                hover:bg-blue-700 cursor-pointer
-                                ">
-                    <AiOutlineMessage  className="text-2xl"/>
-                    <span className="text-xl">Send SMS</span>
-                </div>
-                </div>
+
+                {/* Add the SMS Modal : passing props*/}
+                {showSMSModal && <SMSModal
+                    isOpen={showSMSModal}
+                    onClose={() => setShowSMSModal(false)}
+                    // smsMessage={smsMessage}
+                    // setSmsMessage={setSmsMessage}
+                    recipients={recipients}
+                    selectedRecipients={selectedRecipients}
+                    handleRecipientSelect={handleRecipientSelect}
+                    handleSendMessages={handleSendMessages}
+                    isSending={isSending}
+                    sendStatus={sendStatus}
+                    selectedMeetingDetails={selectedMeetingDetails}
+                />}
+
+
+
 
 
                 {/* Session Expiration Modal */}
@@ -219,13 +318,27 @@ const Message_Todaytable = () => {
                                 <table className="w-full border-collapse border text-xl border-gray-400">
                                     <thead>
                                         <tr className="bg-gray-200">
-                                            <th className="border w-[4vw] border-gray-400 px-4 py-2">✔</th>
+                                            {/* <th className="border w-[4vw] border-gray-400 px-4 py-2">
+                                                <button onClick={selectAll}>
+                                                    ✔
+                                                </button>
+                                            </th> */}
+                                            {/* <th className="border w-[4vw] border-gray-400 px-4 py-2">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={selectAll}
+                                                    onChange={handleSelectAll}
+                                                    className="w-4 h-4 cursor-pointer "
+                                                    title="Select all on this page"
+                                                />
+                                            </th> */}
                                             <th className="border w-[4vw] border-gray-400 px-4 py-2">SN</th>
-                                            <th className="border w-[13vw] border-gray-400 px-4 py-2">Date</th>
-                                            <th className="border w-[11vw] border-gray-400 px-4 py-2">Time</th>
-                                            <th className="border w-[20vw] border-gray-400 px-4 py-2">Meeting Type</th>
-                                            <th className="border w-[20vw] border-gray-400 px-4 py-2">Location</th>
-                                            <th className="border w-[35vw] border-gray-400 px-4 py-2">Description</th>
+                                            <th className="border w-[13vw] text-left border-gray-400 px-4 py-2">Date</th>
+                                            <th className="border w-[11vw] text-left border-gray-400 px-4 py-2">Time</th>
+                                            <th className="border w-[20vw] text-left border-gray-400 px-4 py-2">Meeting Type</th>
+                                            <th className="border w-[20vw] text-left border-gray-400 px-4 py-2">Location</th>
+                                            <th className="border w-[30vw] text-left border-gray-400 px-4 py-2">Description</th>
+                                            <th className="border w-[3vw] text-center border-gray-400 px-4 py-2">SMS</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -240,26 +353,36 @@ const Message_Todaytable = () => {
                                                         : "odd:bg-white hover:bg-gray-100"
                                                         }`}
                                                 >
-                                                    <td className="border w-[4vw] border-gray-400 px-4 py-2">
+                                                    {/* <td className="border w-[4vw] border-gray-400 px-4 py-2">
                                                         <input type="checkbox"
                                                             name="select"
                                                             value="select"
                                                             checked={isSelected((currentPage - 1) * meetingsPerPage + index + 1)} //  Maintain selection state
                                                             onChange={() => handleCheckboxChange((currentPage - 1) * meetingsPerPage + index + 1)} //  Toggle selection
                                                             className="w-5 h-5 cursor-pointer" />
-                                                    </td>
+                                                    </td> */}
                                                     <td className="border w-[4vw] border-gray-400 px-4 py-2">
                                                         {(currentPage - 1) * meetingsPerPage + index + 1}
                                                     </td>
-                                                    <td className="border w-[13vw] border-gray-400 px-4 py-2">
+                                                    <td className="border w-[13vw] text-left border-gray-400 px-4 py-2">
                                                         {formatDate(meeting.date)}
                                                     </td>
-                                                    <td className="border w-[11vw] border-gray-400 px-4 py-2">
+                                                    <td className="border w-[11vw] text-left border-gray-400 px-4 py-2">
                                                         {formatTime(meeting.time)}
                                                     </td>
-                                                    <td className="border w-[20vw] border-gray-400 px-4 py-2">{meeting.type}</td>
-                                                    <td className="border w-[20vw] border-gray-400 px-4 py-2">{meeting.location}</td>
-                                                    <td className="border w-[35vw] border-gray-400 px-4 py-2">{meeting.description}</td>
+                                                    <td className="border w-[20vw] text-left border-gray-400 px-4 py-2">{meeting.type}</td>
+                                                    <td className="border w-[20vw] text-left border-gray-400 px-4 py-2">{meeting.location}</td>
+                                                    <td className="border w-[30vw] text-left border-gray-400 px-4 py-2">{meeting.description}</td>
+                                                    <td className="border w-[3vw] text-center border-gray-400 px-4 py-2">
+                                                        <button
+                                                            onClick={() => handleSendSMSButtonClick(meeting)}
+                                                            className="flex space-x-2 justify-center items-center border-none px-4 py-1 rounded-lg
+                                                                                        bg-blue-600 text-white
+                                                                                        hover:bg-green-400 cursor-pointer hover:text-black
+                                                                                        ">
+                                                            <MdSend className="text-2xl" />
+                                                        </button>
+                                                    </td>
                                                 </tr>
                                             );
                                         })}
