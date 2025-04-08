@@ -18,15 +18,32 @@ export const sendBulkSMS = async (req, res) => {
           // Ensure phone number starts with +977
           const formattedNumber = phoneNumber.startsWith("+977") ? phoneNumber : `+977${phoneNumber}`;
           console.log("Attempting SMS to:", formattedNumber); // Verify number format
-  
-          const response = await axios.post(process.env.SPARROW_SMS_URL, null, {
-            params: {
-              token: process.env.SPARROW_TOKEN,
-              from: process.env.SPARROW_FROM,
+          
+          const response = await axios.post(process.env.SPARROW_API_URL, null, {
+            params: { 
+              token: process.env.SPARROW_API_KEY,
+              from: process.env.SPARROW_SENDER_ID,
               to: formattedNumber,
               text: message,
             },
           });
+    // //
+    //       const formData = new URLSearchParams();
+    //       formData.append('token', process.env.SPARROW_API_KEY);
+    //       formData.append('from', process.env.SPARROW_SENDER_ID);
+    //       formData.append('to', formattedNumber);
+    //       formData.append('text', message);
+  
+    //       const response = await axios.post(
+    //         process.env.SPARROW_API_URL,
+    //         formData.toString(),
+    //         {
+    //           headers: {
+    //             'Content-Type': 'application/x-www-form-urlencoded'
+    //           }
+    //         }
+    //       );
+    // //
           console.log("SMS API response:", response.data); // Log Sparrow's response
           return response.data;
         })
