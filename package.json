@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "twilio": "^5.5.2"
+    "twilio": "^5.5.2",
+    "helmet": "^8.1.0"
   }
 }
