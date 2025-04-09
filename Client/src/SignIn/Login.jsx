@@ -22,7 +22,26 @@ const Login = () => {
       ...formData,
       [name]: value,
     });
+
+
   };
+  /*  //user cannot use special character in username
+   const handleChange = (e) => {
+  const { name, value } = e.target;
+
+  if (name === "username") {
+    // Allow only letters, numbers, and underscores (no special characters)
+    const validUsername = value.replace(/[^a-zA-Z0-9_]/g, "");
+    setFormData((prev) => ({
+      ...prev,
+      [name]: validUsername,
+    }));
+  } else {
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  } */
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -108,7 +127,7 @@ const Login = () => {
           <div className="mb-4">
             <div className="mb-4 flex space-x-2">
               <div className="text-2xl m-2 ">
-                <FaLock />
+                <FaLock />  
               </div>
 
               <input
