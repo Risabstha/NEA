@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./ThunderEffect.css";
+import nea from "../assets/NEALOGO.png";
 import logo from "../assets/ThunderEffect.png";
 import { FaUserAlt, FaLock } from "react-icons/fa";
 
@@ -100,12 +101,10 @@ const Login = () => {
       <div className="relative w-full max-w-md p-8 bg-opacity-30 backdrop-blur-4xl bg-gray-200 rounded-2xl shadow-2xl">
         <div className="text-center">
           <div className="mx-auto mb-4 items-center justify-center">
-            <img src="./NEAText.png" alt="NEA LOGO" />
+            <img src={nea} alt="NEA LOGO" />
           </div>
         </div>
-        <div className="text-2xl font-sans opacity-80 text-center flex justify-center text-blue-700">
-          Login
-        </div>
+
 
         {/* Error Message */}
         {errorMessage && (
