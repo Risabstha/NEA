@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 dotenv.config();
 import cors from "cors";
 import connectDB from "./config/db.js";
-import authRoutes from "./routes/authRoutes.js";
+import authRoutes from "./routes/authRoutes.js";        // authRoutes.js ma export default routes gareko xa , export default vako vayera hamle import garda junai pani name use garna milxa
 import meetingRoutes from "./routes/meetingRoutes.js";
 import { errorHandler } from "./middleware/errorMiddleware.js";
 
