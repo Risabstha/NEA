@@ -57,7 +57,7 @@ export const protect = async (req, res, next) => {
 
 // Named export for verifyToken
 export const verifyToken = (req, res, next) => {
-  const token = req.header("Authorization")?.replace("Bearer ", "");  // Extract JWT token
+  const token = req.header("Authorization")?.replace("Bearer ", "");  // Extract JWT token, if header is authorization then replace bearer with ""
 
   if (!token) {
     return res.status(403).json({ message: "No token provided." });
